@@ -1,0 +1,74 @@
+import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import { join } from 'path';
+import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly} from "../utils/Functions"
+import { owners, token } from "../utils/Config";
+import { Message } from "discord.js";
+import guildsData from "../database/Guild"
+
+declare module "discord-akairo" {
+    interface AkairoClient {
+        config: Options;
+        commandHandler: CommandHandler;
+        listenerHandler: ListenerHandler;
+        capitalize;
+        resolve;
+        flag;
+        checkDays;
+        music;
+        findOrCreateUser;
+        findOrCreateGuild;
+        findOrCreateMember;
+        guildOnly;
+    }
+  }
+  
+  interface Options {
+    owners?: string | string[];
+    token?: string;
+  }
+  
+  export default class FibreClient extends AkairoClient {
+    public constructor(config: Options) {
+        super(
+          {
+            ownerID: owners
+          },
+        );
+    
+       this.config = config;
+       this.checkDays = checkDays; 
+       this.flag = flag;
+       this.resolve = resolve
+       this.capitalize = capitalize
+       this.findOrCreateGuild = findOrCreateGuild
+       this.findOrCreateMember = findOrCreateMember
+       this.findOrCreateUser = findOrCreateUser
+       this.guildOnly = guildOnly
+
+       this.commandHandler = new CommandHandler(this, {
+            prefix: async (msg: Message) => {
+              let prefix = "+";
+              const guild = await guildsData.findOne({ id: msg.guild?.id })
+              if(guild) prefix = guild.prefix
+              return prefix
+            },
+            blockBots: true,
+            blockClient: true,
+            allowMention: true,
+            defaultCooldown: 2000,
+            directory: join(__dirname, "..", "commands"),
+            extensions: ['.js']
+        });
+        this.listenerHandler = new ListenerHandler(this,{
+            directory: join(__dirname, "..", "listeners"),
+            extensions: ['.js']
+        });
+        this.commandHandler.useListenerHandler(this.listenerHandler);
+        this.listenerHandler.loadAll()
+        this.commandHandler.loadAll()
+    }
+    public async start(): Promise<string> {
+    
+        return this.login(this.config.token);
+      }
+}

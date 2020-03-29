@@ -1,0 +1,25 @@
+{
+  "name": "fibre-alpha",
+  "version": "1.0.0",
+  "description": "Fibre Alpha",
+  "main": "dist/Shard",
+  "scripts": {
+    "test": "dist/Shard"
+  },
+  "keywords": [
+    "Fibre"
+  ],
+  "author": "Pizza",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "chartjs": "^0.3.24",
+    "chartjs-node-canvas": "^3.0.6",
+    "common-tags": "^1.8.0",
+    "discord-akairo": "^8.0.0",
+    "erela.js": "^1.1.7",
+    "human-ms": "^1.0.5",
+    "moment": "^2.24.0",
+    "ms": "^2.1.2"
+  }
+}

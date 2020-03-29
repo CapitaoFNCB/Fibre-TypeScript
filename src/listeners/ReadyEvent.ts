@@ -1,0 +1,36 @@
+  
+import { Listener } from "discord-akairo";
+import chalk from "chalk"
+import { ErelaClient } from "erela.js"
+import { nodes, connection } from "../utils/Config"
+import mongoose from "mongoose";
+
+export default class ReadyListener extends Listener {
+  public constructor() {
+    super("listeners-ready", {
+      emitter: "client",
+      event: "ready"
+    });
+  }
+
+  public exec() {
+    console.log(chalk.blue(this.client.user?.tag))
+
+    mongoose.connect(connection, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+      console.log("Connected to the Mongodb database.");
+    }).catch((err) => {
+      console.log("Unable to connect to the Mongodb database. Error:"+err);
+    });
+
+
+    this.client.music = new ErelaClient(this.client, nodes)
+    .on("nodeConnect", node => console.log(`New node connected`))
+    .on("trackStart", (player, track) => player.textChannel.send(`Now playing: ${track.title}`))
+    .on("queueEnd", player => {
+      setTimeout(() => {
+      player.textChannel.send("Queue has ended.")
+      this.client.music.players.destroy(player.guild.id);
+      },1000)
+  });
+  }
+}
