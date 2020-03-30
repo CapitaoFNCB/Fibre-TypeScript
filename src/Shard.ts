@@ -5,4 +5,4 @@ const shard = new ShardingManager('dist/Fibre.js', {
     respawn: true
   });
   
-shard.spawn(3);
+shard.spawn(1);

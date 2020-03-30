@@ -8,6 +8,9 @@ const Member = new mongoose.Schema({
     level: {type: Number, default: 1},
     characters: {type: Number, default: 0},
     cash: {type: Number, default: 0},
+    work_time: {type: Number, default: 0},
+    rob_time: {type: Number, default: 0},
+    daily_time: {type: Number, default: 0},
 
 })
 
