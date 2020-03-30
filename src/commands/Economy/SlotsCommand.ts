@@ -28,6 +28,8 @@ export default class SlotsCommand extends Command {
 
   public async exec(message: Message, {target}: {target: any}) {
 
+    if(!message.guild) return this.client.guildOnly(message.channel);
+
     let emojis: any = ['🥭','🍓','🍋','🍑','🍈','🍊','🍐','🍇','🍒','🍅']
 
     let board: any = [];

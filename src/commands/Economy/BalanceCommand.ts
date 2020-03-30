@@ -24,6 +24,7 @@ export default class BalanceCommand extends Command {
   }
 
   public async exec(message: Message, {target}: {target: any}) {
+    if(!message.guild) return this.client.guildOnly(message.channel);
     let member;
     if(message.mentions.members?.size && message.content.length > 0){
       member = await message.mentions.members.first()

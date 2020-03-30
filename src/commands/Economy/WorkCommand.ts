@@ -17,6 +17,7 @@ export default class WorkCommand extends Command {
   }
 
   public async exec(message: Message) {
+    if(!message.guild) return this.client.guildOnly(message.channel);
     let cooldown = 21600000
     const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
     let amount

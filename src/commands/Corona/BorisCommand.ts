@@ -16,6 +16,7 @@ export default class BorisCommand extends Command {
   }
 
   public async exec(message: Message) {
+    if(!message.guild) return this.client.guildOnly(message.channel);
     const channel = message.member?.voice
     if(!channel?.channel) return message.channel.send("You Need to Be in a voice channel")
     const player = this.client.music.players.spawn({

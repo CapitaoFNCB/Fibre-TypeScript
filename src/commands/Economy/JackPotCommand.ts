@@ -25,6 +25,7 @@ export default class JackpotCommand extends Command {
   }
 
   public async exec(message: Message, { amount }: { amount: Number }) {
+    if(!message.guild) return this.client.guildOnly(message.channel);
     if(isNaN(Number(amount))) return message.channel.send(new MessageEmbed()
     .setDescription("Invalid Amount")
     .setColor("0491e2"))

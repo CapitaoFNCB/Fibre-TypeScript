@@ -6,6 +6,7 @@ const Member = new mongoose.Schema({
     guildId: {type: String},
     xp: {type: Number, default: 0},
     level: {type: Number, default: 1},
+    messages: { type: Number, default: 0},
     characters: {type: Number, default: 0},
     cash: {type: Number, default: 0},
     work_time: {type: Number, default: 0},

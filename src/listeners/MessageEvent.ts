@@ -16,16 +16,22 @@ export default class MessageListener extends Listener {
     let member;
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
     let args = message.content.slice(guild.prefix.length).trim().split(/ +/g);
-    if(message.content.startsWith(guild.prefix)) {
-      return this.client.logger.info(`${message.author.username} ran ${this.client.capitalize(args[0])} Command`)
-    };
     if(!message.author.bot){
       user = await this.client.findOrCreateUser({id: message.author.id})
       member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
 
+      if(message.content.startsWith(guild.prefix)) {
+        this.client.logger.info(`${message.author.username} ran ${this.client.capitalize(args[0])} Command`)
+      }
+
+      if(!guild.level){
+        member.characters += message.content.length
+        member.save()
+        return;
+      };
+
       member.characters += message.content.length
-  
-      if(!guild.level) return;
+
       const amount = randomXP()
       const updatelevel = ((member.level ** member.level) + 100) * 2
 
