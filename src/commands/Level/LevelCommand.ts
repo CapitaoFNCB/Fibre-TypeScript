@@ -1,0 +1,115 @@
+import { Command } from "discord-akairo";
+import { MessageEmbed, Message, MessageAttachment } from "discord.js";
+import { Canvas } from "canvas-constructor"
+import fetch from "node-fetch"
+import membersData from "../../database/Member"
+
+export default class Help extends Command {
+  constructor() {
+    super("level", {
+      aliases: ["level"],
+      category: "Level",
+      args: [
+        {
+            id: "target",
+            type: "string",
+            match: "rest",
+            default: null
+          }
+      ],
+      description: {
+        content: "Level Command", 
+        usage: "level",
+        examples: ["level"]
+      }
+    });
+  }
+
+  public async exec(message: Message, {target}: {target: any}) {
+    
+    if(!message.guild) return this.client.guildOnly(message.channel);
+
+    let member;
+    if(message.mentions.members?.size && message.content.length > 0){
+        member = await message.mentions.members.first()
+    }else{
+        member = await this.client.resolve("member",target, message.guild,this.client) || message.member
+    }
+    
+    if(member.user.bot) return message.channel.send(new MessageEmbed()
+        .setDescription("No Information is stored for bots")
+        .setColor("0491e2")
+    )
+
+    
+    const found = await this.client.findOrCreateMember({id: member.id})
+
+    let rank: any = 1;
+    let members = await membersData.find({ guildId: message.guild?.id }).lean(),
+    membersLeaderboard = members.map((m) => {
+      return {
+          id: m.id,
+          value: m.level
+      };
+    }).sort((a,b) => b.value - a.value);
+
+    for (const member of membersLeaderboard) {
+      const user = this.client.users.cache.get(member.id) || false;
+      if(user){
+              if(user.id === member.id){
+                rank = "#"+ rank 
+                break
+            }if(user.id !== member.id){
+            }
+        }
+    }
+
+    const result = await fetch(message.author.displayAvatarURL({ format: 'png', size: 2048 }));
+    if (!result.ok) return message.channel.send("Failed to get Avatar");
+    const avatar = await result.buffer();
+
+    const buffer = await user();
+    const filename = `profile.png`;
+    const attachment = new MessageAttachment(buffer.toBuffer(), filename);
+    await message.channel.send(attachment);
+
+    /*
+
+    ctx.fillText(`Messages: ${found.messages > 1000 ? found.messages > 1000000 ? found.messages > 1000000000 ? found.messages > 1000000000000 ? `${(found.messages/1000000000000).toFixed(2)}t` : `${(found.messages/1000000000).toFixed(2)}b` : `${(found.messages/1000000).toFixed(2)}m` : `${(found.messages/1000).toFixed(2)}k` : found.messages}`, 940, 120)
+        .addText(`Characters: ${found.characters > 1000 ? found.characters > 1000000 ? found.characters > 1000000000 ? found.characters > 1000000000000 ? `${(found.characters/1000000000000).toFixed(2)}t` : `${(found.characters/1000000000).toFixed(2)}b` : `${(found.characters/1000000).toFixed(2)}m` : `${(found.characters/1000).toFixed(2)}k` : found.characters}`, 880, 120)
+
+    */
+
+    async function user(){
+        return new Canvas(934, 282)
+        .setColor('#2C2F33')
+        .addBeveledRect(0,0,934, 282)
+        .setColor("#2C2F33")
+        .setShadowColor('rgba(22, 22, 22, 1)')
+        .setShadowOffsetY(5)
+        .setShadowBlur(10) 
+        .addCircle(130, 130, 100)
+        .addCircularImage(avatar,130,130,100)
+        .addBeveledRect(260, 165, 650, 46)
+        .setColor('#2C2F33')
+        .fill()
+        .restore()
+        .addBeveledRect(260, 165, (100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5, 46)
+        .setColor('#FFFFFF')
+        .fill()
+        .restore()
+        .setTextAlign('left')
+        .setTextFont('32px sans-serif')
+        .setColor('#FFFFFF')
+        .addText(message.author.tag, 275, 130)
+        .setTextAlign('right')
+        .addText(`LEVEL ${found.level}` , 880, 90)
+        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 880, 50)
+        .addText(`${found.level + 1}` , 900, 250)
+        .setTextAlign('center')
+        .addText(`${found.xp}/${((found.level ** found.level) + 100) * 2}` , 575, 250)
+        .setTextAlign('left')
+        .addText(`${found.level}` , 275, 250)
+    }
+  }
+}
