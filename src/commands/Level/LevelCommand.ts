@@ -53,18 +53,21 @@ export default class Help extends Command {
       };
     }).sort((a,b) => b.value - a.value);
 
-    for (const member of membersLeaderboard) {
-      const user = this.client.users.cache.get(member.id) || false;
+    for (const search of membersLeaderboard) {
+      const user = this.client.users.cache.get(search.id) || false;
       if(user){
               if(user.id === member.id){
                 rank = "#"+ rank 
-                break
+                 break
             }if(user.id !== member.id){
+              rank++ 
             }
         }
     }
 
-    const result = await fetch(message.author.displayAvatarURL({ format: 'png', size: 2048 }));
+    if(!rank.toString().startsWith('#')) rank = '#' + rank
+
+    const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.channel.send("Failed to get Avatar");
     const avatar = await result.buffer();
 
@@ -72,13 +75,6 @@ export default class Help extends Command {
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
     await message.channel.send(attachment);
-
-    /*
-
-    ctx.fillText(`Messages: ${found.messages > 1000 ? found.messages > 1000000 ? found.messages > 1000000000 ? found.messages > 1000000000000 ? `${(found.messages/1000000000000).toFixed(2)}t` : `${(found.messages/1000000000).toFixed(2)}b` : `${(found.messages/1000000).toFixed(2)}m` : `${(found.messages/1000).toFixed(2)}k` : found.messages}`, 940, 120)
-        .addText(`Characters: ${found.characters > 1000 ? found.characters > 1000000 ? found.characters > 1000000000 ? found.characters > 1000000000000 ? `${(found.characters/1000000000000).toFixed(2)}t` : `${(found.characters/1000000000).toFixed(2)}b` : `${(found.characters/1000000).toFixed(2)}m` : `${(found.characters/1000).toFixed(2)}k` : found.characters}`, 880, 120)
-
-    */
 
     async function user(){
         return new Canvas(934, 282)
@@ -94,17 +90,17 @@ export default class Help extends Command {
         .setColor('#2C2F33')
         .fill()
         .restore()
-        .addBeveledRect(260, 165, (100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5, 46)
+        .addBeveledRect(260, 165, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5), 46)
         .setColor('#FFFFFF')
         .fill()
         .restore()
         .setTextAlign('left')
         .setTextFont('32px sans-serif')
         .setColor('#FFFFFF')
-        .addText(message.author.tag, 275, 130)
+        .addText(member.user.tag, 275, 130)
         .setTextAlign('right')
-        .addText(`LEVEL ${found.level}` , 880, 90)
-        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 880, 50)
+        .addText(`LEVEL ${found.level}` , 880, 130)
+        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 880, 90)
         .addText(`${found.level + 1}` , 900, 250)
         .setTextAlign('center')
         .addText(`${found.xp}/${((found.level ** found.level) + 100) * 2}` , 575, 250)
