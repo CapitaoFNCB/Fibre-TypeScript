@@ -14,23 +14,20 @@ export default class ReadyListener extends Listener {
   }
 
   public exec() {
-    console.log(chalk.blue(this.client.user?.tag))
-
+    this.client.user?.setStatus("dnd");
+    this.client.logger.info(`Started!`);
     mongoose.connect(connection, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-      console.log("Connected to the Mongodb database.");
+      this.client.logger.info(`Connected to the Mongodb database!`);
     }).catch((err) => {
-      console.log("Unable to connect to the Mongodb database. Error:"+err);
+      this.client.logger.error("Unable to connect to the Mongodb database. Error:"+err)
     });
 
 
     this.client.music = new ErelaClient(this.client, nodes)
-    .on("nodeConnect", node => console.log(`New node connected`))
+    .on("nodeConnect", node => this.client.logger.info(`New node connected`))
     .on("trackStart", (player, track) => player.textChannel.send(`Now playing: ${track.title}`))
     .on("queueEnd", player => {
-      setTimeout(() => {
       player.textChannel.send("Queue has ended.")
-      this.client.music.players.destroy(player.guild.id);
-      },1000)
   });
   }
 }

@@ -43,7 +43,7 @@ export default class EnableCommand extends Command {
             .setColor("0491e2")
         )
         guild.level = true
-        return message.channel.send(new MessageEmbed()
+        message.channel.send(new MessageEmbed()
             .setDescription("Enabled Level System")
             .setColor("0491e2")
         )

@@ -12,6 +12,7 @@
   "author": "Pizza",
   "license": "ISC",
   "dependencies": {
+    "@ayanaware/logger": "^2.2.1",
     "chalk": "^3.0.0",
     "chartjs": "^0.3.24",
     "chartjs-node-canvas": "^3.0.6",
@@ -20,6 +21,7 @@
     "erela.js": "^1.1.7",
     "human-ms": "^1.0.5",
     "moment": "^2.24.0",
-    "ms": "^2.1.2"
+    "ms": "^2.1.2",
+    "node-os-utils": "^1.2.2"
   }
 }

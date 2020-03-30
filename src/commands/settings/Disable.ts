@@ -40,7 +40,7 @@ export default class DisableCommand extends Command {
             .setColor("0491e2")
         )
         guild.level = false
-        return message.channel.send(new MessageEmbed()
+        message.channel.send(new MessageEmbed()
             .setDescription("Disabled Level System")
             .setColor("0491e2")
         )

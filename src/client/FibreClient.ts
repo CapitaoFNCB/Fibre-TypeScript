@@ -4,12 +4,14 @@ import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGui
 import { owners, token } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
+import Logger from "@ayanaware/logger";
 
 declare module "discord-akairo" {
     interface AkairoClient {
         config: Options;
         commandHandler: CommandHandler;
         listenerHandler: ListenerHandler;
+        logger: Logger;
         capitalize;
         resolve;
         flag;
@@ -28,6 +30,7 @@ declare module "discord-akairo" {
   }
   
   export default class FibreClient extends AkairoClient {
+    public logger: Logger = Logger.get(FibreClient);
     public constructor(config: Options) {
         super(
           {
