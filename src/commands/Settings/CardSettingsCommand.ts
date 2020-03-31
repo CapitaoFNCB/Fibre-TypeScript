@@ -12,7 +12,7 @@ export default class CardSettingsCommand extends Command {
             id: "type",
             type: "string",
             prompt:{
-              start: "What would you like to disable?"
+              start: "What settings would you like to change?"
             },
         },
         {
