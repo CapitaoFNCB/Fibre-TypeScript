@@ -29,6 +29,13 @@ export default class Help extends Command {
     
     if(!message.guild) return this.client.guildOnly(message.channel);
 
+    const guild = await this.client.findOrCreateGuild({id: message.guild.id})
+
+    if(!guild.level) return message.channel.send(new MessageEmbed()
+    .setDescription("This Servers Level System is Disabled")
+    .setColor("0491e2")
+    )
+
     let member;
     if(message.mentions.members?.size && message.content.length > 0){
         member = await message.mentions.members.first()
@@ -42,7 +49,9 @@ export default class Help extends Command {
     )
 
     
-    const found = await this.client.findOrCreateMember({id: member.id})
+    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild.id})
+
+    const founduser = await this.client.findOrCreateUser({id: member.id})
 
     let rank: any = 1;
     let members = await membersData.find({ guildId: message.guild?.id }).lean(),
@@ -67,6 +76,10 @@ export default class Help extends Command {
 
     if(!rank.toString().startsWith('#')) rank = '#' + rank
 
+    const resultback = await fetch(founduser.backgound);
+    if (!resultback.ok) return message.channel.send("Failed to get Backgound");
+    const backgound = await resultback.buffer();
+
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.channel.send("Failed to get Avatar");
     const avatar = await result.buffer();
@@ -78,8 +91,7 @@ export default class Help extends Command {
 
     async function user(){
         return new Canvas(934, 282)
-        .setColor('#2C2F33')
-        .addBeveledRect(0,0,934, 282)
+        .addImage(backgound, 0, 0, 934, 282)
         .setColor("#2C2F33")
         .setShadowColor('rgba(22, 22, 22, 1)')
         .setShadowOffsetY(5)
@@ -91,12 +103,12 @@ export default class Help extends Command {
         .fill()
         .restore()
         .addBeveledRect(260, 165, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5), 46)
-        .setColor('#FFFFFF')
+        .setColor(founduser.barcolour)
         .fill()
         .restore()
         .setTextAlign('left')
         .setTextFont('32px sans-serif')
-        .setColor('#FFFFFF')
+        .setColor(founduser.text)
         .addText(member.user.tag, 275, 130)
         .setTextAlign('right')
         .addText(`LEVEL ${found.level}` , 880, 130)

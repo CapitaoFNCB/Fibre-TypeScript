@@ -1,0 +1,99 @@
+import { Command } from "discord-akairo";
+import { Message, MessageEmbed } from "discord.js";
+import isHex from "is-hexcolor"
+
+export default class CardSettingsCommand extends Command {
+  public constructor() {
+    super("card", {
+      aliases: ["card"],
+      category: "Settings",
+      args: [
+        {
+            id: "type",
+            type: "string",
+            prompt:{
+              start: "What would you like to disable?"
+            },
+        },
+        {
+            id: "change",
+            type: "string",
+            default: null
+        }
+      ],
+      description: {
+        content: "Card Command",
+        usage: "card [type]",
+        examples: ["card backgound https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fuej6dnX54XA%2Fmaxresdefault.jpg&f=1&nofb=1", "card text #ffffff"]
+      },
+      ownerOnly: false
+    });
+  }
+
+  public async exec(message: Message,{ type, change }: { type: String; change: string }){
+
+    const types: String[] = ["background","text","bar"]
+
+    if(!types.includes(type.toLowerCase())) return message.channel.send(new MessageEmbed()
+        .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
+        .setColor("0491e2")
+    )
+
+    const founduser = await this.client.findOrCreateUser({id: message.author.id})
+
+    if(!change && message.attachments.size < 1) return message.channel.send(new MessageEmbed()
+        .setDescription("No Change Found and or made")
+        .setColor("0491e2")
+    )
+
+    if(type.toLowerCase() == "background"){
+
+        if(!change){
+            founduser.backgound = message.attachments.first()?.proxyURL
+            founduser.save() 
+
+            return message.channel.send(new MessageEmbed()
+            .setDescription("Changed card background")
+            .setColor("0491e2")
+            )
+        }
+
+        founduser.backgound = change
+        founduser.save()
+
+        return message.channel.send(new MessageEmbed()
+          .setDescription("Invalid Hex Value")
+          .setColor("0491e2")
+        )
+
+    }else if(type.toLowerCase() == "text"){
+
+        if(!isHex(change)) return message.channel.send(new MessageEmbed()
+        .setDescription("Changed card background")
+        .setColor("0491e2"))
+
+        founduser.text = change
+        founduser.save()
+
+        return message.channel.send(new MessageEmbed()
+          .setDescription("Set Progress Text Colour")
+          .setColor("0491e2")
+      )
+
+    }else{
+
+        if(!isHex(change)) return message.channel.send(new MessageEmbed()
+          .setDescription("Invalid Hex Value")
+          .setColor("0491e2")
+        )
+
+        founduser.barcolour = change
+        founduser.save()
+
+        return message.channel.send(new MessageEmbed()
+          .setDescription("Set Progress Bar Colour")
+          .setColor("0491e2")
+        )
+    }
+  }
+}

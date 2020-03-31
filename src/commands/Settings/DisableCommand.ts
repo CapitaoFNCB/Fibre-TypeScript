@@ -1,24 +1,25 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 
-export default class EnableCommand extends Command {
+export default class DisableCommand extends Command {
   public constructor() {
-    super("enable", {
-      aliases: ["enable"],
+    super("disable", {
+      aliases: ["disable"],
       category: "Settings",
       args: [
         {
             id: "type",
             type: "string",
             prompt:{
-              start: "What would you like to enable?"
+              start: "What would you like to disable?"
             }
           }
       ],
+      userPermissions: ["ADMINISTRATOR"],
       description: {
-        content: "Enable Command",
-        usage: "enable [type]",
-        examples: ["enable level"]
+        content: "Disable Command",
+        usage: "disable [type]",
+        examples: ["disable level"]
       },
       ownerOnly: false
     });
@@ -26,29 +27,25 @@ export default class EnableCommand extends Command {
 
   public async exec(message: Message, { type }: { type: String }) {
     if(!message.guild) return this.client.guildOnly(message.channel);
-
-    const types = ["level"]
-
-    if(!types.includes(type.toLowerCase())){
+    if(!["level"].includes(type.toLowerCase())){
         return message.channel.send(new MessageEmbed()
-            .setDescription(`There is no setting with this name\nValid settings: \`${types.map(x => `\`` + x + `\``)}`)
+            .setDescription("There is no setting with this name")
             .setColor("0491e2")
         )
     }
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
 
     if(type.toLowerCase() == "level"){
-        if(guild.level == true) return message.channel.send(new MessageEmbed()
-            .setDescription("Level System is Already Enabled")
+        if(guild.level == false) return message.channel.send(new MessageEmbed()
+            .setDescription("Level System is Already Disabled")
             .setColor("0491e2")
         )
-        guild.level = true
+        guild.level = false
         message.channel.send(new MessageEmbed()
-            .setDescription("Enabled Level System")
+            .setDescription("Disabled Level System")
             .setColor("0491e2")
         )
     }
-
     guild.save()
   }
 }

@@ -15,6 +15,7 @@ export default class PrefixCommand extends Command {
             }
           }
       ],
+      userPermissions: ["ADMINISTRATOR"],
       description: {
         content: "Prefix Command",
         usage: "prefix [new prefix]",
