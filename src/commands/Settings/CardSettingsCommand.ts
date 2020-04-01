@@ -49,7 +49,7 @@ export default class CardSettingsCommand extends Command {
     if(type.toLowerCase() == "background"){
 
         if(!change){
-            founduser.backgound = message.attachments.first()?.proxyURL
+            founduser.backgound = message.attachments.first()!.proxyURL
             founduser.save() 
 
             return message.channel.send(new MessageEmbed()

@@ -26,8 +26,11 @@ export default class ReadyListener extends Listener {
     this.client.music = new ErelaClient(this.client, nodes)
     .on("nodeConnect", node => this.client.logger.info(`New node connected`))
     .on("trackStart", (player, track) => player.textChannel.send(`Now playing: ${track.title}`))
-    .on("queueEnd", player => {
-      player.textChannel.send("Queue has ended.")
-  });
+    .on("queueEnd", (player, track) => {
+      console.log(track)
+    })
+    .on("trackEnd", async (player, track) => {
+
+    })
   }
 }
