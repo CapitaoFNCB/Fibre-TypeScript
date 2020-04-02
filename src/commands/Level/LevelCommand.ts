@@ -29,13 +29,6 @@ export default class Help extends Command {
     
     if(!message.guild) return this.client.guildOnly(message.channel);
 
-    const guild = await this.client.findOrCreateGuild({id: message.guild.id})
-
-    if(!guild.level) return message.channel.send(new MessageEmbed()
-    .setDescription("This Servers Level System is Disabled")
-    .setColor("0491e2")
-    )
-
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
     if(member.user.bot) return message.channel.send(new MessageEmbed()
@@ -49,7 +42,7 @@ export default class Help extends Command {
     const founduser = await this.client.findOrCreateUser({id: member.id})
 
     let rank: any = 1;
-    let members = await membersData.find({ guildId: message.guild?.id }).lean(),
+    let members = await membersData.find({ guildId: message.guild!.id }).lean(),
     membersLeaderboard = members.map((m) => {
       return {
           id: m.id,
