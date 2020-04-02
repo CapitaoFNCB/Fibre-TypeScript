@@ -29,9 +29,6 @@ export default class Help extends Command {
     
     if(!message.guild) return this.client.guildOnly(message.channel);
 
-    const guild = await this.client.findOrCreateGuild({id: message.guild.id})
-
-
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
     if(member.user.bot) return message.channel.send(new MessageEmbed()
