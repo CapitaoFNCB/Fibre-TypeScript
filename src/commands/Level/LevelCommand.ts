@@ -31,7 +31,7 @@ export default class Help extends Command {
 
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
-    if(member.user.bot) return message.channel.send(new MessageEmbed()
+    if(member.user.bot) return message.util!.send(new MessageEmbed()
         .setDescription("No Information is stored for bots")
         .setColor("0491e2")
     )
@@ -65,17 +65,17 @@ export default class Help extends Command {
     if(!rank.toString().startsWith('#')) rank = '#' + rank
 
     const resultback = await fetch(founduser.backgound);
-    if (!resultback.ok) return message.channel.send("Failed to get Backgound");
+    if (!resultback.ok) return message.util!.send("Failed to get Backgound");
     const backgound = await resultback.buffer();
 
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
-    if (!result.ok) return message.channel.send("Failed to get Avatar");
+    if (!result.ok) return message.util!.send("Failed to get Avatar");
     const avatar = await result.buffer();
 
     const buffer = await user();
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    await message.channel.send(attachment);
+    await message.util!.send(attachment);
 
     async function user(){
         return new Canvas(934, 282)

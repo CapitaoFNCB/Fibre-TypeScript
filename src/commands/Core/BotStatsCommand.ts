@@ -52,7 +52,7 @@ export default class BotstatsCommand extends Command {
             const commits = await this.getCommits();
             if (commits) embed.addField(`Github Commits`, commits);
     
-            message.channel.send(embed)
+            message.util!.send(embed)
         })
 
 

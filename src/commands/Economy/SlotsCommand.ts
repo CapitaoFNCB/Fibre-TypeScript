@@ -10,10 +10,11 @@ export default class SlotsCommand extends Command {
       args: [
         {
             id: "target",
-            type: "string",
+            type: "number",
             match: "rest",
             prompt:{
-                start: "What radio station would you like to listen too?"
+                start: "How Much do you want to gamble?",
+                retry: "Try again, How much do you want to gamble?"
             }
           }
       ],
@@ -34,6 +35,13 @@ export default class SlotsCommand extends Command {
 
     let board: any = [];
 
+    let targetuser = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
+
+    if(targetuser.cash < target) return message.channel.send(new MessageEmbed()
+      .setDescription("Unfortunately you don't have enough for this amount")
+      .setColor("0491e2")
+      )
+
     for(let i = 0; i < 9; i++){
         board.push(Math.floor(Math.random() * (Math.floor(10) - Math.ceil(1))) + Math.ceil(1))
     }
@@ -45,7 +53,6 @@ export default class SlotsCommand extends Command {
         .setColor("0491e2")
         )
 
-    let targetuser = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
     let targetguild = await this.client.findOrCreateGuild({id: message.guild?.id})
 
     if(emojis[board[3]] == emojis[board[4]] && emojis[board[4]] == emojis[board[5]]) {

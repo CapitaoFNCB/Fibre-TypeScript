@@ -30,11 +30,15 @@ export default class RadioCommand extends Command {
 
     if(!message.guild) return this.client.guildOnly(message.channel);
 
-    const channel = message.member?.voice
-    if(!channel?.channel) return message.channel.send(new MessageEmbed()
-        .setDescription("You Need to Be in a voice channel")
-        .setColor("0491e2")
-    )
+    const { channel } = message.member!.voice
+
+    if (!channel) {
+        return message.util!.send(new MessageEmbed().setDescription("You Need to be in a voice channel").setColor("0491e2"))
+    }else if (!channel.joinable) {
+        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to enter this voice channel").setColor("0491e2"))
+    }else if(!channel.speakable){
+        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to speak this voice channel").setColor("0491e2"))
+    }
 
     let filter = {
         limit: 1,
@@ -50,7 +54,7 @@ export default class RadioCommand extends Command {
         })
     })
 
-    if(!str.length) return message.channel.send(new MessageEmbed()
+    if(!str.length) return message.util!.send(new MessageEmbed()
         .setDescription("Invalid Radio Stream")
         .setColor("0491e2")
     )
@@ -60,11 +64,11 @@ export default class RadioCommand extends Command {
         case "TRACK_LOADED":
             player = this.client.music.players.spawn({
                 guild: message.guild,
-                voiceChannel: channel?.channel,
+                voiceChannel: channel,
                 textChannel: message.channel,
             })
           if(player.queue.length > 0){
-            message.channel.send(new MessageEmbed().setDescription(`Queued ${res.tracks[0].title}`).setColor("0491e2"))
+            message.util!.send(new MessageEmbed().setDescription(`Queued ${res.tracks[0].title}`).setColor("0491e2"))
           }  
           player.queue.add(res.tracks[0])
           if(!player.playing) player.play()
@@ -72,7 +76,7 @@ export default class RadioCommand extends Command {
         
         case "LOAD_FAILED":
             player = this.client.music.players.get(message.guild?.id)
-            message.channel.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
+            message.util!.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
             if(player){
                 if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
             }
@@ -80,7 +84,7 @@ export default class RadioCommand extends Command {
 
         case "NO_MATCHES":
             player = this.client.music.players.get(message.guild?.id)
-            message.channel.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
+            message.util!.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
             if(player){
                 if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
             }

@@ -17,7 +17,7 @@ export default class EnableCommand extends Command {
 
   public async exec(message: Message) {
     this.client.commandHandler.reloadAll()
-    return message.channel.send(new MessageEmbed()
+    return message.util!.send(new MessageEmbed()
       .setDescription("Reloaded All Commands!")
       .setColor("0491e2")
     )

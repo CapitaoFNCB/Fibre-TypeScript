@@ -26,7 +26,7 @@ export default class PrefixCommand extends Command {
   }
 
   public async exec(message: Message, { prefix }: { prefix: String }) {
-    if(prefix.length > 5) return message.channel.send(new MessageEmbed()
+    if(prefix.length > 5) return message.util!.send(new MessageEmbed()
         .setDescription("The Max length of a prefix is 5")
         .setColor("0491e2")
     )
@@ -34,7 +34,7 @@ export default class PrefixCommand extends Command {
     guild.prefix = prefix
     guild.save()
 
-    return message.channel.send(new MessageEmbed()
+    return message.util!.send(new MessageEmbed()
         .setDescription(`New prefix \`${prefix}\``)
         .setColor("0491e2")
     )

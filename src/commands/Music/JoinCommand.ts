@@ -16,21 +16,21 @@ export default class JoinCommand extends Command {
 
   async exec (message: Message) {
 
-    const voiceChannel = message.member?.voice
+    const { channel } = message.member!.voice
 
-    if(!voiceChannel?.channel) return message.channel.send(new MessageEmbed()
+    if(!channel) return message.util!.send(new MessageEmbed()
         .setDescription("You Need to be in a voice channel")
         .setColor("0491e2")
       )
 
     let player = this.client.music.players.get(message.guild?.id)
-    if(player) return message.channel.send(new MessageEmbed()
+    if(player) return message.util!.send(new MessageEmbed()
         .setDescription("I'm already in a voice channel"))
     
     player = this.client.music.players.spawn({
         guild: message.guild,
         textChannel: message.channel,
-        voiceChannel: voiceChannel?.channel
+        voiceChannel: channel
     }) 
   }
 }

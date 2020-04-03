@@ -31,7 +31,7 @@ export default class Help extends Command {
         embed.addField(`${name} [${category.size}]`, category.filter(cmd => cmd.aliases.length > 0).map(cmd => `\`${this.client.capitalize(cmd.aliases[0])}\``).join(", ") || "There was an error")
       }
 
-    return message.channel.send(embed);
+    return message.util!.send(embed);
     }
 
     const embed = new MessageEmbed()
@@ -44,6 +44,6 @@ export default class Help extends Command {
         **Examples**: ${command.description.examples.map(x => `\`${x}\``).join(" ")}
       `)
 
-    return message.channel.send(embed);
+    return message.util!.send(embed);
   }
 }

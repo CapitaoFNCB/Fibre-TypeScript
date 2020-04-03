@@ -55,6 +55,8 @@ declare module "discord-akairo" {
               if(guild) prefix = guild.prefix
               return prefix
             },
+            commandUtil: true,
+            handleEdits: true,
             blockBots: true,
             blockClient: true,
             allowMention: true,

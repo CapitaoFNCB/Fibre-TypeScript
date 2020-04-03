@@ -30,7 +30,7 @@ export default class DailyCommand extends Command {
         target.daily_time = Date.now()
         let daily = (Math.floor(Math.random() * (Math.floor(50) - Math.ceil(25))) + Math.ceil(25))
 
-        message.channel.send(new MessageEmbed()
+        message.util!.send(new MessageEmbed()
         .setDescription(`${message.author.username} Claimed $${daily}`)
         .setColor("0491e2")
         )
@@ -48,7 +48,7 @@ export default class DailyCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.channel.send(new MessageEmbed()
+        return message.util!.send(new MessageEmbed()
         .setDescription(`You cannot use daily for ${str}`)
         .setColor("0491e2"))
     }

@@ -30,11 +30,11 @@ export default class CountrylistCommand extends Command {
     const data = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
     const found = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
     const check = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
-    if(!check.length) return message.channel.send(new MessageEmbed()
+    if(!check.length) return message.util!.send(new MessageEmbed()
         .setColor("0491e2")
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
-    message.channel.send(new MessageEmbed()
+    message.util!.send(new MessageEmbed()
         .setColor("0491e2")
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)

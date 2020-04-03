@@ -43,7 +43,7 @@ export default class GraphCommand extends Command {
       let recovered
       if(country){
         check = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase())
-        if(!check.length) return message.channel.send(new MessageEmbed().setDescription("No Country with this name").setColor("0491e2"))
+        if(!check.length) return message.util!.send(new MessageEmbed().setDescription("No Country with this name").setColor("0491e2"))
         confirmed = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         deaths = r.deaths.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         recovered = r.recovered.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
@@ -106,7 +106,7 @@ export default class GraphCommand extends Command {
       }
     });
     const attachment = new MessageAttachment(image, "image.png");
-    message.channel.send(attachment)
+    message.util!.send(attachment)
    })
   }
 }

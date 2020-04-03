@@ -26,13 +26,13 @@ export default class JackpotCommand extends Command {
 
   public async exec(message: Message, { amount }: { amount: Number }) {
     if(!message.guild) return this.client.guildOnly(message.channel);
-    if(isNaN(Number(amount))) return message.channel.send(new MessageEmbed()
+    if(isNaN(Number(amount))) return message.util!.send(new MessageEmbed()
     .setDescription("Invalid Amount")
     .setColor("0491e2"))
 
 
     if(!message.guild) return this.client.guildOnly(message.channel);
-    const message2 = await message.channel.send(new MessageEmbed()
+    const message2 = await message.util!.send(new MessageEmbed()
       .setTitle("JACKPOT!!")
       .setDescription("React with 💰 to enter the jackpot. You have 30 seconds")
       .setColor("0491e2")
@@ -53,7 +53,7 @@ export default class JackpotCommand extends Command {
     collector.on('end', async (r, time) => {
       let users = r.first()?.users.cache.filter(u => !u.bot)
 
-      if(!users?.size) return message.channel.send(new MessageEmbed()
+      if(!users?.size) return message.util!.send(new MessageEmbed()
       .setDescription("No one Entered the jackpot")
       .setColor("0491e2")
       )
@@ -66,7 +66,7 @@ export default class JackpotCommand extends Command {
 
       let winner = users?.random()
 
-      message.channel.send(new MessageEmbed()
+      message.util!.send(new MessageEmbed()
         .setDescription(`${winner.username} Won!!`)
         .setColor("0491e2"))
 

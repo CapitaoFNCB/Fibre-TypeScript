@@ -79,7 +79,7 @@ export default class AllCommand extends Command {
 
 
 
-    message.channel.send(new MessageEmbed()
+    message.util!.send(new MessageEmbed()
             // Cases
         .addField("Cases",casecounter.toLocaleString(),true)
         .addField("Today Cases",todayCasescounter.toLocaleString(),true)

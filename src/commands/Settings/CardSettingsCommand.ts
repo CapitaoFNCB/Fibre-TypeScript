@@ -34,14 +34,14 @@ export default class CardSettingsCommand extends Command {
 
     const types: String[] = ["background","text","bar"]
 
-    if(!types.includes(type.toLowerCase())) return message.channel.send(new MessageEmbed()
+    if(!types.includes(type.toLowerCase())) return message.util!.send(new MessageEmbed()
         .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
         .setColor("0491e2")
     )
 
     const founduser = await this.client.findOrCreateUser({id: message.author.id})
 
-    if(!change && message.attachments.size < 1) return message.channel.send(new MessageEmbed()
+    if(!change && message.attachments.size < 1) return message.util!.send(new MessageEmbed()
         .setDescription("No Change Found and or made")
         .setColor("0491e2")
     )
@@ -52,7 +52,7 @@ export default class CardSettingsCommand extends Command {
             founduser.backgound = message.attachments.first()!.proxyURL
             founduser.save() 
 
-            return message.channel.send(new MessageEmbed()
+            return message.util!.send(new MessageEmbed()
             .setDescription("Changed card background")
             .setColor("0491e2")
             )
@@ -61,28 +61,28 @@ export default class CardSettingsCommand extends Command {
         founduser.backgound = change
         founduser.save()
 
-        return message.channel.send(new MessageEmbed()
+        return message.util!.send(new MessageEmbed()
           .setDescription("Invalid Hex Value")
           .setColor("0491e2")
         )
 
     }else if(type.toLowerCase() == "text"){
 
-        if(!isHex(change)) return message.channel.send(new MessageEmbed()
+        if(!isHex(change)) return message.util!.send(new MessageEmbed()
         .setDescription("Changed card background")
         .setColor("0491e2"))
 
         founduser.text = change
         founduser.save()
 
-        return message.channel.send(new MessageEmbed()
+        return message.util!.send(new MessageEmbed()
           .setDescription("Set Progress Text Colour")
           .setColor("0491e2")
       )
 
     }else{
 
-        if(!isHex(change)) return message.channel.send(new MessageEmbed()
+        if(!isHex(change)) return message.util!.send(new MessageEmbed()
           .setDescription("Invalid Hex Value")
           .setColor("0491e2")
         )
@@ -90,7 +90,7 @@ export default class CardSettingsCommand extends Command {
         founduser.barcolour = change
         founduser.save()
 
-        return message.channel.send(new MessageEmbed()
+        return message.util!.send(new MessageEmbed()
           .setDescription("Set Progress Bar Colour")
           .setColor("0491e2")
         )

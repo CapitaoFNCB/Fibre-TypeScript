@@ -28,13 +28,13 @@ export default class BalanceCommand extends Command {
     
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
-    if(member.user.bot) return message.channel.send(new MessageEmbed()
+    if(member.user.bot) return message.util!.send(new MessageEmbed()
       .setDescription("No Information is stored for bots")
       .setColor("0491e2")
     )
 
     const user = await this.client.findOrCreateMember({id: member.id, guildId: message.guild?.id})
-    message.channel.send(new MessageEmbed()
+    message.util!.send(new MessageEmbed()
         .setDescription(`Cash: ${user.cash}`)
         .setColor("0491e2")
     )

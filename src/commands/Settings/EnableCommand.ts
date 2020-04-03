@@ -31,7 +31,7 @@ export default class EnableCommand extends Command {
     const types = ["level"]
 
     if(!types.includes(type.toLowerCase())){
-        return message.channel.send(new MessageEmbed()
+        return message.util!.send(new MessageEmbed()
             .setDescription(`There is no setting with this name\nValid settings: ${types.map(x => `\`` + x + `\``)}`)
             .setColor("0491e2")
         )
@@ -39,12 +39,12 @@ export default class EnableCommand extends Command {
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
 
     if(type.toLowerCase() == "level"){
-        if(guild.level == true) return message.channel.send(new MessageEmbed()
+        if(guild.level == true) return message.util!.send(new MessageEmbed()
             .setDescription("Level System is Already Enabled")
             .setColor("0491e2")
         )
         guild.level = true
-        message.channel.send(new MessageEmbed()
+        message.util!.send(new MessageEmbed()
             .setDescription("Enabled Level System")
             .setColor("0491e2")
         )

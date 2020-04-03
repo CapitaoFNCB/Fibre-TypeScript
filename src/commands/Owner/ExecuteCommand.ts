@@ -30,16 +30,16 @@ export default class ExecCommand extends Command {
   public async exec(message: Message, { execution }: { execution: string }) {
     try {
       exec(execution, (error, stdout, stderr) => {
-        if (error) return message.channel.send(`Error:\n\n\`${error}\``);
-        if (stderr) return message.channel.send(`Bash Error:\n\n\`${stderr}\``);
+        if (error) return message.util!.send(`Error:\n\n\`${error}\``);
+        if (stderr) return message.util!.send(`Bash Error:\n\n\`${stderr}\``);
 
-        message.channel.send(
+        message.util!.send(
           stdout.length > 1900 ? `${stdout.substr(0, 1900)}...` : stdout,
           { code: true }
         );
       });
     } catch (error) {
-      message.channel.send(`Error\n\n${error}`, { code: true });
+      message.util!.send(`Error\n\n${error}`, { code: true });
     }
   }
 }
