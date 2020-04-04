@@ -23,10 +23,10 @@ export default class BorisCommand extends Command {
 
     let player: any;
 
-    await this.client.music.search("https://www.youtube.com/watch?v=Sw0J6ZQakdY", message.author).then(res => {
+    await this.client.manager.search("https://www.youtube.com/watch?v=Sw0J6ZQakdY", message.author).then(res => {
       switch (res.loadType){
         case "TRACK_LOADED":
-          player = this.client.music.players.spawn({
+          player = this.client.manager.players.spawn({
             guild: message.guild,
             voiceChannel: channel,
             textChannel: message.channel,

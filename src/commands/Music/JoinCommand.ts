@@ -22,11 +22,11 @@ export default class JoinCommand extends Command {
         .setDescription("You Need to be in a voice channel")
       )
 
-    let player = this.client.music.players.get(message.guild?.id)
+    let player = this.client.manager.players.get(message.guild?.id)
     if(player) return message.util!.send(new this.client.Embed()
         .setDescription("I'm already in a voice channel"))
     
-    player = this.client.music.players.spawn({
+    player = this.client.manager.players.spawn({
         guild: message.guild,
         textChannel: message.channel,
         voiceChannel: channel

@@ -49,7 +49,7 @@ export default class PlayCommand extends Command {
 
     */
 
-    this.client.music.search(query, message.author).then(found => {
+    this.client.manager.search(query, message.author).then(found => {
         switch (found.loadType) {
 
             case "TRACK_LOADED":
@@ -58,7 +58,7 @@ export default class PlayCommand extends Command {
                     return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
                     }
                 }
-                player = this.client.music.players.spawn({
+                player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel
@@ -73,7 +73,7 @@ export default class PlayCommand extends Command {
 
             case "SEARCH_RESULT":
                 const tracks = found.tracks.slice(0,10);
-                player = this.client.music.players.spawn({
+                player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel
@@ -87,7 +87,7 @@ export default class PlayCommand extends Command {
             break;
 
             case "PLAYLIST_LOADED":
-                player = this.client.music.players.spawn({
+                player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel

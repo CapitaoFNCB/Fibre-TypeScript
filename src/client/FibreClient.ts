@@ -28,7 +28,7 @@ declare module "discord-akairo" {
         resolve;
         flag;
         checkDays;
-        music;
+        manager;
         findOrCreateUser;
         findOrCreateGuild;
         findOrCreateMember;

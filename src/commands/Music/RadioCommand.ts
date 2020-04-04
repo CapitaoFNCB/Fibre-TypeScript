@@ -58,10 +58,10 @@ export default class RadioCommand extends Command {
         .setDescription("Invalid Radio Stream")
     )
 
-    await this.client.music.search(str, message.author).then(res => {
+    await this.client.manager.search(str, message.author).then(res => {
       switch (res.loadType){
         case "TRACK_LOADED":
-            player = this.client.music.players.spawn({
+            player = this.client.manager.players.spawn({
                 guild: message.guild,
                 voiceChannel: channel,
                 textChannel: message.channel,
@@ -74,18 +74,18 @@ export default class RadioCommand extends Command {
         break; 
         
         case "LOAD_FAILED":
-            player = this.client.music.players.get(message.guild?.id)
+            player = this.client.manager.players.get(message.guild?.id)
             message.util!.send(new this.client.Embed().setDescription(`Invalid Radio Station`))
             if(player){
-                if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
+                if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
             }
         break;
 
         case "NO_MATCHES":
-            player = this.client.music.players.get(message.guild?.id)
+            player = this.client.manager.players.get(message.guild?.id)
             message.util!.send(new this.client.Embed().setDescription(`Invalid Radio Station`))
             if(player){
-                if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
+                if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
             }
         break;     
       }

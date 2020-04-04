@@ -30,11 +30,11 @@ export default class RandomCommand extends Command {
     }
 
     fetch('https://fibreapi.glitch.me/song').then(res => res.json()).then(results => {
-        this.client.music.search(results.song, message.author).then(found => {
+        this.client.manager.search(results.song, message.author).then(found => {
             switch (found.loadType) {
                 case "SEARCH_RESULT":
                     const tracks = found.tracks.slice(0,10);
-                    player = this.client.music.players.spawn({
+                    player = this.client.manager.players.spawn({
                         guild: message.guild,
                         textChannel: message.channel,
                         voiceChannel: message.member!.voice.channel

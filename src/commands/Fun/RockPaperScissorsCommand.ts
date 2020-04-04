@@ -26,14 +26,24 @@ export default class RockPaperScissorsCommand extends Command {
 
     const reactions = channel_message.createReactionCollector(filter, { time: 15000 });
 
+    const choices = ["✂️","📰","🧱"]
+
+    let bot_choice = choices[(Math.floor(Math.random() * (Math.floor(choices.length) - Math.ceil(0))) + Math.ceil(0))]
+
     reactions.on('collect', r => {
-        if(r.emoji.name == "✂️"){
-            console.log("1")
-        }else if(r.emoji.name == "📰"){
-            console.log("2")
+      channel_message.reactions.removeAll()
+
+      channel_message.edit(new this.client.Embed().setDescription(result(r, bot_choice)))
+        
+      function result(user, bot) {
+        if ((user === "🧱" && bot === "✂️") || (user === "📰" && bot === "🧱") || (user === "✂️" && bot === "📰")) {
+          return "You Win!"
+        }else if(user === bot){
+          return "We Tied"
         }else{
-            console.log("3")
+          return "You Lost!"
         }
+      }
     })
   }
 }

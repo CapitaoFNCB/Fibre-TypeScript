@@ -39,7 +39,7 @@ export default class SearchCommand extends Command {
         return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
-    this.client.music.search(query, message.author).then(async found => {
+    this.client.manager.search(query, message.author).then(async found => {
         switch (found.loadType) {
 
             case "TRACK_LOADED":
@@ -48,7 +48,7 @@ export default class SearchCommand extends Command {
                     return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
                     }
                 }
-                player = this.client.music.players.spawn({
+                player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel
@@ -78,7 +78,7 @@ export default class SearchCommand extends Command {
                 collector.on("collect", m => {
                     if (/cancel/i.test(m.content)) return collector.stop("cancelled")
 
-                    player = this.client.music.players.spawn({
+                    player = this.client.manager.players.spawn({
                         guild: message.guild,
                         textChannel: message.channel,
                         voiceChannel: channel
@@ -97,7 +97,7 @@ export default class SearchCommand extends Command {
             break;
 
             case "PLAYLIST_LOADED":
-                player = this.client.music.players.spawn({
+                player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel

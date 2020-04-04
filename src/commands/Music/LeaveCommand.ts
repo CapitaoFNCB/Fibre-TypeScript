@@ -18,13 +18,13 @@ export default class LeaveCommand extends Command {
 
     if(!message.guild) return this.client.guildOnly(message.channel);
 
-    const player = this.client.music.players.get(message.guild?.id)
+    const player = this.client.manager.players.get(message.guild?.id)
     if(!player){
         return message.util!.send(new this.client.Embed()
             .setDescription("Not Currently in Voice Channel")
         )
     }else{
-        this.client.music.players.destroy(message.guild.id)
+        this.client.manager.players.destroy(message.guild.id)
 
         return message.util!.send(new this.client.Embed()
         .setDescription("Left Voice Channel")
