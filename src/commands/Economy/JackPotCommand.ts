@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class JackpotCommand extends Command {
   public constructor() {
@@ -20,22 +20,20 @@ export default class JackpotCommand extends Command {
         usage: "jackpot [amount]",
         examples: ["jackpot 100"]
       },
-      ownerOnly: false
     });
   }
 
   public async exec(message: Message, { amount }: { amount: Number }) {
     if(!message.guild) return this.client.guildOnly(message.channel);
-    if(isNaN(Number(amount))) return message.util!.send(new MessageEmbed()
-    .setDescription("Invalid Amount")
-    .setColor("0491e2"))
+    if(isNaN(Number(amount))) return message.util!.send(new this.client.Embed()
+      .setDescription("Invalid Amount")
+    )
 
 
     if(!message.guild) return this.client.guildOnly(message.channel);
-    const message2 = await message.util!.send(new MessageEmbed()
+    const message2 = await message.util!.send(new this.client.Embed()
       .setTitle("JACKPOT!!")
       .setDescription("React with 💰 to enter the jackpot. You have 30 seconds")
-      .setColor("0491e2")
       .setFooter("If you don't have enough your reaction will be removed"))
     await message2.react("💰")
     const filter = (reaction) => reaction.emoji.name === '💰';
@@ -53,9 +51,8 @@ export default class JackpotCommand extends Command {
     collector.on('end', async (r, time) => {
       let users = r.first()?.users.cache.filter(u => !u.bot)
 
-      if(!users?.size) return message.util!.send(new MessageEmbed()
-      .setDescription("No one Entered the jackpot")
-      .setColor("0491e2")
+      if(!users?.size) return message.util!.send(new this.client.Embed()
+        .setDescription("No one Entered the jackpot")
       )
 
       await users?.forEach(async user => {
@@ -66,10 +63,9 @@ export default class JackpotCommand extends Command {
 
       let winner = users?.random()
 
-      message.util!.send(new MessageEmbed()
+      message.util!.send(new this.client.Embed()
         .setDescription(`${winner.username} Won!!`)
-        .setColor("0491e2"))
-
+      )
 
       setTimeout(async () =>{
         let target = await this.client.findOrCreateMember({id: winner.id, guildId: message.guild?.id})

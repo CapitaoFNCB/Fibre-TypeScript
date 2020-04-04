@@ -1,5 +1,4 @@
 import { Command } from "discord-akairo";
-import { MessageEmbed } from "discord.js";
 
 export default class Help extends Command {
   constructor() {
@@ -23,8 +22,7 @@ export default class Help extends Command {
 
   async exec (message, { command }) {
     if (!command) {
-      const embed = new MessageEmbed()
-        .setColor("0491e2")
+      const embed = new this.client.Embed()
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
 
       for (const [name, category] of this.handler.categories) {
@@ -34,8 +32,7 @@ export default class Help extends Command {
     return message.util!.send(embed);
     }
 
-    const embed = new MessageEmbed()
-      .setColor("0491e2")
+    const embed = new this.client.Embed()
       .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
       .setDescription(`
         **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${this.client.capitalize(alias)}\``).join(", ") : "Unknown"}

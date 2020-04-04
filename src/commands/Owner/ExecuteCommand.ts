@@ -23,11 +23,15 @@ export default class ExecCommand extends Command {
         usage: "exec [command]",
         examples: ["exec ls", "exec pm2"]
       },
-      ownerOnly: true
     });
   }
 
   public async exec(message: Message, { execution }: { execution: string }) {
+
+    if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
+      .setDescription("Owner Only Command")
+    )
+
     try {
       exec(execution, (error, stdout, stderr) => {
         if (error) return message.util!.send(`Error:\n\n\`${error}\``);

@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class EnableCommand extends Command {
   public constructor() {
@@ -21,7 +21,6 @@ export default class EnableCommand extends Command {
         usage: "enable [type]",
         examples: ["enable level"]
       },
-      ownerOnly: false
     });
   }
 
@@ -31,22 +30,19 @@ export default class EnableCommand extends Command {
     const types = ["level"]
 
     if(!types.includes(type.toLowerCase())){
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
             .setDescription(`There is no setting with this name\nValid settings: ${types.map(x => `\`` + x + `\``)}`)
-            .setColor("0491e2")
         )
     }
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
 
     if(type.toLowerCase() == "level"){
-        if(guild.level == true) return message.util!.send(new MessageEmbed()
+        if(guild.level == true) return message.util!.send(new this.client.Embed()
             .setDescription("Level System is Already Enabled")
-            .setColor("0491e2")
         )
         guild.level = true
-        message.util!.send(new MessageEmbed()
+        message.util!.send(new this.client.Embed()
             .setDescription("Enabled Level System")
-            .setColor("0491e2")
         )
     }
 

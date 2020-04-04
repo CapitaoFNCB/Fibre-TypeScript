@@ -31,9 +31,8 @@ export default class Help extends Command {
 
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
-    if(member.user.bot) return message.util!.send(new MessageEmbed()
+    if(member.user.bot) return message.util!.send(new this.client.Embed()
         .setDescription("No Information is stored for bots")
-        .setColor("0491e2")
     )
 
     

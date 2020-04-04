@@ -1,4 +1,4 @@
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { Command } from "discord-akairo";
 import fetch from "node-fetch";
 
@@ -36,19 +36,10 @@ export default class BotstatsCommand extends Command {
             totalEmojis = results[2]?.reduce((prev, emojicount) => prev + emojicount, 0);
             totalUsage = results[3]?.reduce((prev, usagecount) => prev + usagecount, 0);
             totalMusic = results[4]?.reduce((prev, musiccount) => prev + musiccount, 0);
-            const embed = new MessageEmbed()
-            .setColor("0491e2")
+            const embed = new this.client.Embed()
             // .addField(`Process Information`,`Node.js Version: \`${process.version}\`\nLangauge: [\`Typescript\`](${"https://www.typescriptlang.org"})\nDiscord.js: \`${require("discord.js").version}\`\nDiscord-akairo: \`${require("discord-akairo").version}\``,true)
-            .setAuthor(
-                `Bot Information | ${this.client.user?.username}`,
-                this.client.user?.displayAvatarURL()
-              )
-              .setColor("#0491e2")
-              .addField(
-                `Regular Information`,
-                `Guilds: \`${totalGuilds}\`\nUsers: \`${totalUsers}\`\nEmojis: \`${totalEmojis}\`\nUsage: \`${totalUsage.toFixed(2)}\`\nMusic Performances: \`${totalMusic}\`\nOwner: \`Pizza#2020\``,
-                true
-              )
+            .setAuthor(`Bot Information | ${this.client.user?.username}`, this.client.user?.displayAvatarURL())
+            .addField(`Regular Information`, `Guilds: \`${totalGuilds}\`\nUsers: \`${totalUsers}\`\nEmojis: \`${totalEmojis}\`\nUsage: \`${totalUsage.toFixed(2)}\`\nMusic Performances: \`${totalMusic}\`\nOwner: \`Pizza#2020\``, true)
             const commits = await this.getCommits();
             if (commits) embed.addField(`Github Commits`, commits);
     

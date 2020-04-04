@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class BorisCommand extends Command {
   public constructor() {
@@ -11,7 +11,6 @@ export default class BorisCommand extends Command {
         usage: "boris",
         examples: ["boris"]
       },
-      ownerOnly: false
     });
   }
 
@@ -34,6 +33,11 @@ export default class BorisCommand extends Command {
           })
           player.queue.add(res.tracks[0])
           if(!player.playing) player.play()
+
+          if(player.queue.length > 1){
+            message.util!.send(new this.client.Embed()
+            .setDescription("Queued Boris"))
+        }
       }
     })
   }

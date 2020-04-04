@@ -1,10 +1,22 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly} from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly} from "../utils/Functions"
 import { owners, token } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
 import Logger from "@ayanaware/logger";
+import { DefaultFormatter, DefaultFormatterColor, Color } from "@ayanaware/logger"
+import Embed from "./FibreEmbed";
+
+Logger.setFormatter(new DefaultFormatter({
+  dateFormat: "DD/MMM/YYYY hh:mm",
+  colorMap: new Map([
+    [DefaultFormatterColor.LOG_PACKAGE_PATH, Color.BRIGHT_YELLOW],
+    [DefaultFormatterColor.LOG_PACKAGE_NAME, Color.BRIGHT_RED],
+    [DefaultFormatterColor.LOG_UNIQUE_MARKER, Color.WHITE]
+  ])
+}));
+
 
 declare module "discord-akairo" {
     interface AkairoClient {
@@ -21,6 +33,8 @@ declare module "discord-akairo" {
         findOrCreateGuild;
         findOrCreateMember;
         guildOnly;
+        ownerOnly;
+        Embed
     }
   }
   
@@ -47,6 +61,8 @@ declare module "discord-akairo" {
        this.findOrCreateMember = findOrCreateMember
        this.findOrCreateUser = findOrCreateUser
        this.guildOnly = guildOnly
+       this.ownerOnly = ownerOnly
+       this.Embed = Embed
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {

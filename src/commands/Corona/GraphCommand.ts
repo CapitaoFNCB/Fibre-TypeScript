@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message, MessageAttachment } from "discord.js";
 import fetch from "node-fetch";
 import moment from "moment";
 import { CanvasRenderService } from 'chartjs-node-canvas';
@@ -22,7 +22,6 @@ export default class GraphCommand extends Command {
         usage: "graph",
         examples: ["graph ireland", "graph"]
       },
-      ownerOnly: false
     });
   }
 
@@ -43,7 +42,7 @@ export default class GraphCommand extends Command {
       let recovered
       if(country){
         check = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase())
-        if(!check.length) return message.util!.send(new MessageEmbed().setDescription("No Country with this name").setColor("0491e2"))
+        if(!check.length) return message.util!.send(new this.client.Embed().setDescription("No Country with this name"))
         confirmed = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         deaths = r.deaths.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         recovered = r.recovered.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);

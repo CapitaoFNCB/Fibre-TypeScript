@@ -2,6 +2,12 @@ import usersData from "../database/User"
 import membersData from "../database/Member"
 import guildsData from "../database/Guild"
 import { MessageEmbed } from "discord.js"
+import { owners } from "../utils/Config"
+
+export function ownerOnly(id){
+    if(!owners.includes(id)) return false
+    return true
+}
 
 export function capitalize(str){
     return str.slice(0, 1).toUpperCase() + str.slice(1);

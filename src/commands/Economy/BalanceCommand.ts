@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class BalanceCommand extends Command {
   public constructor() {
@@ -19,7 +19,6 @@ export default class BalanceCommand extends Command {
         usage: "balance",
         examples: ["balance"]
       },
-      ownerOnly: false
     });
   }
 
@@ -28,15 +27,13 @@ export default class BalanceCommand extends Command {
     
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
-    if(member.user.bot) return message.util!.send(new MessageEmbed()
+    if(member.user.bot) return message.util!.send(new this.client.Embed()
       .setDescription("No Information is stored for bots")
-      .setColor("0491e2")
     )
 
     const user = await this.client.findOrCreateMember({id: member.id, guildId: message.guild?.id})
-    message.util!.send(new MessageEmbed()
+    message.util!.send(new this.client.Embed()
         .setDescription(`Cash: ${user.cash}`)
-        .setColor("0491e2")
     )
   }
 }

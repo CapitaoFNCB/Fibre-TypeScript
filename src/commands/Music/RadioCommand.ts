@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import radio from "radio-browser"
 
 export default class RadioCommand extends Command {
@@ -33,11 +33,11 @@ export default class RadioCommand extends Command {
     const { channel } = message.member!.voice
 
     if (!channel) {
-        return message.util!.send(new MessageEmbed().setDescription("You Need to be in a voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to enter this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to speak this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     let filter = {
@@ -54,9 +54,8 @@ export default class RadioCommand extends Command {
         })
     })
 
-    if(!str.length) return message.util!.send(new MessageEmbed()
+    if(!str.length) return message.util!.send(new this.client.Embed()
         .setDescription("Invalid Radio Stream")
-        .setColor("0491e2")
     )
 
     await this.client.music.search(str, message.author).then(res => {
@@ -68,7 +67,7 @@ export default class RadioCommand extends Command {
                 textChannel: message.channel,
             })
           if(player.queue.length > 0){
-            message.util!.send(new MessageEmbed().setDescription(`Queued ${res.tracks[0].title}`).setColor("0491e2"))
+            message.util!.send(new this.client.Embed().setDescription(`Queued ${res.tracks[0].title}`))
           }  
           player.queue.add(res.tracks[0])
           if(!player.playing) player.play()
@@ -76,7 +75,7 @@ export default class RadioCommand extends Command {
         
         case "LOAD_FAILED":
             player = this.client.music.players.get(message.guild?.id)
-            message.util!.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
+            message.util!.send(new this.client.Embed().setDescription(`Invalid Radio Station`))
             if(player){
                 if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
             }
@@ -84,7 +83,7 @@ export default class RadioCommand extends Command {
 
         case "NO_MATCHES":
             player = this.client.music.players.get(message.guild?.id)
-            message.util!.send(new MessageEmbed().setDescription(`Invalid Radio Station`).setColor("0491e2"))
+            message.util!.send(new this.client.Embed().setDescription(`Invalid Radio Station`))
             if(player){
                 if(!player.playing) this.client.music.players.destroy(message.guild?.id); 
             }

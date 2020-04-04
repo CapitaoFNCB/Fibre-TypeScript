@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import parse from "parse-ms"
 
 export default class WorkCommand extends Command {
@@ -12,7 +12,6 @@ export default class WorkCommand extends Command {
         usage: "work",
         examples: ["work"]
       },
-      ownerOnly: false
     });
   }
 
@@ -31,9 +30,8 @@ export default class WorkCommand extends Command {
         let hours = (Math.floor(Math.random() * (Math.floor(8) - Math.ceil(2))) + Math.ceil(2))
         let amount = (Math.floor(Math.random() * (Math.floor(14) - Math.ceil(7))) + Math.ceil(7))
 
-        message.util!.send(new MessageEmbed()
-        .setDescription(`${message.author.username} worked for ${hours} hours at a rate of $${amount} an hour`)
-        .setColor("0491e2")
+        message.util!.send(new this.client.Embed()
+          .setDescription(`${message.author.username} worked for ${hours} hours at a rate of $${amount} an hour`)
         )
 
         target.cash += amount * hours;
@@ -49,9 +47,9 @@ export default class WorkCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new MessageEmbed()
-        .setDescription(`You cannot work for ${str}`)
-        .setColor("0491e2"))
+        return message.util!.send(new this.client.Embed()
+          .setDescription(`You cannot work for ${str}`)
+        )
     }
   }
 }

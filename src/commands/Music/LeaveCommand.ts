@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { MessageEmbed, Message } from "discord.js";
+import { Message } from "discord.js";
 
 export default class LeaveCommand extends Command {
   constructor() {
@@ -20,16 +20,14 @@ export default class LeaveCommand extends Command {
 
     const player = this.client.music.players.get(message.guild?.id)
     if(!player){
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
             .setDescription("Not Currently in Voice Channel")
-            .setColor("0491e2")
         )
     }else{
         this.client.music.players.destroy(message.guild.id)
 
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
         .setDescription("Left Voice Channel")
-        .setColor("0491e2")
       )
     }
   }

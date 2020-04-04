@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import parse from "parse-ms"
 
 export default class DailyCommand extends Command {
@@ -12,7 +12,6 @@ export default class DailyCommand extends Command {
         usage: "daily",
         examples: ["daily"]
       },
-      ownerOnly: false
     });
   }
 
@@ -30,9 +29,8 @@ export default class DailyCommand extends Command {
         target.daily_time = Date.now()
         let daily = (Math.floor(Math.random() * (Math.floor(50) - Math.ceil(25))) + Math.ceil(25))
 
-        message.util!.send(new MessageEmbed()
+        message.util!.send(new this.client.Embed()
         .setDescription(`${message.author.username} Claimed $${daily}`)
-        .setColor("0491e2")
         )
 
         target.cash += daily;
@@ -48,9 +46,9 @@ export default class DailyCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
         .setDescription(`You cannot use daily for ${str}`)
-        .setColor("0491e2"))
+      )
     }
   }
 }

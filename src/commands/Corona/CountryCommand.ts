@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import fetch from "node-fetch";
 
 export default class CountrylistCommand extends Command {
@@ -22,7 +22,6 @@ export default class CountrylistCommand extends Command {
         usage: "country [country]",
         examples: ["country UK", "country ireland"]
       },
-      ownerOnly: false
     });
   }
 
@@ -30,12 +29,10 @@ export default class CountrylistCommand extends Command {
     const data = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
     const found = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
     const check = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
-    if(!check.length) return message.util!.send(new MessageEmbed()
-        .setColor("0491e2")
+    if(!check.length) return message.util!.send(new this.client.Embed()
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
-    message.util!.send(new MessageEmbed()
-        .setColor("0491e2")
+    message.util!.send(new this.client.Embed()
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases", found.cases.toLocaleString(), true)

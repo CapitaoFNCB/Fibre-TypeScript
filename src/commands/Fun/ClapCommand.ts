@@ -21,11 +21,10 @@ export default class ClapCommand extends Command {
         usage: "clap message",
         examples: ["clap hello"]
       },
-      ownerOnly: false
     });
   }
 
   public async exec(message: Message, {string}: {string: String}) {
-    return message.util!.send([...string.replace(/ /g, "")].join("👏") + "👏")
+    return message.util!.send([...string].join("👏") + "👏")
   }
 }

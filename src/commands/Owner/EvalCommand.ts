@@ -24,28 +24,54 @@ export default class EvalCommand extends Command {
             start: "What would you like to evaluate?"
           }
         },
-
         {
           id: "depth",
           type: "number",
           match: "option",
           flag: ["-d=", "-depth="],
           default: 0
-        }
+        },
+
+        {
+          id: "async",
+          type: "boolean",
+          match: "flag",
+          flag: ["-async", "-a"],
+        },
+
+        {
+          id: "silent",
+          type: "boolean",
+          match: "flag",
+          flag: ["-silent", "-s"],
+        },
+
       ],
-      ownerOnly: true
     });
   }
 
-  public async exec (message: Message, { code, depth }: { code: any; depth: number; }) {
+  public async exec (message: Message, { code, depth, async, silent }: { code: any; depth: number; async: boolean; silent: boolean }) {
+
+    if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
+      .setDescription("Owner Only Command")
+    )   
+
     try {
       const hrStart: [number, number] = process.hrtime();
-      let toEvaluate = eval(code);
-      if (typeof toEvaluate !== "string") toEvaluate = inspect(toEvaluate, { depth: depth });
+
+      if(async) code = `(async () => { ${code} })()`
+
+      let toEvaluate = await eval(code);
+      if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth: depth });
       const hrDiff: [number, number] = process.hrtime(hrStart);
+
+      if(silent) return;
 
       return message.util!.send(`*Ran in: ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*\`\`\`js\n${toEvaluate.length > 1950 ? `${toEvaluate.substr(0, 1950)}...` : toEvaluate}\`\`\``);
     } catch (error) {
+
+      if(silent) return;
+
       return message.util!.send(`Error: \`\`\`js\n${error}\`\`\``);
     }
   }

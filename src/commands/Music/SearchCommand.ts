@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { MessageEmbed, Message } from "discord.js";
+import { Message } from "discord.js";
 import { Utils } from "erela.js";
 
 export default class SearchCommand extends Command {
@@ -32,11 +32,11 @@ export default class SearchCommand extends Command {
     const { channel } = message.member!.voice
 
     if (!channel) {
-        return message.util!.send(new MessageEmbed().setDescription("You Need to be in a voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to enter this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to speak this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     this.client.music.search(query, message.author).then(async found => {
@@ -45,7 +45,7 @@ export default class SearchCommand extends Command {
             case "TRACK_LOADED":
                 if(found.tracks[0].isStream){
                     if(found.tracks[0].uri.startsWith("https://www.you")){
-                    return message.util!.send(new MessageEmbed().setDescription("Unfortunately I cannot play youtube streams right now").setColor("0491e2"))
+                    return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
                     }
                 }
                 player = this.client.music.players.spawn({
@@ -57,18 +57,17 @@ export default class SearchCommand extends Command {
                 if(!player.playing) player.play();
 
                 if(player.queue.length > 1){
-                    message.util!.send(new MessageEmbed().setDescription(`Queued ${found.tracks[0].title}`).setColor("0491e2"))
+                    message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
                 }
             break;
 
             case "SEARCH_RESULT":
                 let i = 1
                 const tracks = found.tracks.slice(0,10);
-                const embed = new MessageEmbed()
-                .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
-                .setDescription(tracks.map(video => `**${i++} -** ${video.title}`))
-                .setColor("0491e2")
-                .setFooter("Your response time closes within the next 30 seconds. Type 'cancel' to cancel the selection");
+                const embed = new this.client.Embed()
+                    .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
+                    .setDescription(tracks.map(video => `**${i++} -** ${video.title}`))
+                    .setFooter("Your response time closes within the next 30 seconds. Type 'cancel' to cancel the selection");
 
                 await message.util!.send(embed);
 
@@ -89,11 +88,11 @@ export default class SearchCommand extends Command {
                     player.queue.add(track)
                     if(!player.playing) player.play();
                     if(player.queue.length > 1){
-                        message.util!.send(new MessageEmbed().setDescription(`Queued ${found.tracks[0].title}`).setColor("0491e2"))
+                        message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
                     }
                 });
                 collector.on("end", (_, reason) => {
-                    if(["time", "cancelled"].includes(reason)) return message.util!.send(new MessageEmbed().setDescription(`Cancelled selection`).setColor("0491e2"))
+                    if(["time", "cancelled"].includes(reason)) return message.util!.send(new this.client.Embed().setDescription(`Cancelled selection`))
                 });
             break;
 
@@ -106,16 +105,16 @@ export default class SearchCommand extends Command {
         
                 found.playlist.tracks.forEach(track => player.queue.add(track));
                 const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
-                message.util!.send(new MessageEmbed().setColor("0491e2").setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
+                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                 if(!player.playing) player.play()
             break;
 
             case "LOAD_FAILED":
-                message.util!.send(new MessageEmbed().setDescription(`No Songs Found`).setColor("0491e2"))
+                message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
             break;
 
             case "NO_MATCHES":
-                message.util!.send(new MessageEmbed().setDescription(`No Songs Found`).setColor("0491e2"))
+                message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
             break;
 
         }

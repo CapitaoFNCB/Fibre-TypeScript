@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed, MessageAttachment } from "discord.js";
+import { Message } from "discord.js";
 import fetch from "node-fetch";
 
 export default class AllCommand extends Command {
@@ -12,7 +12,6 @@ export default class AllCommand extends Command {
         usage: "all",
         examples: ["all"]
       },
-      ownerOnly: false
     });
   }
 
@@ -79,7 +78,7 @@ export default class AllCommand extends Command {
 
 
 
-    message.util!.send(new MessageEmbed()
+    message.util!.send(new this.client.Embed()
             // Cases
         .addField("Cases",casecounter.toLocaleString(),true)
         .addField("Today Cases",todayCasescounter.toLocaleString(),true)
@@ -92,7 +91,6 @@ export default class AllCommand extends Command {
         .addField("Recovered",recoveredcounter.toLocaleString(),true)
         .addField("Cases Per Million",casesPerOneMillioncounter.toLocaleString(),true)
         .addField("Deaths Per Million",deathsPerOneMillioncounter.toLocaleString(),true)
-        .setColor("0491e2")
     )
   }
 }

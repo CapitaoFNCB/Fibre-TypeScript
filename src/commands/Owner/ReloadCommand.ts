@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class EnableCommand extends Command {
   public constructor() {
@@ -16,10 +16,13 @@ export default class EnableCommand extends Command {
   }
 
   public async exec(message: Message) {
-    this.client.commandHandler.reloadAll()
-    return message.util!.send(new MessageEmbed()
+    if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
+      .setDescription("Owner Only Command")
+    )
+
+    this.client.shard!.broadcastEval(`(async () => { await this.commandHandler.reloadAll(), this.logger.info("Reloaded All Commands") })() `)
+    return message.util!.send(new this.client.Embed()
       .setDescription("Reloaded All Commands!")
-      .setColor("0491e2")
     )
   }
 }

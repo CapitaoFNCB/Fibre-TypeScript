@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import fetch from "node-fetch";
 
 export default class CountrylistCommand extends Command {
@@ -12,7 +12,6 @@ export default class CountrylistCommand extends Command {
         usage: "countrylist",
         examples: ["countrylist"]
       },
-      ownerOnly: false
     });
   }
 
@@ -22,8 +21,7 @@ export default class CountrylistCommand extends Command {
     const countries = final_data.slice(0,80)
     const restcontries = final_data.slice(80,140)
     const finalcontries = final_data.slice(140,)
-    message.util!.send(new MessageEmbed()
-        .setColor("0491e2")
+    message.util!.send(new this.client.Embed()
         .setTitle("Country List")
         .addField(`\u200b`,`\`` + countries.map(x => x).join("\`, \`") + `\``,false)
         .addField(`\u200b`,`\`` + restcontries.map(x => x).join("\`, \`") + `\``,false)

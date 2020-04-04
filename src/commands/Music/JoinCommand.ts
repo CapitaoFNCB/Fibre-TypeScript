@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { MessageEmbed, Message } from "discord.js";
+import { Message } from "discord.js";
 
 export default class JoinCommand extends Command {
   constructor() {
@@ -18,13 +18,12 @@ export default class JoinCommand extends Command {
 
     const { channel } = message.member!.voice
 
-    if(!channel) return message.util!.send(new MessageEmbed()
+    if(!channel) return message.util!.send(new this.client.Embed()
         .setDescription("You Need to be in a voice channel")
-        .setColor("0491e2")
       )
 
     let player = this.client.music.players.get(message.guild?.id)
-    if(player) return message.util!.send(new MessageEmbed()
+    if(player) return message.util!.send(new this.client.Embed()
         .setDescription("I'm already in a voice channel"))
     
     player = this.client.music.players.spawn({

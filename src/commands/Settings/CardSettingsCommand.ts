@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import isHex from "is-hexcolor"
 
 export default class CardSettingsCommand extends Command {
@@ -34,16 +34,14 @@ export default class CardSettingsCommand extends Command {
 
     const types: String[] = ["background","text","bar"]
 
-    if(!types.includes(type.toLowerCase())) return message.util!.send(new MessageEmbed()
+    if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed()
         .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
-        .setColor("0491e2")
     )
 
     const founduser = await this.client.findOrCreateUser({id: message.author.id})
 
-    if(!change && message.attachments.size < 1) return message.util!.send(new MessageEmbed()
+    if(!change && message.attachments.size < 1) return message.util!.send(new this.client.Embed()
         .setDescription("No Change Found and or made")
-        .setColor("0491e2")
     )
 
     if(type.toLowerCase() == "background"){
@@ -52,47 +50,42 @@ export default class CardSettingsCommand extends Command {
             founduser.backgound = message.attachments.first()!.proxyURL
             founduser.save() 
 
-            return message.util!.send(new MessageEmbed()
-            .setDescription("Changed card background")
-            .setColor("0491e2")
+            return message.util!.send(new this.client.Embed()
+              .setDescription("Changed card background")
             )
         }
 
         founduser.backgound = change
         founduser.save()
 
-        return message.util!.send(new MessageEmbed()
-          .setDescription("Invalid Hex Value")
-          .setColor("0491e2")
+        return message.util!.send(new this.client.Embed()
+            .setDescription("Invalid Hex Value")
         )
 
     }else if(type.toLowerCase() == "text"){
 
-        if(!isHex(change)) return message.util!.send(new MessageEmbed()
-        .setDescription("Changed card background")
-        .setColor("0491e2"))
+        if(!isHex(change)) return message.util!.send(new this.client.Embed()
+          .setDescription("Changed card background")
+        )
 
         founduser.text = change
         founduser.save()
 
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
           .setDescription("Set Progress Text Colour")
-          .setColor("0491e2")
-      )
+        )
 
     }else{
 
-        if(!isHex(change)) return message.util!.send(new MessageEmbed()
+        if(!isHex(change)) return message.util!.send(new this.client.Embed()
           .setDescription("Invalid Hex Value")
-          .setColor("0491e2")
         )
 
         founduser.barcolour = change
         founduser.save()
 
-        return message.util!.send(new MessageEmbed()
+        return message.util!.send(new this.client.Embed()
           .setDescription("Set Progress Bar Colour")
-          .setColor("0491e2")
         )
     }
   }

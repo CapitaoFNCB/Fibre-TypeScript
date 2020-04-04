@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import fetch from "node-fetch"
 
 export default class RandomCommand extends Command {
@@ -22,11 +22,11 @@ export default class RandomCommand extends Command {
     const { channel } = message.member!.voice
 
     if (!channel) {
-        return message.util!.send(new MessageEmbed().setDescription("You Need to be in a voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to enter this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new MessageEmbed().setDescription("I don't seem to have permission to speak this voice channel").setColor("0491e2"))
+        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     fetch('https://fibreapi.glitch.me/song').then(res => res.json()).then(results => {
@@ -43,7 +43,7 @@ export default class RandomCommand extends Command {
                     if(!player.playing) player.play();
 
                     if(player.queue.length > 1){
-                        message.util!.send(new MessageEmbed().setDescription(`Queued ${found.tracks[0].title}`).setColor("0491e2"))
+                        message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
                     }
                 break;
             }
