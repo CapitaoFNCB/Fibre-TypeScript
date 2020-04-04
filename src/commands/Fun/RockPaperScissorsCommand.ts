@@ -31,10 +31,11 @@ export default class RockPaperScissorsCommand extends Command {
     let bot_choice = choices[(Math.floor(Math.random() * (Math.floor(choices.length) - Math.ceil(0))) + Math.ceil(0))]
 
     reactions.on('collect', r => {
-      channel_message.reactions.removeAll()
 
-      channel_message.edit(new this.client.Embed().setDescription(result(r, bot_choice)))
-        
+      channel_message.edit(new this.client.Embed().setDescription(result(r.emoji.name, bot_choice)))
+
+      reactions.stop()
+
       function result(user, bot) {
         if ((user === "🧱" && bot === "✂️") || (user === "📰" && bot === "🧱") || (user === "✂️" && bot === "📰")) {
           return "You Win!"
@@ -44,6 +45,7 @@ export default class RockPaperScissorsCommand extends Command {
           return "You Lost!"
         }
       }
+      channel_message.reactions.removeAll()
     })
   }
 }

@@ -9,6 +9,20 @@ export default class Embed extends MessageEmbed {
     this.msg = msg;
   }
 
+  public errorEmbed(error?: string): this {
+    return this.setAuthor(
+      `Oops, ${this.msg.author.tag}`,
+      this.msg.author.displayAvatarURL()
+    )
+      .setColor("0491e2")
+      .setDescription(error || "Unknown Error")
+      .setFooter(
+        `${this.msg.client.user!.username} • ${new Date(
+          Date.now()
+        ).toLocaleTimeString()}`
+      );
+  }
+
 
   public addBlankField(): this {
     return this.addFields({
