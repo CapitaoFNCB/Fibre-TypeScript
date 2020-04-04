@@ -7,6 +7,7 @@ export default class EvalCommand extends Command {
   public constructor() {
     super("eval", {
       aliases: ["eval", "evaluate"],
+      category: "Owner",
       description: {
         content: "Executes JavaScript code",
         usage: "eval [ code ] < depth >",

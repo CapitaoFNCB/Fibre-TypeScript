@@ -27,7 +27,15 @@ export default class DisableCommand extends Command {
 
   public async exec(message: Message, { type }: { type: String }) {
     if(!message.guild) return this.client.guildOnly(message.channel);
-    if(!["level"].includes(type.toLowerCase())){
+
+    const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
+    if(perms.length > 0) return message.util!.send(new this.client.Embed()
+        .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
+    )
+
+    const types = ["level"]
+
+    if(!types.includes(type.toLowerCase())){
         return message.util!.send(new this.client.Embed()
             .setDescription("There is no setting with this name")
         )

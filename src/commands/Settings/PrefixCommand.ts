@@ -15,7 +15,6 @@ export default class PrefixCommand extends Command {
             }
           }
       ],
-      userPermissions: ["ADMINISTRATOR"],
       description: {
         content: "Prefix Command",
         usage: "prefix [new prefix]",
@@ -25,6 +24,13 @@ export default class PrefixCommand extends Command {
   }
 
   public async exec(message: Message, { prefix }: { prefix: String }) {
+    if(!message.guild) return this.client.guildOnly(message.channel);
+
+    const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
+    if(perms.length > 0) return message.util!.send(new this.client.Embed()
+        .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
+    )
+
     if(prefix.length > 5) return message.util!.send(new this.client.Embed()
         .setDescription("The Max length of a prefix is 5")
     )

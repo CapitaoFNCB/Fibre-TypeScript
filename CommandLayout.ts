@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 
 export default class CommandLayout extends Command {
   public constructor() {
@@ -11,7 +11,6 @@ export default class CommandLayout extends Command {
         usage: "",
         examples: [""]
       },
-      ownerOnly: true
     });
   }
 

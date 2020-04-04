@@ -4,6 +4,14 @@ import guildsData from "../database/Guild"
 import { MessageEmbed } from "discord.js"
 import { owners } from "../utils/Config"
 
+export function perms(check, member){
+    let neededperms: string[] = []
+    check.forEach(element => {
+        if(!member.permissions.toArray().includes(element)) neededperms.push(element)
+    });
+    return neededperms
+}
+
 export function ownerOnly(id){
     if(!owners.includes(id)) return false
     return true

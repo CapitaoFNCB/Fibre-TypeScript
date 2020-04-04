@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly} from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms} from "../utils/Functions"
 import { owners, token } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
@@ -34,7 +34,8 @@ declare module "discord-akairo" {
         findOrCreateMember;
         guildOnly;
         ownerOnly;
-        Embed
+        Embed;
+        perms;
     }
   }
   
@@ -63,6 +64,7 @@ declare module "discord-akairo" {
        this.guildOnly = guildOnly
        this.ownerOnly = ownerOnly
        this.Embed = Embed
+       this.perms = perms
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
