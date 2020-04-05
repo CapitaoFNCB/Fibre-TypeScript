@@ -49,6 +49,12 @@ export default class PlayCommand extends Command {
 
     */
 
+    player = this.client.manager.players.get(message.guild!.id)
+
+    if(player){
+        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed().setDescription("You need to be in the same voice channel as me to use Play Command"));
+    }
+
     this.client.manager.search(query, message.author).then(found => {
         switch (found.loadType) {
 

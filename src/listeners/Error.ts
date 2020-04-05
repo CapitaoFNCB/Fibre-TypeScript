@@ -14,8 +14,8 @@ export default class ErrorListener extends Listener {
     this.client.logger.error(`Error: ${error.message}`);
 
     return message.util?.send(
-      new this.client.Embed()(
-        `There was an error while trying to execute this command. Please report this to the developer. <@535585397435006987>\n\n\`${error.message}\``
+      new this.client.Embed(message).errorEmbed(
+        `There was an error while trying to execute this command. Please report this to the developer.\n\n\`${error.message}\``
       )
     );
   }

@@ -22,15 +22,38 @@ export default class ReadyListener extends Listener {
       this.client.logger.error("Unable to connect to the Mongodb database. Error:"+err)
     });
 
-
+    let guildData;
     this.client.manager = new ErelaClient(this.client, nodes)
     .on("nodeConnect", node => this.client.logger.info(`New node connected`))
-    .on("trackStart", (player, track) => player.textChannel.send(`Now playing: ${track.title}`))
-    .on("queueEnd", (player, track) => {
-      console.log(track)
-    })
-    .on("trackEnd", async (player, track) => {
 
+    .on("trackStart", async (player, track) => {
+        guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+        guildData.skip_users = []
+        guildData.save()
+
+        if(guildData.notifications){
+          player.textChannel.send(new this.client.Embed()
+            .setDescription(`Now playing: ${track.title}`)
+          )
+        }
+      }
+    )
+    .on("queueEnd", async (player, track) => {
+      guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+      guildData.last_playing = track.uri
+      guildData.save()
+
+      if(guildData.notifications){
+        player.textChannel.send(new this.client.Embed()
+          .setDescription("Queue Has Ended")
+        )
+      }
+    })
+
+    .on("trackEnd", async (player, track) => {
+      guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+      guildData.last_playing = track.uri
+      guildData.save()
     })
   }
 }

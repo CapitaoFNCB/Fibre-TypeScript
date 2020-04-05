@@ -79,6 +79,7 @@ declare module "discord-akairo" {
             blockClient: true,
             allowMention: true,
             defaultCooldown: 2000,
+            commandUtilLifetime: 6e5,
             directory: join(__dirname, "..", "commands"),
             extensions: ['.js']
         });

@@ -29,6 +29,12 @@ export default class RandomCommand extends Command {
         return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
+    player = this.client.manager.players.get(message.guild!.id)
+
+    if(player){
+      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed().setDescription("You need to be in the same voice channel as me to use Random Command"));
+    }
+
     fetch('https://fibreapi.glitch.me/song').then(res => res.json()).then(results => {
         this.client.manager.search(results.song, message.author).then(found => {
             switch (found.loadType) {

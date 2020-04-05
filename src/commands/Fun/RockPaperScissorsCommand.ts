@@ -45,7 +45,10 @@ export default class RockPaperScissorsCommand extends Command {
           return "You Lost!"
         }
       }
-      channel_message.reactions.removeAll()
+      channel_message.reactions.removeAll().catch(err => {
+        message.channel.send(new this.client.Embed()
+            .setDescription("I Don't have permissions to delete my emojis"))
+      })
     })
   }
 }

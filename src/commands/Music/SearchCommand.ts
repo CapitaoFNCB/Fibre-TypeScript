@@ -63,37 +63,137 @@ export default class SearchCommand extends Command {
 
             case "SEARCH_RESULT":
                 let i = 1
-                const tracks = found.tracks.slice(0,10);
+                const tracks = found.tracks.slice(0,5);
                 const embed = new this.client.Embed()
                     .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
                     .setDescription(tracks.map(video => `**${i++} -** ${video.title}`))
-                    .setFooter("Your response time closes within the next 30 seconds. Type 'cancel' to cancel the selection");
+                    .setFooter("Your response time closes within the next 30 seconds. Use 🗑️ to cancel the selection");
 
-                await message.util!.send(embed);
+                let send_message = await message.util!.send(embed);
 
-                const collector = message.channel.createMessageCollector(m => {
-                    return m.author.id === message.author.id && new RegExp(`^([1-5]|cancel)$`, "i").test(m.content)
-                }, { time: 30000, max: 1});
+                send_message.react("1️⃣")
+                send_message.react("2️⃣")
+                send_message.react("3️⃣")
+                send_message.react("4️⃣")
+                send_message.react("5️⃣")
+                send_message.react("🗑️")
 
-                collector.on("collect", m => {
-                    if (/cancel/i.test(m.content)) return collector.stop("cancelled")
+                const filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
 
-                    player = this.client.manager.players.spawn({
-                        guild: message.guild,
-                        textChannel: message.channel,
-                        voiceChannel: channel
-                    }); 
+                const reactions = send_message.createReactionCollector(filter, { time: 30000 });
 
-                    const track = tracks[Number(m.content) - 1];
-                    player.queue.add(track)
-                    if(!player.playing) player.play();
-                    if(player.queue.length > 1){
-                        message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                reactions.on('collect', r => {
+                    if(r.emoji.name === "🗑️"){
+                        if(send_message.deletable){
+                            send_message.delete()
+                        }else{
+                            send_message.edit("", new this.client.Embed()
+                                .setDescription("I cannot delete this message"))
+                        }
+                    }else if(r.emoji.name === "1️⃣"){
+                        player = this.client.manager.players.spawn({
+                                    guild: message.guild,
+                                    textChannel: message.channel,
+                                    voiceChannel: channel
+                                }); 
+                        player.queue.add(tracks[0])
+                        if(!player.playing) player.play()
+                        if(send_message.editable){
+                            send_message.edit("", new this.client.Embed()
+                            .setDescription(`Queued: ${tracks[0].title}`)
+                        )
+                        }else{
+                            message.util!.send(new this.client.Embed()
+                                .setDescription("I cannot Edit my messages"))
+                        }
+                        send_message.reactions.removeAll().catch(err => {
+                            message.channel.send(new this.client.Embed()
+                                .setDescription("I Don't have permissions to delete my emojis"))
+                        })
+                    }else if(r.emoji.name === "2️⃣"){
+                        player = this.client.manager.players.spawn({
+                                    guild: message.guild,
+                                    textChannel: message.channel,
+                                    voiceChannel: channel
+                                }); 
+                        player.queue.add(tracks[1])
+                        if(!player.playing) player.play()
+                        if(send_message.editable){
+                            send_message.edit("", new this.client.Embed()
+                            .setDescription(`Queued: ${tracks[1].title}`)
+                        )
+                        }else{
+                            message.util!.send(new this.client.Embed()
+                                .setDescription("I cannot Edit my messages"))
+                        }
+                        send_message.reactions.removeAll().catch(err => {
+                            message.channel.send(new this.client.Embed()
+                                .setDescription("I Don't have permissions to delete my emojis"))
+                        })
+                    }else if(r.emoji.name === "3️⃣"){
+                        player = this.client.manager.players.spawn({
+                                    guild: message.guild,
+                                    textChannel: message.channel,
+                                    voiceChannel: channel
+                                }); 
+                        player.queue.add(tracks[2])
+                        if(!player.playing) player.play()
+                        if(send_message.editable){
+                            send_message.edit("", new this.client.Embed()
+                            .setDescription(`Queued: ${tracks[2].title}`)
+                        )
+                        }else{
+                            message.util!.send(new this.client.Embed()
+                                .setDescription("I cannot Edit my messages"))
+                        }
+                        send_message.reactions.removeAll().catch(err => {
+                            message.channel.send(new this.client.Embed()
+                                .setDescription("I Don't have permissions to delete my emojis"))
+                        })
+                    }else if(r.emoji.name === "4️⃣"){
+                        player = this.client.manager.players.spawn({
+                                    guild: message.guild,
+                                    textChannel: message.channel,
+                                    voiceChannel: channel
+                                }); 
+                        player.queue.add(tracks[3])
+                        if(!player.playing) player.play()
+                        if(send_message.editable){
+                            send_message.edit("", new this.client.Embed()
+                            .setDescription(`Queued: ${tracks[3].title}`)
+                        )
+                        }else{
+                            message.util!.send(new this.client.Embed()
+                                .setDescription("I cannot Edit my messages"))
+                        }
+                        send_message.reactions.removeAll().catch(err => {
+                            message.channel.send(new this.client.Embed()
+                                .setDescription("I Don't have permissions to delete my emojis"))
+                        })
+                    }else if(r.emoji.name === "5️⃣"){
+                        player = this.client.manager.players.spawn({
+                                    guild: message.guild,
+                                    textChannel: message.channel,
+                                    voiceChannel: channel
+                                }); 
+                        player.queue.add(tracks[4])
+                        if(!player.playing) player.play()
+                        if(send_message.editable){
+                            send_message.edit("", new this.client.Embed()
+                            .setDescription(`Queued: ${tracks[4].title}`)
+                        )
+                        }else{
+                            message.util!.send(new this.client.Embed()
+                                .setDescription("I cannot Edit my messages"))
+                        }
+                        send_message.reactions.removeAll().catch(err => {
+                            message.channel.send(new this.client.Embed()
+                                .setDescription("I Don't have permissions to delete my emojis"))
+                        })
                     }
-                });
-                collector.on("end", (_, reason) => {
-                    if(["time", "cancelled"].includes(reason)) return message.util!.send(new this.client.Embed().setDescription(`Cancelled selection`))
-                });
+
+                    reactions.stop()
+                })
             break;
 
             case "PLAYLIST_LOADED":
