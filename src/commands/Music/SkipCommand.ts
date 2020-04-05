@@ -36,7 +36,7 @@ export default class SkipCommand extends Command {
 
                 }else{
                     return message.util!.send(new this.client.Embed()
-                        .setDescription(`Skip Request Recived ${guild.skip_users.length}/3`))
+                        .setDescription(`Skip Request Received ${guild.skip_users.length}/3`))
                 }
 
             }else if(voice_channel!.members.filter(r => r.user.bot !== true).size > 2){
@@ -49,7 +49,7 @@ export default class SkipCommand extends Command {
 
                 }else{
                     return message.util!.send(new this.client.Embed()
-                        .setDescription(`Skip Request Recived ${guild.skip_users.length}/2`))
+                        .setDescription(`Skip Request Received ${guild.skip_users.length}/2`))
                 }
 
             }else{
