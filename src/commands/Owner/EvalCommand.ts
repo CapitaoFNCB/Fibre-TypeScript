@@ -55,7 +55,9 @@ export default class EvalCommand extends Command {
 
     if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
       .setDescription("Owner Only Command")
-    )   
+    )  
+    
+    const embed = new this.client.Embed()
 
     try {
       const hrStart: [number, number] = process.hrtime();
@@ -71,7 +73,7 @@ export default class EvalCommand extends Command {
       if(silent) return;
 
 
-      return message.util!.send(new this.client.Embed()
+      return message.util!.send(embed
         .addField("Response:", `\`\`\`js\n${toEvaluate.length > 1010 ? `${toEvaluate.substr(0, 1010)}...` : toEvaluate}\`\`\``, false)
         .addField("Type:", typeof eval(toEval))
         .addField("Time Taken:", execTime))
@@ -79,7 +81,8 @@ export default class EvalCommand extends Command {
 
       if(silent) return;
 
-      return message.util!.send(`Error: \`\`\`js\n${error}\`\`\``);
+      return message.util!.send(embed
+        .addField("Response:", `Error: \`\`\`js\n${error}\`\`\``, false));
     }
   }
 }
