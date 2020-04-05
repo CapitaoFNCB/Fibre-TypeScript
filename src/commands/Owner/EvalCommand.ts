@@ -66,9 +66,15 @@ export default class EvalCommand extends Command {
       if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth: depth });
       const hrDiff: [number, number] = process.hrtime(hrStart);
 
+      const execTime = hrDiff[0] > 0 ? `${hrDiff[0]}s` : `${Math.round(hrDiff[1] / 1000)}μ`;
+
       if(silent) return;
 
-      return message.util!.send(`*Ran in: ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ""}${hrDiff[1] / 1000000}ms.*\`\`\`js\n${toEvaluate.length > 1950 ? `${toEvaluate.substr(0, 1950)}...` : toEvaluate}\`\`\``);
+
+      return message.util!.send(new this.client.Embed()
+        .addField("Response:", `\`\`\`js\n${toEvaluate.length > 1010 ? `${toEvaluate.substr(0, 1010)}...` : toEvaluate}\`\`\``, false)
+        .addField("Type:", typeof eval(toEval))
+        .addField("Time Taken:", execTime))
     } catch (error) {
 
       if(silent) return;
