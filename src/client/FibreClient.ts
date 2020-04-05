@@ -75,10 +75,34 @@ declare module "discord-akairo" {
             },
             commandUtil: true,
             handleEdits: true,
+            argumentDefaults: {
+              prompt: {
+                modifyStart: (_, str?: string) => new this.Embed(_).promptEmbed(str),
+                modifyRetry: (_, str?: string) => new this.Embed(_).promptEmbed(str),
+                cancel: _ =>
+                  new this.Embed(_).promptEmbed(
+                    "Alright, I've cancelled the command for you."
+                  ),
+                ended: _ =>
+                  new this.Embed(_).promptEmbed(
+                    "You took too many tries to respond correctly, so I've cancelled the command"
+                  ),
+                timeout: _ =>
+                  new this.Embed(_).promptEmbed(
+                    "You took long to respond, so I've cancelled the command"
+                  ),
+                retries: 3,
+                time: 6e4
+              },
+              otherwise: ""
+            },
             blockBots: true,
             blockClient: true,
             allowMention: true,
-            defaultCooldown: 2000,
+            ignoreCooldown: this.ownerID,
+            ignorePermissions: this.ownerID,
+            automateCategories: true,
+            defaultCooldown: 4e3,
             commandUtilLifetime: 6e5,
             directory: join(__dirname, "..", "commands"),
             extensions: ['.js']

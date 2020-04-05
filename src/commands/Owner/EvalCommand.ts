@@ -18,7 +18,7 @@ export default class EvalCommand extends Command {
       },
       args: [
         {
-          id: "code",
+          id: "toEval",
           type: "text",
           match: "rest",
           prompt: {
@@ -51,7 +51,7 @@ export default class EvalCommand extends Command {
     });
   }
 
-  public async exec (message: Message, { code, depth, async, silent }: { code: any; depth: number; async: boolean; silent: boolean }) {
+  public async exec (message: Message, { toEval, depth, async, silent }: { toEval: any; depth: number; async: boolean; silent: boolean }) {
 
     if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
       .setDescription("Owner Only Command")
@@ -60,9 +60,9 @@ export default class EvalCommand extends Command {
     try {
       const hrStart: [number, number] = process.hrtime();
 
-      if(async) code = `(async () => { ${code} })()`
+      if(async) toEval = `(async () => { ${toEval} })()`;
 
-      let toEvaluate = await eval(code);
+      let toEvaluate = await eval(toEval);
       if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth: depth });
       const hrDiff: [number, number] = process.hrtime(hrStart);
 

@@ -31,7 +31,7 @@ export default class JavaScriptDocsCommand extends Command {
 
         let embed = new this.client.Embed()
             .setAuthor(`JavaScript: ${Title}`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', `https://developer.mozilla.org${URL}`)
-            .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\nTags:\n${Tags.map(x => x).join(", ")}`)
+            .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\n\n**Tags:**\n${Tags.map(x => x).join(", ")}`)
 
         message.util!.send(embed)
     })

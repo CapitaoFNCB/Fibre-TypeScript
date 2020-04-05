@@ -23,6 +23,12 @@ export default class Embed extends MessageEmbed {
       );
   }
 
+  public promptEmbed(string?: string): this {
+    return this
+      .setColor("0491e2")
+      .setDescription(string || "Unknown Prompt")
+  }
+
 
   public addBlankField(): this {
     return this.addFields({
