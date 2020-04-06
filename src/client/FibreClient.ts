@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms} from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis} from "../utils/Functions"
 import { owners, token } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
@@ -36,6 +36,7 @@ declare module "discord-akairo" {
         ownerOnly;
         Embed;
         perms;
+        check_emojis;
     }
   }
   
@@ -56,15 +57,16 @@ declare module "discord-akairo" {
        this.config = config;
        this.checkDays = checkDays; 
        this.flag = flag;
-       this.resolve = resolve
-       this.capitalize = capitalize
-       this.findOrCreateGuild = findOrCreateGuild
-       this.findOrCreateMember = findOrCreateMember
-       this.findOrCreateUser = findOrCreateUser
-       this.guildOnly = guildOnly
-       this.ownerOnly = ownerOnly
-       this.Embed = Embed
-       this.perms = perms
+       this.resolve = resolve;
+       this.capitalize = capitalize;
+       this.findOrCreateGuild = findOrCreateGuild;
+       this.findOrCreateMember = findOrCreateMember;
+       this.findOrCreateUser = findOrCreateUser;
+       this.guildOnly = guildOnly;
+       this.ownerOnly = ownerOnly;
+       this.Embed = Embed;
+       this.perms = perms;
+       this.check_emojis = check_emojis;
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {

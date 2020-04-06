@@ -65,6 +65,7 @@ export default class EvalCommand extends Command {
       if(async) toEval = `(async () => { ${toEval} })()`;
 
       let toEvaluate = await eval(toEval);
+      let type = toEvaluate
       if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth: depth });
       const hrDiff: [number, number] = process.hrtime(hrStart);
 
@@ -75,7 +76,7 @@ export default class EvalCommand extends Command {
 
       return message.util!.send(embed
         .addField("Response:", `\`\`\`js\n${toEvaluate.length > 1010 ? `${toEvaluate.substr(0, 1010)}...` : toEvaluate}\`\`\``, false)
-        .addField("Type:", typeof eval(toEval))
+        .addField("Type:", this.client.capitalize(typeof type))
         .addField("Time Taken:", execTime))
     } catch (error) {
 

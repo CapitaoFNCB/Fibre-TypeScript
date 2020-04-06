@@ -4,6 +4,15 @@ import guildsData from "../database/Guild"
 import { MessageEmbed } from "discord.js"
 import { owners } from "../utils/Config"
 
+export function check_emojis(emoji){
+    if(emoji === '1️⃣') return 1
+    else if(emoji === '2️⃣') return 2
+    else if(emoji === '3️⃣') return 3
+    else if(emoji === '4️⃣') return 4
+    else if(emoji === '5️⃣') return 5
+    else if(emoji === '🗑️') return 6
+}
+
 export function perms(check, member){
     let neededperms: string[] = []
     check.forEach(element => {
