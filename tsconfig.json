@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "declaration": true,
+        "rootDir": "./src",
+        "removeComments": true,
+        "strict": true,
+        "outDir": "./dist",
+        "noImplicitAny": false,
+        "baseUrl": "./src",
+        "esModuleInterop": true,
+        "module": "CommonJS", 
+        "moduleResolution": "node",
+        "resolveJsonModule": true
+    },
+    "include": ["src"],
+}
