@@ -50,6 +50,7 @@ export default class BotstatsCommand extends Command {
             .addField(`Bot Stats`, `Guilds: \`${totalGuilds}\`\nUsers: \`${totalUsers}\`\nEmojis: \`${totalEmojis}\`\nPlayers: \`${totalMusic}\`\nOwner: \`Pizza#2020\``, true)
             const commits = await this.getCommits();
             if (commits) embed.addField(`Github Commits`, commits);
+            console.log("test")
     
             message.util!.send(embed)
         })
