@@ -12,6 +12,7 @@ export default class AllCommand extends Command {
         usage: "all",
         examples: ["all"]
       },
+      typing: true
     });
   }
 

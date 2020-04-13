@@ -22,6 +22,7 @@ export default class JavaScriptDocsCommand extends Command {
         usage: "javascript [search]",
         examples: ["javascript map"]
       },
+      typing: true
     });
   }
 

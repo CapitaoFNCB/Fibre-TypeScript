@@ -22,6 +22,7 @@ export default class SoundCloudCommand extends Command {
         usage: "soundcloud [url/search query]",
         examples: ["soundcloud The Box", "sc https://soundcloud.com/roddyricch/the-box"]
       },
+      typing: true
     });
   }
 

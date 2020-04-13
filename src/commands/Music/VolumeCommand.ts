@@ -21,7 +21,8 @@ export default class VolumeCommand extends Command {
         content: "Volume Command", 
         usage: "volume [amount]",
         examples: ["volume 150"]
-      }
+      },
+      typing: true
     });
   }
 

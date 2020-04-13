@@ -12,7 +12,8 @@ export default class BotstatsCommand extends Command {
           content: "Displays the bots statistics",
           usage: "botstats",
           examples: ["botstats"]
-        }
+        },
+        typing: true
       });
     }
   
@@ -34,8 +35,6 @@ export default class BotstatsCommand extends Command {
         const net = (await OSUtils.netstat.inOut()) as NetStatMetrics,
         cpu = await OSUtils.cpu.usage()
 
-        console.log("test")
-
         // \nUsage: \`${totalUsage.toFixed(2)}\`
 
         Promise.all(promises).then(async results => {
@@ -49,11 +48,28 @@ export default class BotstatsCommand extends Command {
             .setAuthor(`${this.client.user!.username}`, this.client.user!.displayAvatarURL())
             .addField(`Bot Stats`, `Guilds: \`${totalGuilds}\`\nUsers: \`${totalUsers}\`\nEmojis: \`${totalEmojis}\`\nPlayers: \`${totalMusic}\`\nOwner: \`Pizza#2020\``, true)
             .addField("Process Information", `Network: \`${net.total.outputMb} ⬆️\` / \`${net.total.inputMb} ⬇️\``)
+            
+            const commits = await this.getCommits();
+            if (commits) embed.addField(`Github Commits`, commits);
     
             message.util!.send(embed)
         })
 
-
-
+    }
+    private async getCommits() {
+      const res = await fetch(
+        "https://api.github.com/repos/PizzaOnTop/Fibre-TypeScript/commits"
+      );
+      let str = "";
+      const json = await res.json();
+  
+      for (const { sha, html_url, commit, author } of json.slice(0, 5)) {
+        str += `[\`${sha.slice(0, 7)}\`](${html_url}) ${commit.message.substr(
+          0,
+          80
+        )} - **[${!author ? "Pizza" : author.login.toLowerCase()}](${!author ? "https://github.com/PizzaOnTop" :author.html_url})**\n`;
+      }
+  
+      return str;
     }
 }

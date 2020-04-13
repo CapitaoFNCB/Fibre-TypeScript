@@ -21,7 +21,8 @@ export default class Help extends Command {
         content: "Level Command", 
         usage: "level",
         examples: ["level"]
-      }
+      },
+      typing: true
     });
   }
 

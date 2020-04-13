@@ -20,6 +20,7 @@ export default class PrefixCommand extends Command {
         usage: "prefix [new prefix]",
         examples: ["prefix !"]
       },
+      typing: true
     });
   }
 

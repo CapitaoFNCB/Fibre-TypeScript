@@ -22,6 +22,7 @@ export default class KpopCommand extends Command {
         usage: "kpop",
         examples: ["kpop"]
       },
+      typing: true
     });
   }
 

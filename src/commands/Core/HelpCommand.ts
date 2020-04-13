@@ -16,7 +16,8 @@ export default class Help extends Command {
         content: "Help Command", 
         usage: "help (command name)",
         examples: ["help help", "help eval"]
-      }
+      },
+      typing: true
     });
   }
 

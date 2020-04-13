@@ -12,6 +12,7 @@ export default class WorkCommand extends Command {
         usage: "work",
         examples: ["work"]
       },
+      typing: true
     });
   }
 

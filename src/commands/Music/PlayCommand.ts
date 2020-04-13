@@ -21,7 +21,8 @@ export default class PlayCommand extends Command {
         content: "Play Command", 
         usage: "play [url/search query]",
         examples: ["play ncs"]
-      }
+      },
+      typing: true
     });
   }
 
@@ -49,11 +50,11 @@ export default class PlayCommand extends Command {
         switch (found.loadType) {
 
             case "TRACK_LOADED":
-                // if(found.tracks[0].isStream){
-                //     if(found.tracks[0].uri.startsWith("https://www.you")){
-                //     return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
-                //     }
-                // }
+                if(found.tracks[0].isStream){
+                    if(found.tracks[0].uri.startsWith("https://www.you")){
+                    return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
+                    }
+                }
                 player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
@@ -124,60 +125,18 @@ export default class PlayCommand extends Command {
                         break;
 
                         case "SEARCH_RESULT":
-                            let i = 1
-                            const tracks = found.tracks.slice(0,5);
-                            const embed = new this.client.Embed()
-                                .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
-                                .setDescription(tracks.map(video => `**${i++} -** ${video.title}`))
-                                .setFooter("Your response time closes within the next 30 seconds. Use 🗑️ to cancel the selection");
-
-                            let send_message = await message.util!.send(embed);
-
-                            send_message.react("1️⃣")
-                            send_message.react("2️⃣")
-                            send_message.react("3️⃣")
-                            send_message.react("4️⃣")
-                            send_message.react("5️⃣")
-                            send_message.react("🗑️")
-
-                            const filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
-
-                            const reactions = send_message.createReactionCollector(filter, { time: 30000 });
-                            
-                            reactions.on('collect', r => {
-                                let reacted = this.client.check_emojis(r.emoji.name)
-
-                                if(reacted > 5){
-                                    if(send_message.deletable){
-                                        send_message.delete()
-                                    }else{
-                                        send_message.edit("", new this.client.Embed()
-                                            .setDescription("I cannot delete this message")).catch(err => message.channel.send(new this.client.Embed()
-                                            .setDescription("I cannot edit my messages message")))
-                                    }
-                                }else{
-                                    player = this.client.manager.players.spawn({
-                                        guild: message.guild,
-                                        textChannel: message.channel,
-                                        voiceChannel: channel
-                                    }); 
-                                    player.queue.add(tracks[reacted - 1])
-                                    if(!player.playing) player.play()
-                                    if(send_message.editable){
-                                        send_message.edit("", new this.client.Embed()
-                                        .setDescription(`Queued: ${tracks[0].title}`)
-                                    )
-                                    }else{
-                                        message.util!.send(new this.client.Embed()
-                                            .setDescription("I cannot Edit my messages"))
-                                    }
-                                    send_message.reactions.removeAll().catch(err => {
-                                        message.channel.send(new this.client.Embed()
-                                            .setDescription("I Don't have permissions to delete my emojis"))
-                                    })
-                                }
-                                reactions.stop()
-                            })
+                            const tracks = found.tracks.slice(0,10);
+                            player = this.client.manager.players.spawn({
+                                guild: message.guild,
+                                textChannel: message.channel,
+                                voiceChannel: channel
+                            }); 
+                            player.queue.add(tracks[0]);
+                            if(!player.playing) player.play();
+            
+                            if(player.queue.length > 1){
+                                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                            }
                         break;
 
                         case "PLAYLIST_LOADED":

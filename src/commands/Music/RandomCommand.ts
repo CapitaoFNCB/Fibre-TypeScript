@@ -12,7 +12,7 @@ export default class RandomCommand extends Command {
         usage: "random",
         examples: ["random"]
       },
-      ownerOnly: false
+      typing: true
     });
   }
 

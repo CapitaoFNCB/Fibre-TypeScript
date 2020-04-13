@@ -14,6 +14,7 @@ export default class JokeCommand extends Command {
         usage: "joke",
         examples: ["joke"]
       },
+      typing: true
     });
   }
 

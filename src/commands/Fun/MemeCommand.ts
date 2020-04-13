@@ -14,6 +14,7 @@ export default class MemeCommand extends Command {
         usage: "meme",
         examples: ["meme"]
       },
+      typing: true
     });
   }
 

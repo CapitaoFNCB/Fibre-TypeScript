@@ -11,6 +11,7 @@ export default class RockPaperScissorsCommand extends Command {
         usage: "rps",
         examples: ["rps"]
       },
+      typing: true
     });
   }
 

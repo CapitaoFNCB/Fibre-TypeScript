@@ -20,6 +20,7 @@ export default class JackpotCommand extends Command {
         usage: "jackpot [amount]",
         examples: ["jackpot 100"]
       },
+      typing: true
     });
   }
 

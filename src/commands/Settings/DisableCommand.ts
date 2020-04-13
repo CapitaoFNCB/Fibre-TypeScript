@@ -21,7 +21,7 @@ export default class DisableCommand extends Command {
         usage: "disable [type]",
         examples: ["disable level"]
       },
-      ownerOnly: false
+      typing: true
     });
   }
 

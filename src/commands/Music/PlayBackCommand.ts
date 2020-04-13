@@ -11,6 +11,7 @@ export default class PlayBackCommand extends Command {
         usage: "playback",
         examples: ["playback","pb"]
       },
+      typing: true
     });
   }
 

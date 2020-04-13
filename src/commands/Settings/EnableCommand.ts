@@ -20,6 +20,7 @@ export default class EnableCommand extends Command {
         usage: "enable [type]",
         examples: ["enable level"]
       },
+      typing: true
     });
   }
 

@@ -23,6 +23,7 @@ export default class NpmCommand extends Command {
         usage: "npm [search]",
         examples: ["npm discord.js"]
       },
+      typing: true
     });
   }
 

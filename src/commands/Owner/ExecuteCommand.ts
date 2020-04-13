@@ -23,6 +23,7 @@ export default class ExecCommand extends Command {
         usage: "exec [command]",
         examples: ["exec ls", "exec pm2"]
       },
+      typing: true
     });
   }
 

@@ -21,7 +21,8 @@ export default class SearchCommand extends Command {
         content: "Search Command", 
         usage: "search [search query]",
         examples: ["search ncs"]
-      }
+      },
+      typing: true
     });
   }
 

@@ -21,6 +21,7 @@ export default class ClapCommand extends Command {
         usage: "clap message",
         examples: ["clap hello"]
       },
+      typing: true
     });
   }
 

@@ -23,6 +23,7 @@ export default class SlotsCommand extends Command {
         usage: "slots",
         examples: ["slots"]
       },
+      typing: true
     });
   }
 

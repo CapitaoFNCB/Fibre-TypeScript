@@ -23,6 +23,7 @@ export default class CountrylistCommand extends Command {
         usage: "country [country]",
         examples: ["country UK", "country ireland"]
       },
+      typing: true
     });
   }
 

@@ -12,6 +12,7 @@ export default class DailyCommand extends Command {
         usage: "daily",
         examples: ["daily"]
       },
+      typing: true
     });
   }
 

@@ -31,6 +31,7 @@ export default class DiscordJsCommand extends Command {
         usage: "djs",
         examples: ["djs util master", "djs util akairo"]
       },
+      typing: true
     });
   }
 

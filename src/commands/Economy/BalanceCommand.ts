@@ -19,6 +19,7 @@ export default class BalanceCommand extends Command {
         usage: "balance",
         examples: ["balance"]
       },
+      typing: true
     });
   }
 

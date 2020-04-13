@@ -22,7 +22,7 @@ export default class RadioCommand extends Command {
         usage: "radio [Radio Station]",
         examples: ["radio Kiss Uk"]
       },
-      ownerOnly: false
+      typing: true
     });
   }
 

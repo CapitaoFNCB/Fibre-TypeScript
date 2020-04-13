@@ -10,7 +10,8 @@ export default class JoinCommand extends Command {
         content: "Join Command", 
         usage: "join",
         examples: ["join"]
-      }
+      },
+      typing: true
     });
   }
 

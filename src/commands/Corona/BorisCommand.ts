@@ -11,6 +11,7 @@ export default class BorisCommand extends Command {
         usage: "boris",
         examples: ["boris"]
       },
+      typing: true
     });
   }
 

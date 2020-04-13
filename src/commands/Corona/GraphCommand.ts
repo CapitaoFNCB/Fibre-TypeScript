@@ -22,6 +22,7 @@ export default class GraphCommand extends Command {
         usage: "graph",
         examples: ["graph ireland", "graph"]
       },
+      typing: true
     });
   }
 

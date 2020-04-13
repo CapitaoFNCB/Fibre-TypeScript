@@ -12,6 +12,7 @@ export default class CountrylistCommand extends Command {
         usage: "countrylist",
         examples: ["countrylist"]
       },
+      typing: true
     });
   }
 

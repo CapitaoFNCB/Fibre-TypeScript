@@ -18,7 +18,7 @@ export default class EnableCommand extends Command {
         usage: "reload",
         examples: ["reload"]
       },
-      ownerOnly: true
+      typing: true
     });
   }
 

@@ -10,7 +10,8 @@ export default class LeaveCommand extends Command {
         content: "Leave Command", 
         usage: "leave",
         examples: ["leave"]
-      }
+      },
+      typing: true
     });
   }
 

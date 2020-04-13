@@ -39,8 +39,8 @@ export default class EvalCommand extends Command {
           match: "flag",
           flag: ["-silent", "-s"],
         },
-
       ],
+      typing: true
     });
   }
 
