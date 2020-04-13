@@ -1,4 +1,4 @@
-import { token } from "./utils/Config";
+import { token } from "../Config";
 import { ShardingManager } from 'discord.js';
 const shard = new ShardingManager('dist/Fibre.js', {
     token: token,

@@ -1,7 +1,7 @@
 import { Listener } from "discord-akairo";
 import chalk from "chalk"
 import { ErelaClient } from "erela.js"
-import { nodes, connection } from "../utils/Config"
+import { nodes, connection } from "../../Config"
 import mongoose from "mongoose";
 
 export default class ReadyListener extends Listener {
