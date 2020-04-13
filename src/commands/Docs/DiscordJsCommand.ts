@@ -16,15 +16,6 @@ export default class DiscordJsCommand extends Command {
                 start: "What would you like to search?"
             }
         },
-
-        {
-          id: "library",
-          type: "string",
-          match: "option",
-          flag: ["-"],
-          default: "stable"
-        
-        }
       ],
       description: {
         content: "Discord JavaScript Docs Command",
@@ -35,18 +26,41 @@ export default class DiscordJsCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { query, library }: { query: string; library: string }) {
-    if(!["stable", "master", "rpc", "commando", "akairo", "akairo-master"].includes(library)) return message.util!.send(new this.client.Embed()
-      .setDescription("Invalid library")
-    )
+  public async exec(message: Message, { query } : {query: string }) {
 
-    await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${library}&q=${query}`).then(res => res.json()).then(body => {
+    let search: string[] = query.split(" ")
+
+    let data = this.library(search)
+
+    await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`).then(res => res.json()).then(body => {
 
       if(!body) return message.util!.send(new this.client.Embed()
-        .setDescription(`Nothing found for ${query}`)
+        .setDescription(`Nothing found for ${data.searching}`)
       )
 
       message.util!.send({embed: body})
     })
+  }
+
+  private library(array: string[]){
+
+    let library;
+    let searchlibrary;
+    let searching;
+
+    if(array.includes('master') || array.includes('stable') || array.includes('rpc') || array.includes('commando') || array.includes('akairo') || array.includes('akairo-master') ){
+      library = array.indexOf("master") == -1 ? array.indexOf('stable') == -1 ? array.indexOf('rpc') == -1 ? array.indexOf('commando') == -1 ? array.indexOf('akairo') == -1 ? array.indexOf('akairo-master') : array.indexOf('akairo') : array.indexOf('commando') : array.indexOf('rpc') : array.indexOf('stable') : array.indexOf("master")
+      searchlibrary = array.splice(library,1)[0]
+      searching = array.join(" ")
+
+      return { searching: searching, searchlibrary: searchlibrary}
+
+    }else{
+      searching = array.join(" ")
+      searchlibrary = "stable"
+
+      return { searching: searching, searchlibrary: searchlibrary}
+
+    }
   }
 }
