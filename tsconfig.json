@@ -13,5 +13,5 @@
         "moduleResolution": "node",
         "resolveJsonModule": true
     },
-    "include": ["src", "Config.ts"],
+    "include": ["src", "src/utils/Config.ts"],
 }

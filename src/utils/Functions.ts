@@ -2,7 +2,7 @@ import usersData from "../database/User"
 import membersData from "../database/Member"
 import guildsData from "../database/Guild"
 import { MessageEmbed } from "discord.js"
-import { owners } from "../../Config"
+import { owners } from "./Config"
 
 export function check_emojis(emoji){
     if(emoji === '1️⃣') return 1

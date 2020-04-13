@@ -1,5 +1,5 @@
 import FibreClient from "./client/FibreClient";
-import { token } from "../Config";
+import { token } from "./utils/Config";
 const client = new FibreClient({token:token});
 
 

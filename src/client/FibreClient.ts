@@ -1,7 +1,7 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
 import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis} from "../utils/Functions"
-import { owners, token } from "../../Config";
+import { owners, token } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
 import Logger from "@ayanaware/logger";
