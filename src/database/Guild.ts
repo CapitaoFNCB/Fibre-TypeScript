@@ -8,7 +8,8 @@ const Guild = new mongoose.Schema({
     jackpot: { type: Number, default: 0},
     skip_users: { type: Array, default: [] },
     last_playing: { type: String, default: "" },
-    notifications: { type: Boolean, default: true }
+    notifications: { type: Boolean, default: true },
+    customCommands: { type: Array, default: [] }
 
 })
 export default mongoose.model("Guild", Guild);

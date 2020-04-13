@@ -5,7 +5,7 @@ import { Message } from "discord.js";
 export default class ErrorListener extends Listener {
   public constructor() {
     super("listeners-error-client", {
-      emitter: "client",
+      emitter: "process",
       event: "error"
     });
   }
