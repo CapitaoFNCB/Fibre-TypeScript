@@ -4,6 +4,7 @@ import { Message } from "discord.js";
 export default class TagCommand extends Command {
     public constructor() {
         super("tag-list", {
+            category: "flag"
         });
     }
 

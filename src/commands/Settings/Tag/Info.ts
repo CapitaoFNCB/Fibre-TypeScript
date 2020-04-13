@@ -14,6 +14,7 @@ export default class TagCommand extends Command {
                     }
                 }
             ],
+            category: "flag"
         });
     }
 

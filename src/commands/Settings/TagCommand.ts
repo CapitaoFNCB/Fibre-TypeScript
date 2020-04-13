@@ -8,7 +8,7 @@ export default class TagCOmmand extends Command {
       category: "Settings",
       description: {
         content: "Tag Command",
-        usage: "Tag <create | delete | edit | info>",
+        usage: "Tag <create | delete | edit | info | list>",
         examples: ["tag create pizza ez"]
       },
       typing: true
@@ -29,7 +29,7 @@ export default class TagCOmmand extends Command {
 
             let prefix = guild.prefix
 
-            return `Invalid Usage\nRun:\`${prefix}help tag\``
+            return new this.client.Embed().setDescription(`Invalid Usage:\nRun: \`${prefix}help tag\``)
         }
     }
 

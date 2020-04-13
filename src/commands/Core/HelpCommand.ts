@@ -1,4 +1,4 @@
-import { Command } from "discord-akairo";
+import { Command, Category } from "discord-akairo";
 
 export default class Help extends Command {
   constructor() {
@@ -26,7 +26,7 @@ export default class Help extends Command {
       const embed = new this.client.Embed()
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
 
-      for (const [name, category] of this.handler.categories) {
+      for (const [name, category] of this.handler.categories.filter((c: Category<string, Command>) => !["flag"].includes(c.id))) {
         embed.addField(`${name} [${category.size}]`, category.filter(cmd => cmd.aliases.length > 0).map(cmd => `\`${this.client.capitalize(cmd.aliases[0])}\``).join(", ") || "There was an error")
       }
 

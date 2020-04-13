@@ -103,7 +103,6 @@ declare module "discord-akairo" {
             allowMention: true,
             ignoreCooldown: this.ownerID,
             ignorePermissions: this.ownerID,
-            automateCategories: true,
             defaultCooldown: 4e3,
             commandUtilLifetime: 6e5,
             directory: join(__dirname, "..", "commands"),
