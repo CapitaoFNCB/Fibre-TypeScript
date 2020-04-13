@@ -34,6 +34,8 @@ export default class BotstatsCommand extends Command {
         const net = (await OSUtils.netstat.inOut()) as NetStatMetrics,
         cpu = await OSUtils.cpu.usage()
 
+        console.log("test")
+
         // \nUsage: \`${totalUsage.toFixed(2)}\`
 
         Promise.all(promises).then(async results => {
