@@ -1,4 +1,3 @@
-  
 import { Listener } from "discord-akairo";
 import chalk from "chalk"
 import { ErelaClient } from "erela.js"

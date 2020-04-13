@@ -48,30 +48,12 @@ export default class BotstatsCommand extends Command {
             // .addField(`Process Information`,`Node.js Version: \`${process.version}\`\nLangauge: [\`Typescript\`](${"https://www.typescriptlang.org"})\nDiscord.js: \`${require("discord.js").version}\`\nDiscord-akairo: \`${require("discord-akairo").version}\``,true)
             .setAuthor(`${this.client.user!.username}`, this.client.user!.displayAvatarURL())
             .addField(`Bot Stats`, `Guilds: \`${totalGuilds}\`\nUsers: \`${totalUsers}\`\nEmojis: \`${totalEmojis}\`\nPlayers: \`${totalMusic}\`\nOwner: \`Pizza#2020\``, true)
-            const commits = await this.getCommits();
-            if (commits) embed.addField(`Github Commits`, commits);
-            console.log("test")
+            .addField("Process Information", `Network: \`${net.total.outputMb} ⬆️\` / \`${net.total.inputMb} ⬇️\``)
     
             message.util!.send(embed)
         })
 
 
 
-    }
-    private async getCommits() {
-        const res = await fetch(
-        "https://api.github.com/repos/PizzaOnTop/Fibre-TypeScript/commits"
-        );
-        let str = "";
-        const json = await res.json();
-
-        for (const { sha, html_url, commit, author } of json.slice(0, 5)) {
-        str += `[\`${sha.slice(0, 7)}\`](${html_url}) ${commit.message.substr(
-            0,
-            80
-        )} - **[@${author.login.toLowerCase()}](${author.html_url})**\n`;
-        }
-
-        return str;
     }
 }

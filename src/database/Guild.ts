@@ -11,5 +11,4 @@ const Guild = new mongoose.Schema({
     notifications: { type: Boolean, default: true }
 
 })
-
 export default mongoose.model("Guild", Guild);

@@ -49,11 +49,11 @@ export default class PlayCommand extends Command {
         switch (found.loadType) {
 
             case "TRACK_LOADED":
-                if(found.tracks[0].isStream){
-                    if(found.tracks[0].uri.startsWith("https://www.you")){
-                    return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
-                    }
-                }
+                // if(found.tracks[0].isStream){
+                //     if(found.tracks[0].uri.startsWith("https://www.you")){
+                //     return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
+                //     }
+                // }
                 player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,

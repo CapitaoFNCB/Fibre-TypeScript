@@ -9,7 +9,6 @@ import { DefaultFormatter, DefaultFormatterColor, Color } from "@ayanaware/logge
 import Embed from "./FibreEmbed";
 
 Logger.setFormatter(new DefaultFormatter({
-  dateFormat: "DD/MMM/YYYY hh:mm",
   colorMap: new Map([
     [DefaultFormatterColor.LOG_PACKAGE_PATH, Color.BRIGHT_YELLOW],
     [DefaultFormatterColor.LOG_PACKAGE_NAME, Color.BRIGHT_RED],
