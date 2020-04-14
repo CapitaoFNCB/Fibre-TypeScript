@@ -32,6 +32,10 @@ export default class InstagramCommand extends Command {
   public async exec(message: Message, {string}: {string: string}) {
     const search = await api.instagram(string)
 
+    if(!search.success) return message.util!.send(new this.client.Embed()
+      .setDescription("No Account with this name")
+    )
+
     const result = await fetch(search.user.profile_pic_url);
     const avatar = await result.buffer();
 
