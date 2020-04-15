@@ -18,10 +18,10 @@ export default class JokeCommand extends Command {
     });
   }
 
-  public async exec(message: Message) {
+  public async exec(message: Message): Promise<Message> {
     const data = await api.joke()
 
-    message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed()
         .setTitle(data.data.title)
         .setDescription(data.data.body)
         .setURL(data.data.url)

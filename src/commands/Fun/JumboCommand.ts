@@ -7,7 +7,7 @@ export default class JumboCommand extends Command {
     public constructor() {
       super("jumbo", {
         aliases: ["jumbo"],
-        category: "Docs",
+        category: "Fun",
         args: [
           {
               id: "query",
@@ -26,7 +26,7 @@ export default class JumboCommand extends Command {
         typing: true
       });
     }
-    public async exec(message: Message, { query }: { query: string }) {
+    public async exec(message: Message, { query }: { query: string }): Promise<Message> {
 
         let emoji = query.split(":").slice(-1).toString().slice(0,-1)
         
@@ -63,7 +63,7 @@ export default class JumboCommand extends Command {
             }
         }
 
-        message.util!.send("",messageAtttachment)
+        return message.util!.send("",messageAtttachment)
 
     }
 }

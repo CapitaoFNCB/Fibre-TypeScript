@@ -29,7 +29,7 @@ export default class InstagramCommand extends Command {
     });
   }
 
-  public async exec(message: Message, {string}: {string: string}) {
+  public async exec(message: Message, {string}: {string: string}): Promise<Message> {
     const search = await api.instagram(string)
 
     if(!search.success) return message.util!.send(new this.client.Embed()
@@ -39,23 +39,14 @@ export default class InstagramCommand extends Command {
     const result = await fetch(search.user.profile_pic_url);
     const avatar = await result.buffer();
 
-    const firstpic = await fetch(search.images[0].url);
-    const first = await firstpic.buffer();
-
-    const secondpic = await fetch(search.images[1].url);
-    const second = await secondpic.buffer();
-
-    const thirdpic = await fetch(search.images[2].url);
-    const third = await thirdpic.buffer();
-
     const buffer = await profile(search);
     const attachment = new MessageAttachment(buffer.toBuffer(), "profile.png");
-    message.util!.send(attachment)
+    return message.util!.send(attachment)
 
     async function profile(search: any){
         let canvas = new Canvas(900,600)
 
-            .setColor("#cccccc")
+            .setColor("#ffffff")
             .addBeveledRect(0,0,900,600)
             .setShadowColor('rgba(22, 22, 22, 1)')
             .setShadowOffsetY(5)
@@ -78,10 +69,33 @@ export default class InstagramCommand extends Command {
             .setTextAlign("left")
             .setTextFont('18px sans-serif')
             .addText(search.user.biography, 20, 270)
-            .addImage(first,0,400, 300, 300)
-            .addImage(second,300,400, 300, 300)
-            .addImage(third,600,400, 300, 300)
 
+          if(search.images[0] && !search.user.is_private){
+            const firstpic = await fetch(search.images[0].url);
+            const first = await firstpic.buffer();
+            canvas.addImage(first,0,400, 300, 300)
+          }
+
+          if(search.images[1] && !search.user.is_private){
+              const secondpic = await fetch(search.images[1].url);
+              const second = await secondpic.buffer();
+              canvas.addImage(second,300,400, 300, 300)
+          }
+
+          if(search.images[2] && !search.user.is_private){
+            const thirdpic = await fetch(search.images[2].url);
+            const third = await thirdpic.buffer();
+            canvas.addImage(third,600,400, 300, 300)
+          }
+
+          if(search.user.is_private){
+            canvas.setTextAlign("center")
+            .setTextFont('25px sans-serif')
+            .addText("This Account is Private", 450,500)
+            const lock = await fetch(`https://cdn.clipart.email/8e8d1dc05675a503a0cf4a89b570756c_png-file-svg-lock-to-trace-clip-art-library_920-1060.jpeg`);
+            const locking = await lock.buffer();
+            canvas.addImage(locking,450,420, 50, 50)
+          } 
 
         return canvas
     }

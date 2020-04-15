@@ -26,7 +26,7 @@ export default class KpopCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { query }: { query: string}) {
+  public async exec(message: Message, { query }: { query: string}): Promise<Message> {
 
     let data;
 
@@ -40,7 +40,7 @@ export default class KpopCommand extends Command {
       .setDescription("Unknown Artist")
     )
 
-    message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed()
         .setDescription(`Name: ${data.data.name}\nBand: ${data.data.band}`)
         .setImage(data.data.img)
     )

@@ -26,20 +26,21 @@ export default class DiscordJsCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { query } : {query: string }) {
+  public async exec(message: Message, { query } : {query: string }): Promise<Message> {
 
     let search: string[] = query.split(" ")
 
-    let data = this.library(search)
+    let data: any = this.library(search)
+
+    let found: any;
 
     await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`).then(res => res.json()).then(body => {
-
-      if(!body) return message.util!.send(new this.client.Embed()
-        .setDescription(`Nothing found for ${data.searching}`)
-      )
-
-      message.util!.send({embed: body})
+      found = body;
     })
+    if(!found) return message.util!.send(new this.client.Embed()
+      .setDescription(`Nothing found for ${data.searching}`)
+    )
+    return message.util!.send({embed: found})
   }
 
   private library(array: string[]){

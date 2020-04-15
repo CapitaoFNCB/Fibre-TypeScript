@@ -1,4 +1,5 @@
 import { Command, Category } from "discord-akairo";
+import { Message } from "discord.js";
 
 export default class Help extends Command {
   constructor() {
@@ -21,7 +22,7 @@ export default class Help extends Command {
     });
   }
 
-  async exec (message, { command }) {
+  async exec (message: Message, { command }: {command : Command}): Promise<Message> {
     if (!command) {
       const embed = new this.client.Embed()
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))

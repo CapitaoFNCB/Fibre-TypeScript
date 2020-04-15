@@ -16,14 +16,14 @@ export default class CountrylistCommand extends Command {
     });
   }
 
-  public async exec(message: Message) {
-    const data = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
-    const final_data = data.map(x => x.country).sort()
-    const countries = final_data.slice(0,60)
-    const restcontries = final_data.slice(80,120)
-    const finalcontries = final_data.slice(120,180)
-    const finalcontries2 = final_data.slice(180,)
-    message.util!.send(new this.client.Embed()
+  public async exec(message: Message): Promise<Message> {
+    const data: any[] = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
+    const final_data: string[] = data.map(x => x.country).sort()
+    const countries: string[] = final_data.slice(0,60)
+    const restcontries: string[] = final_data.slice(80,120)
+    const finalcontries: string[] = final_data.slice(120,180)
+    const finalcontries2: string[] = final_data.slice(180,)
+    return message.util!.send(new this.client.Embed()
         .setTitle("Country List")
         .addField(`\u200b`,`\`` + countries.map(x => x).join("\`, \`") + `\``,false)
         .addField(`\u200b`,`\`` + restcontries.map(x => x).join("\`, \`") + `\``,false)

@@ -27,17 +27,15 @@ export default class CountrylistCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { country }: { country: any }) {
-    const data = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
-    const found = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
-    const check = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
+  public async exec(message: Message, { country }: { country: any }): Promise<Message> {
+    const data: any[] = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
+    const found: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
+    const check: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
     if(!check.length) return message.util!.send(new this.client.Embed()
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
 
-    console.log(found)
-
-    message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed()
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location:", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases:", found.cases.toLocaleString(), true)
@@ -49,9 +47,6 @@ export default class CountrylistCommand extends Command {
         .addField("Critical Cases:", found.critical.toLocaleString(),true)
         .addField("Tests:", found.tests == 0 ? "Unknown" : found.tests.toLocaleString(),true)
         .addField("Positive Tests Rate:", found.tests == 0 ? "Unknown" : `${(found.tests / found.cases).toFixed(2)}%` , true)
-
-        .addField("Recovery Rate:", found.cases)
-
         .addField("Cases Per Million:", found.casesPerOneMillion.toLocaleString(), true)
         .addField("Deaths Per Million:", found.deathsPerOneMillion.toLocaleString(), true)
         .addField("Tests Per Million:", found.testsPerOneMillion == 0 ? "Unknown" : found.testsPerOneMillion.toLocaleString(),true)

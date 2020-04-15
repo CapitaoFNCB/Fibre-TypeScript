@@ -23,7 +23,7 @@ export default class BalanceCommand extends Command {
     });
   }
 
-  public async exec(message: Message, {target}: {target: any}) {
+  public async exec(message: Message, {target}: {target: any}): Promise<Message> {
     if(!message.guild) return this.client.guildOnly(message.channel);
     
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
@@ -33,7 +33,7 @@ export default class BalanceCommand extends Command {
     )
 
     const user = await this.client.findOrCreateMember({id: member.id, guildId: message.guild?.id})
-    message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed()
         .setDescription(`Cash: ${user.cash}`)
     )
   }

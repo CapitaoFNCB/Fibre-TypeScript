@@ -26,15 +26,20 @@ export default class JavaScriptDocsCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { query }: { query: string }) {
+  public async exec(message: Message, { query }: { query: string }): Promise<Message> {
+
+    let data: any;
+
     await fetch(`https://mdn.pleb.xyz/search?q=${query}`).then(res => res.json()).then(body => {
-        let { Summary, URL, Title, Tags } = body;
 
-        let embed = new this.client.Embed()
-            .setAuthor(`JavaScript: ${Title}`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', `https://developer.mozilla.org${URL}`)
-            .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\n\n**Tags:**\n${Tags.map(x => x).join(", ")}`)
+      data = body
 
-        message.util!.send(embed)
     })
+    let { Summary, URL, Title, Tags } = data;
+    let embed = new this.client.Embed()
+      .setAuthor(`JavaScript: ${Title}`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', `https://developer.mozilla.org${URL}`)
+      .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\n\n**Tags:**\n${Tags.map(x => x).join(", ")}`)
+
+    return message.util!.send(embed)
   }
 }

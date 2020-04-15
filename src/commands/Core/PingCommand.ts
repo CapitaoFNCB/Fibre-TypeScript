@@ -1,4 +1,6 @@
 import { Command } from "discord-akairo";
+import { Message } from "discord.js";
+import moment from "moment";
 
 export default class PingCOmmand extends Command {
   constructor() {
@@ -14,11 +16,12 @@ export default class PingCOmmand extends Command {
     });
   }
 
-  exec(message) {
-    return message.util.send('Pinging...').then(sent => {
-        const timeDiff = (sent.editedAt || sent.createdAt) - (message.editedAt || message.createdAt);
-        return message.util.send(new this.client.Embed()
-            .setDescription(`Response: \`${timeDiff} ms\`\nLatency: \`${Math.round(this.client.ws.ping)} ms\``));
+  exec(message: Message): Promise<Message> {
+    return message.util!.send('Pinging...').then(sent => {
+        let timeDiff = Number(moment(sent.editedAt || sent.createdAt).format("x")) - Number(moment(message.editedAt || message.createdAt).format("x"))
+
+        return message.util!.send(new this.client.Embed()
+          .setDescription(`Response: \`${timeDiff} ms\`\nLatency: \`${Math.round(this.client.ws.ping)} ms\``));
         });
     }
 }

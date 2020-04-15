@@ -16,7 +16,7 @@ export default class DailyCommand extends Command {
     });
   }
 
-  public async exec(message: Message) {
+  public async exec(message: Message): Promise<Message> {
     if(!message.guild) return this.client.guildOnly(message.channel);
     let cooldown = 86400000
     const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
@@ -26,16 +26,17 @@ export default class DailyCommand extends Command {
     }else{
         amount = target.daily_time
     }
-    if((Date.now() + cooldown) - amount <= 0){
+    if(cooldown - (Date.now() - amount) <= 0){
         target.daily_time = Date.now()
         let daily = (Math.floor(Math.random() * (Math.floor(50) - Math.ceil(25))) + Math.ceil(25))
 
-        message.util!.send(new this.client.Embed()
-        .setDescription(`${message.author.username} Claimed $${daily}`)
-        )
-
         target.cash += daily;
         target.save()
+
+        return message.util!.send(new this.client.Embed()
+          .setDescription(`${message.author.username} Claimed $${daily}`)
+        )
+
     }else{
         let str = ""
         if(parse(cooldown - (Date.now() - amount)).hours > 1){

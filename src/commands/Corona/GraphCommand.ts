@@ -26,8 +26,9 @@ export default class GraphCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { country }: { country: any }) {
-    fetch('https://coronavirus-tracker-api.herokuapp.com/all').then(r => r.json()).then(async r => {
+  public async exec(message: Message, { country }: { country: any }): Promise<Message> {
+    let image: any;
+    await fetch('https://coronavirus-tracker-api.herokuapp.com/all').then(r => r.json()).then(async r => {
       let v = Object.keys(r.confirmed.locations[0].history)
       const canvasRenderService = new CanvasRenderService(800, 400, (ChartJS) => {
         ChartJS.plugins.register({
@@ -41,11 +42,11 @@ export default class GraphCommand extends Command {
       let confirmed
       let deaths
       let recovered
-      let active: Number[] = [];
+      let active: number[] = [];
 
       if(country){
         check = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase())
-        if(!check.length) return message.util!.send(new this.client.Embed().setDescription("No Country with this name"))
+        if(!check.length) return;
         confirmed = r.confirmed.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         deaths = r.deaths.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
         recovered = r.recovered.locations.filter(u => u["country"].toLowerCase() == country.toLowerCase()).map(u=>Object.values(u.history)).reduce((a, b) => a.map((c, i) => Number(c) + Number(b[i]))).sort((a,b) => a - b);
@@ -68,7 +69,7 @@ export default class GraphCommand extends Command {
       
 
 
-      const image = await canvasRenderService.renderToBuffer({
+      image = await canvasRenderService.renderToBuffer({
         type: 'line',
       data: {
         labels: v,
@@ -124,8 +125,9 @@ export default class GraphCommand extends Command {
         }
       }
     });
-    const attachment = new MessageAttachment(image, "image.png");
-    message.util!.send(attachment)
    })
+   if(!image)return message.util!.send(new this.client.Embed().setDescription("No Country with this name"))
+   const attachment = new MessageAttachment(image, "image.png");
+   return message.util!.send(attachment)
   }
 }

@@ -26,7 +26,7 @@ export default class Help extends Command {
     });
   }
 
-  public async exec(message: Message, {target}: {target: any}) {
+  public async exec(message: Message, {target}: {target: any}): Promise<Message> {
     
     if(!message.guild) return this.client.guildOnly(message.channel);
 
@@ -75,7 +75,7 @@ export default class Help extends Command {
     const buffer = await user();
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    await message.util!.send(attachment);
+    return message.util!.send(attachment);
 
     async function user(){
         return new Canvas(934, 282)

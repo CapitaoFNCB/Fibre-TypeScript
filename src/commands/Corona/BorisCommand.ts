@@ -15,7 +15,7 @@ export default class BorisCommand extends Command {
     });
   }
 
-  public async exec(message: Message) {
+  public async exec(message: Message): Promise<Message> {
     if(!message.guild) return this.client.guildOnly(message.channel);
 
     const { channel } = message.member!.voice
@@ -35,11 +35,10 @@ export default class BorisCommand extends Command {
           player.queue.add(res.tracks[0])
           if(!player.playing) player.play()
 
-          if(player.queue.length > 1){
-            message.util!.send(new this.client.Embed()
-            .setDescription("Queued Boris"))
         }
-      }
     })
+    return message.util!.send(new this.client.Embed()
+      .setDescription("Queued Boris")
+    )
   }
 }

@@ -25,7 +25,10 @@ export default class ClapCommand extends Command {
     });
   }
 
-  public async exec(message: Message, {string}: {string: String}) {
+  public async exec(message: Message, {string}: {string: String}): Promise<Message> {
+    if(string.length > 500) return message.util!.send(new this.client.Embed()
+      .setDescription("Cannot clapify this due to its length")
+    )
     return message.util!.send([...string].join("👏") + "👏")
   }
 }

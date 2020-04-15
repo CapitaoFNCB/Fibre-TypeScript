@@ -31,7 +31,7 @@ export default class TranscriptCommand extends Command {
       .setDescription("This command can used for Tickets")
     )
 
-    let channelMessages = await message.channel.messages.fetch( {limit: 100})
+    let channelMessages = await (await message.channel.messages.cache.filter(x => !x.author.bot))
 
     let msgs = channelMessages.array().reverse();
 
@@ -44,7 +44,6 @@ export default class TranscriptCommand extends Command {
 
       let parentContainer = document.createElement("div");
       parentContainer.className = "parent-container";
-
       let avatarDiv = document.createElement("div");
       avatarDiv.className = "avatar-container";
       let img = document.createElement('img');
@@ -69,7 +68,7 @@ export default class TranscriptCommand extends Command {
     }
     else {
         let msgNode = document.createElement('span');
-        let textNode = document.createTextNode(msg.content);
+        let textNode = document.createTextNode(msg.content.length == 0 ? "Attachment Or Embed" : msg.content);
         msgNode.append(textNode);
         messageContainer.appendChild(msgNode);
     }
