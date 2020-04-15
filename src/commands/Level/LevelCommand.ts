@@ -75,7 +75,10 @@ export default class Help extends Command {
     const buffer = await user();
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    return message.util!.send(attachment);
+    const embed = new this.client.Embed()
+      .attachFiles(attachment)
+      .setImage(`attachment://profile.png`)
+   return message.util!.send(embed)
 
     async function user(){
         return new Canvas(934, 282)

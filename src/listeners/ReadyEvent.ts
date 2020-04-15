@@ -3,6 +3,7 @@ import chalk from "chalk"
 import { ErelaClient } from "erela.js"
 import { nodes, connection } from "../utils/Config"
 import mongoose from "mongoose";
+import { dashboard } from "../utils/Config"
 
 export default class ReadyListener extends Listener {
   public constructor() {
@@ -20,6 +21,10 @@ export default class ReadyListener extends Listener {
     }).catch((err) => {
       this.client.logger.error("Unable to connect to the Mongodb database. Error:"+err)
     });
+
+    if(dashboard.enabled && this.client.shard!.ids.includes(0)){
+      this.client.load(this.client);
+    }
 
     let guildData;
     this.client.manager = new ErelaClient(this.client, nodes)

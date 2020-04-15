@@ -1,12 +1,13 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
 import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis} from "../utils/Functions"
-import { owners, token } from "../utils/Config";
+import { owners } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
 import Logger from "@ayanaware/logger";
 import { DefaultFormatter, DefaultFormatterColor, Color } from "@ayanaware/logger"
 import Embed from "./FibreEmbed";
+import { load } from "../dashboard/app"
 
 Logger.setFormatter(new DefaultFormatter({
   colorMap: new Map([
@@ -36,6 +37,7 @@ declare module "discord-akairo" {
         Embed;
         perms;
         check_emojis;
+        load;
     }
   }
   
@@ -66,6 +68,7 @@ declare module "discord-akairo" {
        this.Embed = Embed;
        this.perms = perms;
        this.check_emojis = check_emojis;
+       this.load = load
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {

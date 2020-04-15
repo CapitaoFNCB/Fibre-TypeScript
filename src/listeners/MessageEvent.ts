@@ -1,6 +1,6 @@
 import { Listener } from "discord-akairo";
 import { Message } from "discord.js";
-
+import safe from "safe-eval"
 
 export default class MessageListener extends Listener {
   public constructor() {
@@ -11,12 +11,26 @@ export default class MessageListener extends Listener {
   }
 
   public async exec(message: Message) {
+
+    // if(message.content.startsWith("```js") && message.content.endsWith("```")){
+    //   let content: string = message.content.split("```js")[1].split("```")[0].split("\n").filter(x => x.length).join("\n")
+    //   console.log(content)
+    //   console.log(this.client.token)
+    //   try{
+    //     safe(content)
+    //     message.react("✅").catch(() => null)
+    //   }catch(e){
+    //     console.log(e)
+    //     message.react("❎").catch(() => null)
+    //   }
+    // }
+
     if(!message.guild) return;
-    let user;
     let member;
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
     if(!message.author.bot){
-      user = await this.client.findOrCreateUser({id: message.author.id})
+      if(message.content.startsWith(guild.prefix)) return;
+      
       member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
 
       if(!guild.level){

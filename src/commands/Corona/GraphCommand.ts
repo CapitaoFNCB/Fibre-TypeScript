@@ -128,6 +128,9 @@ export default class GraphCommand extends Command {
    })
    if(!image)return message.util!.send(new this.client.Embed().setDescription("No Country with this name"))
    const attachment = new MessageAttachment(image, "image.png");
-   return message.util!.send(attachment)
+   const embed = new this.client.Embed()
+    .attachFiles(attachment)
+    .setImage(`attachment://image.png`)
+   return message.util!.send(embed)
   }
 }
