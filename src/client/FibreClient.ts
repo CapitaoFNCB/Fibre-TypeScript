@@ -1,9 +1,11 @@
 import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis} from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis, getUsersData } from "../utils/Functions"
 import { owners } from "../utils/Config";
 import { Message } from "discord.js";
 import guildsData from "../database/Guild"
+import membersData from "../database/Member"
+import usersData from "../database/User"
 import Logger from "@ayanaware/logger";
 import { DefaultFormatter, DefaultFormatterColor, Color } from "@ayanaware/logger"
 import Embed from "./FibreEmbed";
@@ -38,6 +40,10 @@ declare module "discord-akairo" {
         perms;
         check_emojis;
         load;
+        getUsersData;
+        usersData;
+        guildsData;
+        membersData;
     }
   }
   
@@ -48,6 +54,7 @@ declare module "discord-akairo" {
   
   export default class FibreClient extends AkairoClient {
     public logger: Logger = Logger.get(FibreClient);
+
     public constructor(config: Options) {
         super(
           {
@@ -68,7 +75,12 @@ declare module "discord-akairo" {
        this.Embed = Embed;
        this.perms = perms;
        this.check_emojis = check_emojis;
-       this.load = load
+       this.load = load;
+       this.getUsersData = getUsersData;
+       this.usersData = usersData;
+       this.guildsData = guildsData;
+       this.membersData = membersData;
+       
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
@@ -129,8 +141,15 @@ declare module "discord-akairo" {
         this.listenerHandler.loadAll()
         this.commandHandler.loadAll()
     }
+
+    async broadcastEval(evalStr, onlyOneValid) {
+      const results = await this.shard!.broadcastEval(evalStr);
+      if (onlyOneValid) return results.find(r => r);
+      return results;
+    }
+
     public async start(): Promise<string> {
     
         return this.login(this.config.token);
-      }
+    }
 }

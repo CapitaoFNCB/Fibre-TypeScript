@@ -75,7 +75,7 @@ export default class NpmCommand extends Command {
       .addField("Repository:", body.repository ? `[\`Click Me\`](${body.repository.url.slice(4)})` : "`Unknown`",true)
       .addField("Bugs:", body.bugs ? `[\`Click Me\`](${body.bugs.url})` : "`Unknown`", true)
       .addField("Homepage:", body.homepage ? `[\`Click Me\`](${body.homepage})` : "`Unknown`", true)
-      .addField("This Weeks Downloads:", `\`${downloads}\``,true)
+      .addField("This Weeks Downloads:", `\`${downloads.length ? downloads : "Unregistered"}\``,true)
       .addField("Unpacked Size:", `\`${size}\``,true)
       .addField("Number of Files:", `\`${files}\``,true)
       .addField("Maintainers:", `${body.maintainers.map(x => `\`${x.name}\``).join(" ")}`)

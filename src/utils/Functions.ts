@@ -132,3 +132,22 @@ export async function findOrCreateGuild(param, isLean){
         }
     });
 }
+
+export async function getUsersData(client, users){
+    return new Promise(async function(resolve, reject){
+        let usersData: any[] = [];
+        for(let u of users){
+            let result = await client.usersData.find({id: u.id});
+            if(result[0]){
+                usersData.push(result[0]);
+            } else {
+                let user = new client.usersData({
+                    id: u.id
+                });
+                await user.save();
+                usersData.push(user);
+            }
+        }
+        resolve(usersData);
+    });
+}
