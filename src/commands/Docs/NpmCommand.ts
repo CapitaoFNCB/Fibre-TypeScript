@@ -80,7 +80,7 @@ export default class NpmCommand extends Command {
       .addField("Number of Files:", `\`${files}\``,true)
       .addField("Maintainers:", `${body.maintainers.map(x => `\`${x.name}\``).join(" ")}`)
       .addField("Key Words:", body.keywords && body.keywords.length ? body.keywords.map(x => `\`${this.client.capitalize(x)}\``).join(" ") : `\`None\``)
-      .addField("Dependencies:", body.versions[body["dist-tags"].latest].dependencies ? Object.keys(body.versions[body["dist-tags"].latest].dependencies).map(x => `\`${x}\``).join(" ") : "`None`")
+      .addField("Dependencies:", body.versions[body["dist-tags"].latest].dependencies && body.versions[body["dist-tags"].latest].dependencies.size ? Object.keys(body.versions[body["dist-tags"].latest].dependencies).map(x => `\`${x}\``).join(" ") : "`None`")
 
     return message.util!.send(embed)
   }

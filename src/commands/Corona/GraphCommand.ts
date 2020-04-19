@@ -1,7 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message, MessageAttachment } from "discord.js";
 import fetch from "node-fetch";
-import moment from "moment";
 import { CanvasRenderService } from 'chartjs-node-canvas';
 
 export default class GraphCommand extends Command {
