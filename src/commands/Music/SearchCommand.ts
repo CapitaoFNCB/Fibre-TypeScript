@@ -87,13 +87,7 @@ export default class SearchCommand extends Command {
                     let reacted = this.client.check_emojis(r.emoji.name)
 
                     if(reacted > 5){
-                        if(send_message.deletable){
-                            send_message.delete()
-                        }else{
-                            send_message.edit("", new this.client.Embed()
-                                .setDescription("I cannot delete this message")).catch(err => message.channel.send(new this.client.Embed()
-                                .setDescription("I cannot edit my messages message")))
-                        }
+                        if(send_message.deletable) send_message.delete()
                     }else{
                         player = this.client.manager.players.spawn({
                             guild: message.guild,

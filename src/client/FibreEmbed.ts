@@ -29,7 +29,6 @@ export default class Embed extends MessageEmbed {
       .setDescription(string || "Unknown Prompt")
   }
 
-
   public addBlankField(inline: boolean): this {
     if(!inline) inline = true
     return this.addFields({

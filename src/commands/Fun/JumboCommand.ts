@@ -2,6 +2,7 @@ import twemoji from 'twemoji';
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
 import { MessageAttachment } from 'discord.js';
+import fetch from "node-fetch";
 
 export default class JumboCommand extends Command {
     public constructor() {
@@ -29,16 +30,13 @@ export default class JumboCommand extends Command {
     public async exec(message: Message, { query }: { query: string }): Promise<Message> {
 
         let emoji = query.split(":").slice(-1).toString().slice(0,-1)
-        
         let image;
-
         let text;
-
         let messageAtttachment;
+        let data;
+        let searchType: string;
 
-        let found = this.client.emojis.cache.get(emoji)
-
-        if(!found){
+        if(!Number(emoji)) {
             text = twemoji.parse(query);
 
             if(!text.startsWith("<img")){
@@ -52,15 +50,14 @@ export default class JumboCommand extends Command {
             text = text.substring(0, text.length - 3);
             image = text
             messageAtttachment = new MessageAttachment(image, "emoji.png")
-            
-        }else{
-            if(found.animated){
-                image = `https://cdn.discordapp.com/emojis/${found.id}.gif`
-                messageAtttachment = new MessageAttachment(image, "emoji.gif")
-            }else{
-                image = `https://cdn.discordapp.com/emojis/${found.id}.png`
-                messageAtttachment = new MessageAttachment(image, "emoji.png")
+        } else {
+            data = await fetch(`https://cdn.discordapp.com/emojis/${emoji}.gif?size=2048`)
+            searchType = "gif"
+            if(data.status !== 200){
+                data = await fetch(`https://cdn.discordapp.com/emojis/${emoji}.png?size=2048`)
+                searchType = "png"
             }
+            messageAtttachment = new MessageAttachment(await data.buffer(), `emoji.${searchType}`)
         }
 
         return message.util!.send("",messageAtttachment)

@@ -19,6 +19,7 @@ export default class MemeCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
+
     const data = await api.meme()
 
     return message.util!.send(new this.client.Embed()
