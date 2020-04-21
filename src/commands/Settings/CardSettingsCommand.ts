@@ -1,6 +1,7 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import isHex from "is-hexcolor"
+import isHex from "is-hexcolor";
+import fetch from "node-fetch";
 
 export default class CardSettingsCommand extends Command {
   public constructor() {
@@ -24,7 +25,7 @@ export default class CardSettingsCommand extends Command {
       description: {
         content: "Card Command",
         usage: "card [type]",
-        examples: ["card backgound https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fuej6dnX54XA%2Fmaxresdefault.jpg&f=1&nofb=1", "card text #ffffff"]
+        examples: ["card backgound https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2Fuej6dnX54XA%2Fmaxresdefault.jpg&f=1&nofb=1", "card colour #ffffff"]
       },
       typing: true
     });
@@ -32,7 +33,7 @@ export default class CardSettingsCommand extends Command {
 
   public async exec(message: Message,{ type, change }: { type: String; change: string }){
 
-    const types: String[] = ["background","text","bar"]
+    const types: String[] = ["background", "colour"]
 
     if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed()
         .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
@@ -46,8 +47,13 @@ export default class CardSettingsCommand extends Command {
 
     if(type.toLowerCase() == "background"){
 
+        if(!founduser.premium) return message.util!.send(new this.client.Embed()
+          .setDescription("This is premium use only")
+        )
+
         if(!change){
-            founduser.backgound = message.attachments.first()!.proxyURL
+            let data = await fetch(message.attachments.first()!.proxyURL)
+            founduser.backgound = await data.buffer()
             founduser.save() 
 
             return message.util!.send(new this.client.Embed()
@@ -55,38 +61,19 @@ export default class CardSettingsCommand extends Command {
             )
         }
 
-        founduser.backgound = change
+        let data = await fetch(change)
+        founduser.backgound = await data.buffer()
         founduser.save()
 
         return message.util!.send(new this.client.Embed()
-            .setDescription("Invalid Hex Value")
-        )
-
-    }else if(type.toLowerCase() == "text"){
-
-        if(!isHex(change)) return message.util!.send(new this.client.Embed()
-          .setDescription("Changed card background")
-        )
-
-        founduser.text = change
-        founduser.save()
-
-        return message.util!.send(new this.client.Embed()
-          .setDescription("Set Progress Text Colour")
-        )
+        .setDescription("Changed card background")
+       )
 
     }else{
-
-        if(!isHex(change)) return message.util!.send(new this.client.Embed()
-          .setDescription("Invalid Hex Value")
-        )
-
-        founduser.barcolour = change
+      if(isHex(change)){
+        founduser.colour = change
         founduser.save()
-
-        return message.util!.send(new this.client.Embed()
-          .setDescription("Set Progress Bar Colour")
-        )
+      }
     }
   }
 }

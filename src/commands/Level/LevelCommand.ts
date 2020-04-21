@@ -61,10 +61,6 @@ export default class Help extends Command {
 
     if(!rank.toString().startsWith('#')) rank = '#' + rank
 
-    const resultback = await fetch(founduser.backgound);
-    if (!resultback.ok) return message.util!.send("Failed to get Backgound");
-    const backgound = await resultback.buffer();
-
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.util!.send("Failed to get Avatar");
     const avatar = await result.buffer();
@@ -79,7 +75,9 @@ export default class Help extends Command {
 
     async function user(){
         return new Canvas(934, 282)
-        .addImage(backgound, 0, 0, 934, 282)
+        .setColor("#2C2F33")
+        .addBeveledRect(0, 0, 934, 282)
+        .addBeveledImage(toBuffer(founduser.backgound.buffer), 0, 0, 934, 282)
         .setColor("#2C2F33")
         .setShadowColor('rgba(22, 22, 22, 1)')
         .setShadowOffsetY(5)
@@ -91,12 +89,12 @@ export default class Help extends Command {
         .fill()
         .restore()
         .addBeveledRect(260, 165, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5), 46)
-        .setColor(founduser.barcolour)
+        .setColor(founduser.colour)
         .fill()
         .restore()
         .setTextAlign('left')
         .setTextFont('32px sans-serif')
-        .setColor(founduser.text)
+        .setColor(founduser.colour)
         .addText(member.user.tag, 275, 130)
         .setTextAlign('right')
         .addText(`LEVEL ${found.level}` , 880, 130)
@@ -108,4 +106,13 @@ export default class Help extends Command {
         .addText(`${found.level}` , 275, 250)
     }
   }
+}
+
+function toBuffer(ab) {
+  var buf = Buffer.alloc(ab.byteLength);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buf.length; ++i) {
+      buf[i] = view[i];
+  }
+  return buf;
 }
