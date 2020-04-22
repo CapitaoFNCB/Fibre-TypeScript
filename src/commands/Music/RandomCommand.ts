@@ -6,6 +6,7 @@ export default class RandomCommand extends Command {
   public constructor() {
     super("random", {
       aliases: ["random"],
+      channel: "guild",
       category: "Music",
       description: {
         content: "Random Command",

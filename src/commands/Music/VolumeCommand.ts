@@ -5,6 +5,7 @@ export default class VolumeCommand extends Command {
   constructor() {
     super("volume", {
       aliases: ["volume"],
+      channel: "guild",
       category: "Music",
       args: [
         {
@@ -27,8 +28,6 @@ export default class VolumeCommand extends Command {
   }
 
   async exec (message: Message, { amount }: { amount: number }) {
-
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     const player = this.client.manager.players.get(message.guild?.id)
 

@@ -6,6 +6,7 @@ export default class SearchCommand extends Command {
   constructor() {
     super("search", {
       aliases: ["search"],
+      channel: "guild",
       category: "Music",
       args: [
         {

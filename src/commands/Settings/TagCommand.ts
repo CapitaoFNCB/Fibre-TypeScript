@@ -6,6 +6,7 @@ export default class TagCOmmand extends Command {
     super("tag", {
       aliases: ["tag"],
       category: "Settings",
+      channel: "guild",
       description: {
         content: "Tag Command",
         usage: "Tag <create | delete | edit | info | list>",

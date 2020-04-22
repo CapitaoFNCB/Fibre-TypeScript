@@ -5,6 +5,7 @@ export default class JoinCommand extends Command {
   constructor() {
     super("join", {
       aliases: ["join"],
+      channel: "guild",
       category: "Music",
       description: {
         content: "Join Command", 

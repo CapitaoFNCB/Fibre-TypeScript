@@ -18,7 +18,7 @@ export default class AllCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-    const data: any[] = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
+    const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries').then(res => res.json())
 
     const updated: number = data[0].updated
     const cases: number[] = data.map(x => x.cases)

@@ -6,6 +6,7 @@ export default class DisableCommand extends Command {
     super("disable", {
       aliases: ["disable"],
       category: "Settings",
+      channel: "guild",
       args: [
         {
             id: "type",
@@ -26,7 +27,6 @@ export default class DisableCommand extends Command {
   }
 
   public async exec(message: Message, { type }: { type: String }) {
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
     if(perms.length > 0) return message.util!.send(new this.client.Embed()

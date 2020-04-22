@@ -6,6 +6,7 @@ export default class PrefixCommand extends Command {
     super("prefix", {
       aliases: ["prefix"],
       category: "Settings",
+      channel: "guild",
       args: [
         {
             id: "prefix",
@@ -25,7 +26,6 @@ export default class PrefixCommand extends Command {
   }
 
   public async exec(message: Message, { prefix }: { prefix: String }) {
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
     if(perms.length > 0) return message.util!.send(new this.client.Embed()

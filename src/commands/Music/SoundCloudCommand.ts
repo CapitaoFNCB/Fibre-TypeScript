@@ -7,6 +7,7 @@ export default class SoundCloudCommand extends Command {
     super("soundcloud", {
       aliases: ["soundcloud", "sc"],
       category: "Music",
+      channel: "guild",
       args: [
         {
             id: "query",

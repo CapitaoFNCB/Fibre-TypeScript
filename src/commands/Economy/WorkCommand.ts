@@ -7,6 +7,7 @@ export default class WorkCommand extends Command {
     super("work", {
       aliases: ["work"],
       category: "Economy",
+      channel: "guild",
       description: {
         content: "Work Command",
         usage: "work",
@@ -17,7 +18,7 @@ export default class WorkCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-    if(!message.guild) return this.client.guildOnly(message.channel);
+
     let cooldown = 21600000
     const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
     let amount

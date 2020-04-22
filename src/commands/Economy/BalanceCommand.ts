@@ -6,6 +6,7 @@ export default class BalanceCommand extends Command {
     super("balance", {
       aliases: ["balance", "bal"],
       category: "Economy",
+      channel: "guild",
       args: [
         {
             id: "target",
@@ -24,8 +25,7 @@ export default class BalanceCommand extends Command {
   }
 
   public async exec(message: Message, {target}: {target: any}): Promise<Message> {
-    if(!message.guild) return this.client.guildOnly(message.channel);
-    
+
     let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
 
     if(member.user.bot) return message.util!.send(new this.client.Embed()

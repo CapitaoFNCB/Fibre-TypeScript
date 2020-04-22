@@ -6,6 +6,7 @@ export default class AvatarCommand extends Command {
     super("avatar", {
       aliases: ["avatar", "av", "pfp"],
       category: "Core",
+      channel: "guild",
       args: [
         {
           id: "member",

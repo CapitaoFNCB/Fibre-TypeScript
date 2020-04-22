@@ -9,6 +9,7 @@ export default class Help extends Command {
     super("level", {
       aliases: ["level"],
       category: "Level",
+      channel: "guild",
       args: [
         {
           id: "member",
@@ -27,14 +28,11 @@ export default class Help extends Command {
 
   public async exec(message: Message, { member }: {member: GuildMember}): Promise<Message> {
     
-    if(!message.guild) return this.client.guildOnly(message.channel);
-
     if(member.user.bot) return message.util!.send(new this.client.Embed()
         .setDescription("No Information is stored for bots")
     )
 
-    
-    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild.id})
+    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild!.id})
 
     const founduser = await this.client.findOrCreateUser({id: member.id})
 

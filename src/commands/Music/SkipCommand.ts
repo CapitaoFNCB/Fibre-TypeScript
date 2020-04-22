@@ -5,6 +5,7 @@ export default class SkipCommand extends Command {
   public constructor() {
     super("skip", {
       aliases: ["skip"],
+      channel: "guild",
       category: "Music",
       description: {
         content: "Skip Command",

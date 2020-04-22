@@ -11,6 +11,7 @@ export default class ExitListener extends Listener {
   }
 
   public async exec(command: Message) {
+    if(!command.guild) return;
     let guild = await this.client.findOrCreateGuild({ id: command.guild!.id})
     let args = command.content.slice(guild.prefix.length).trim().split(/ +/g);
     let cmd = args.shift()!.toLowerCase();

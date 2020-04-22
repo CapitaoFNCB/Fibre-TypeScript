@@ -5,6 +5,7 @@ export default class PlayBackCommand extends Command {
   public constructor() {
     super("playback", {
       aliases: ["playback","pb"],
+      channel: "guild",
       category: "Music",
       description: {
         content: "Playback Command",

@@ -12,7 +12,7 @@ export default class commandStartedListener extends Listener {
 
   public async exec(message: Message, command: Command) {
     
-    this.client.logger.info(`${message.author.tag} Ran ${this.client.capitalize(command.id)} Command, In ${message.guild!.name} (${message.guild!.id})`)
+    this.client.logger.info(`${message.author.tag} Ran ${this.client.capitalize(command.id)} Command, In ${message.guild ? message.guild.name : "DM"} ${message.guild ? `(${message.guild.id})` : ""}`);
 
   }
 }

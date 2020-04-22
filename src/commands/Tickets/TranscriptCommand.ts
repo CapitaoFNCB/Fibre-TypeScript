@@ -11,6 +11,7 @@ export default class TranscriptCommand extends Command {
   public constructor() {
     super("transcript", {
       aliases: ["transcript"],
+      channel: "guild",
       category: "Ticket",
       description: {
         content: "Transcript Command",
@@ -23,9 +24,7 @@ export default class TranscriptCommand extends Command {
 
   public async exec(message: Message) {
 
-    if(!message.guild) return this.client.guildOnly(message.channel);
-
-    const channel = message.guild.channels.cache.get(message.channel!.id)
+    const channel = message.guild!.channels.cache.get(message.channel!.id)
 
     if(!channel!.name.startsWith("ticket-")) return message.util!.send(new this.client.Embed()
       .setDescription("This command can used for Tickets")

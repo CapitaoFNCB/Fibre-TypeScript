@@ -29,7 +29,7 @@ export default class EnableCommand extends Command {
 
     if(!command){
       
-      this.client.shard!.broadcastEval(`(async () => { await this.commandHandler.reloadAll(), this.logger.info("Reloaded All Commands") })() `)
+      this.client.shard!.broadcastEval(`(async () => { await this.commandHandler.reloadAll(), this.listenerHandler.reloadAll(), this.logger.info("Reloaded All Commands") })() `)
 
       return message.util!.send(new this.client.Embed()
         .setDescription("Reloaded All Commands!")

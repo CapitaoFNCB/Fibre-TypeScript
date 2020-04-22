@@ -7,6 +7,7 @@ export default class SlotsCommand extends Command {
     super("slots", {
       aliases: ["slots"],
       category: "Economy",
+      channel: "guild",
       args: [
         {
             id: "target",
@@ -28,8 +29,6 @@ export default class SlotsCommand extends Command {
   }
 
   public async exec(message: Message, {target}: {target: number}): Promise<Message> {
-
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     if(target) return message.util!.send(new this.client.Embed()
       .setDescription("You Can't Use Negative Numbers")  

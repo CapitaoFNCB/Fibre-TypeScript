@@ -7,6 +7,7 @@ export default class RadioCommand extends Command {
     super("radio", {
       aliases: ["radio"],
       category: "Music",
+      channel: "guild",
       args: [
         {
             id: "station",
@@ -27,8 +28,6 @@ export default class RadioCommand extends Command {
   }
 
   public async exec(message: Message, { station }: { station: any }) {
-
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     const { channel } = message.member!.voice
     let player: any;

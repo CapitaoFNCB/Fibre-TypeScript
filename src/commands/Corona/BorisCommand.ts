@@ -5,6 +5,7 @@ export default class BorisCommand extends Command {
   public constructor() {
     super("boris", {
       aliases: ["boris"],
+      channel: "guild",
       category: "Corona",
       description: {
         content: "Boris Command",
@@ -16,7 +17,6 @@ export default class BorisCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-    if(!message.guild) return this.client.guildOnly(message.channel);
 
     const { channel } = message.member!.voice
 

@@ -4,6 +4,7 @@ import { Message } from "discord.js";
 export default class JackpotCommand extends Command {
   public constructor() {
     super("jackpot", {
+      channel: "guild",
       aliases: ["jackpot"],
       category: "Economy",
       args: [
@@ -25,13 +26,12 @@ export default class JackpotCommand extends Command {
   }
 
   public async exec(message: Message, { amount }: { amount: Number }) {
-    if(!message.guild) return this.client.guildOnly(message.channel);
+
     if(isNaN(Number(amount))) return message.util!.send(new this.client.Embed()
       .setDescription("Invalid Amount")
     )
 
 
-    if(!message.guild) return this.client.guildOnly(message.channel);
     const message2 = await message.util!.send(new this.client.Embed()
       .setTitle("JACKPOT!!")
       .setDescription("React with 💰 to enter the jackpot. You have 30 seconds")

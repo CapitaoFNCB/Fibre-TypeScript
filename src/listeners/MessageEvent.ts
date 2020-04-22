@@ -12,19 +12,6 @@ export default class MessageListener extends Listener {
 
   public async exec(message: Message) {
 
-    // if(message.content.startsWith("```js") && message.content.endsWith("```")){
-    //   let content: string = message.content.split("```js")[1].split("```")[0].split("\n").filter(x => x.length).join("\n")
-    //   console.log(content)
-    //   console.log(this.client.token)
-    //   try{
-    //     safe(content)
-    //     message.react("✅").catch(() => null)
-    //   }catch(e){
-    //     console.log(e)
-    //     message.react("❎").catch(() => null)
-    //   }
-    // }
-
     if(!message.guild) return;
     let member;
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})

@@ -7,6 +7,7 @@ export default class PlayCommand extends Command {
     super("play", {
       aliases: ["play"],
       category: "Music",
+      channel: "guild",
       args: [
         {
             id: "query",

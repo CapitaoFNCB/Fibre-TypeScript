@@ -17,7 +17,7 @@ export default class CountrylistCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-    const data: any[] = await fetch('https://corona.lmao.ninja/countries').then(res => res.json())
+    const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries').then(res => res.json())
     const final_data: string[] = data.map(x => x.country).sort()
     const countries: string[] = final_data.slice(0,60)
     const restcontries: string[] = final_data.slice(80,120)

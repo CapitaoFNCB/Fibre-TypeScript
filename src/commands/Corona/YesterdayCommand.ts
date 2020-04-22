@@ -28,7 +28,7 @@ export default class YesterdayCommand extends Command {
   }
 
   public async exec(message: Message, { country }: { country: string }): Promise<Message> {
-    const data: any[] = await fetch('https://corona.lmao.ninja/yesterday').then(res => res.json())
+    const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries?yesterday=true').then(res => res.json())
     const found: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
     const check: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
     if(!check.length) return message.util!.send(new this.client.Embed()
