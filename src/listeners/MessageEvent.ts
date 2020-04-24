@@ -36,7 +36,7 @@ export default class MessageListener extends Listener {
       if(member.xp + amount > updatelevel){
         member.xp = 0
         member.level += 1
-        message.channel.send(`${message.author.username} Has Leveled Up to level ${member.level}!`)
+        // message.channel.send(`${message.author.username} Has Leveled Up to level ${member.level}!`)
       }
       member.save()
     }

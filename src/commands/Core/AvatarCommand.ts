@@ -17,7 +17,7 @@ export default class AvatarCommand extends Command {
       description: {
         content: "Avatar Command", 
         usage: "avatar",
-        examples: ["avatar"]
+        examples: ["avatar pizza#2020"]
       },
       typing: true
     });

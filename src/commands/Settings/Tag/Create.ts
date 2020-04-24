@@ -13,6 +13,8 @@ export default class TagCommand extends Command {
                     type: "existingTag",
                     prompt: {
                         start: "Please provide a tag name",
+                        retry: (msg: Message, { failure }: { failure: { value: string} }) =>
+                            `The tag with the name of: \`${failure.value}\` already exists. Please try again.`
                     }
                 },
 
@@ -39,7 +41,7 @@ export default class TagCommand extends Command {
         if (name.match(USER_MENTION_REGEX) || name.match(CHANNEL_MENTION_REGEX))
             return message.util!.send(new this.client.Embed().setDescription(`You cannot name your tag that, as it contains a mention of a channel, or user.`));
 
-        if (name.length) return message.util!.send(new this.client.Embed().setDescription(`Please include a tag name`));
+        if (!name.length) return message.util!.send(new this.client.Embed().setDescription(`Please include a tag name`));
 
         if (name.length > 16) return message.util!.send(new this.client.Embed().setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
             

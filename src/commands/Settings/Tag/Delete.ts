@@ -7,9 +7,12 @@ export default class TagCommand extends Command {
             args: [
                 {
                     id: "tag",
+                    type: "tag",
                     match: "content",
                     prompt: {
-                        start: "Please provide a tag to delete"
+                        start: "Please provide a tag to delete",
+                        retry: (msg: Message, { failure }: { failure: { value: string} }) =>
+                            `The tag with the name of: \`${failure.value}\` doesn't exists. Please try again.`
                     }
                 }
             ],
@@ -26,12 +29,6 @@ export default class TagCommand extends Command {
         if(perms.length > 0) return message.util!.send(new this.client.Embed()
             .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
         )
-
-        if(!command){
-            return message.util!.send(new this.client.Embed()
-                .setDescription(`\`${tag.toLowerCase()}\` is not a valid tag name.`)
-            )
-        }
 
         guild.customCommands = guild.customCommands.filter((c) => c.name !== tag.toLowerCase());
         guild.save()

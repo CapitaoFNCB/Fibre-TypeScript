@@ -11,8 +11,11 @@ export default class TagCommand extends Command {
                     match: "content",
                     prompt: {
                         start: "What tag do you want to know info about",
+                        retry: (msg: Message, { failure }: { failure: { value: string} }) =>
+                            `The tag with the name of: \`${failure.value}\` doesn't exists. Please try again.`
                     }
                 }
+
             ],
             category: "flag"
         });

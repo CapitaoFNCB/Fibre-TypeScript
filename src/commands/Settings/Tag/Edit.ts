@@ -7,8 +7,12 @@ export default class TagCommand extends Command {
             args: [
                 {
                     id: "tag",
+                    type: "tag",
+                    match: "content",
                     prompt: {
-                        start: "Please provide a tag to edit"
+                        start: "Please provide a tag to edit",
+                        retry: (msg: Message, { failure }: { failure: { value: string} }) =>
+                            `The tag with the name of: \`${failure.value}\` doesn't exists. Please try again.`
                     }
                 },
 

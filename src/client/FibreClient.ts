@@ -1,4 +1,4 @@
-import { AkairoClient, CommandHandler, ListenerHandler } from "discord-akairo";
+import { AkairoClient, CommandHandler, ListenerHandler, Flag } from "discord-akairo";
 import { join } from 'path';
 import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis, getUsersData } from "../utils/Functions"
 import { owners } from "../utils/Config";
@@ -136,11 +136,38 @@ declare module "discord-akairo" {
           // inhibitorHandler: this.inhibitorHandler
       });
 
+        this.commandHandler.resolver.addType("existingTag", async (msg: Message, word: string) => {
+
+          if (!word || !msg.guild || this.commandHandler.modules.has(word))
+              return Flag.fail(word);
+
+          let guild = await this.findOrCreateGuild({ id: msg.guild.id })
+
+          let data = guild.customCommands.filter((c) => c.name == word);
+
+          return data.length ? Flag.fail(word) : word;
+
+        })
+
+        
+        this.commandHandler.resolver.addType("tag", async (msg: Message, word: string) => {
+
+          if (!word || !msg.guild || this.commandHandler.modules.has(word))
+              return Flag.fail(word);
+
+          let guild = await this.findOrCreateGuild({ id: msg.guild.id })
+
+          let data = guild.customCommands.filter((c) => c.name == word);
+
+          return data.length ? data : Flag.fail(word);
+
+        })
 
         this.commandHandler.useListenerHandler(this.listenerHandler);
         this.listenerHandler.loadAll()
         this.commandHandler.loadAll()
     }
+
 
     async broadcastEval(evalStr, onlyOneValid) {
       const results = await this.shard!.broadcastEval(evalStr);

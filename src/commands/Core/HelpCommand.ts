@@ -5,6 +5,7 @@ export default class Help extends Command {
   constructor() {
     super("help", {
       aliases: ["help", "commands"],
+      typing: true,
       args: [
         {
           id: "command",
@@ -18,7 +19,6 @@ export default class Help extends Command {
         usage: "help (command name)",
         examples: ["help help", "help eval"]
       },
-      typing: true
     });
   }
 
