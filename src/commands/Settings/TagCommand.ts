@@ -30,7 +30,7 @@ export default class TagCOmmand extends Command {
 
             let prefix = guild.prefix
 
-            return new this.client.Embed().setDescription(`Invalid Usage:\nRun: \`${prefix}help tag\``)
+            return new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help tag\``)
         }
     }
 

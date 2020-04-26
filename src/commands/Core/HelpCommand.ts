@@ -24,7 +24,7 @@ export default class Help extends Command {
 
   async exec (message: Message, { command }: {command : Command}): Promise<Message> {
     if (!command) {
-      const embed = new this.client.Embed()
+      const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
 
       for (const [name, category] of this.handler.categories.filter((c: Category<string, Command>) => !["flag"].includes(c.id))) {
@@ -34,7 +34,7 @@ export default class Help extends Command {
     return message.util!.send(embed);
     }
 
-    const embed = new this.client.Embed()
+    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
       .setDescription(`
         **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${this.client.capitalize(alias)}\``).join(", ") : "Unknown"}

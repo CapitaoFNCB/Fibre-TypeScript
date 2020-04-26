@@ -36,7 +36,7 @@ export default class WorkCommand extends Command {
         target.cash += amount * hours;
         target.save()
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription(`${message.author.username} worked for ${hours} hours at a rate of $${amount} an hour`)
         )
 
@@ -51,7 +51,7 @@ export default class WorkCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription(`You cannot work for ${str}`)
         )
     }

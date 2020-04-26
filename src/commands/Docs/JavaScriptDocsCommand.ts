@@ -36,7 +36,7 @@ export default class JavaScriptDocsCommand extends Command {
 
     })
     let { Summary, URL, Title, Tags } = data;
-    let embed = new this.client.Embed()
+    let embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setAuthor(`JavaScript: ${Title}`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', `https://developer.mozilla.org${URL}`)
       .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\n\n**Tags:**\n${Tags.map(x => x).join(", ")}`)
 

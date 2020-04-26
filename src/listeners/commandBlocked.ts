@@ -10,9 +10,24 @@ export default class commandBlockedListener extends Listener {
     });
   }
 
-  public async exec(message: Message, command: Command, reason: String): Promise<Message> {
+  public async exec(message: Message, command: Command, reason: String): Promise<Message | any> {
     
-    return message.channel.send(new this.client.Embed().setDescription(reason == "dm" ? "This command can only be ran inside a guild" : reason == "guild" ? "This command cannot be ran in DM's" : "Command couldn't be executed"))
+    switch (reason) {
+      case "owner":
+          return message.util!.send(
+            new this.client.Embed()
+            .setDescription(`You cannot use the command: \`${command}\` due to its owner only`)
+          );
+          
+          break;
 
+      case "guild":
+          return message.util!.send(
+            new this.client.Embed()
+                  .setDescription(`You can only use the command: \`${command}\` in a guild (server)`)
+          );
+          break;
+    
+    }
   }
 }

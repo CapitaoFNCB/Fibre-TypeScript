@@ -28,25 +28,25 @@ export default class EnableCommand extends Command {
   public async exec(message: Message, { type }: { type: String }) {
 
     const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-    if(perms.length > 0) return message.util!.send(new this.client.Embed()
+    if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
     )
 
     const types = ["level"]
 
     if(!types.includes(type.toLowerCase())){
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription(`There is no setting with this name\nValid settings: ${types.map(x => `\`` + x + `\``)}`)
         )
     }
     const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
 
     if(type.toLowerCase() == "level"){
-        if(guild.level == true) return message.util!.send(new this.client.Embed()
+        if(guild.level == true) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription("Level System is Already Enabled")
         )
         guild.level = true
-        message.util!.send(new this.client.Embed()
+        message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription("Enabled Level System")
         )
     }

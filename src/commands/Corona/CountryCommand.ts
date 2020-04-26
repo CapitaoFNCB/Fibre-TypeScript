@@ -35,7 +35,7 @@ export default class CountrylistCommand extends Command {
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
 
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location:", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases:", found.cases.toLocaleString(), true)

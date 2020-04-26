@@ -23,9 +23,9 @@ export default class AvatarCommand extends Command {
     });
   }
 
-  exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
+  async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
 
-    return message.channel.send(new this.client.Embed()
+    return message.channel.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setAuthor(`${member === message.member ? "Your" : `${member.user.username}'s`} Avatar`)
       .setImage(member.user.displayAvatarURL({ dynamic: true, size: 2048 }))
     )

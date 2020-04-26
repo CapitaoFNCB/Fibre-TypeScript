@@ -30,7 +30,7 @@ export default class SlotsCommand extends Command {
 
   public async exec(message: Message, {target}: {target: number}): Promise<Message> {
 
-    if(target) return message.util!.send(new this.client.Embed()
+    if(target) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription("You Can't Use Negative Numbers")  
     )
 
@@ -40,7 +40,7 @@ export default class SlotsCommand extends Command {
 
     let targetuser = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
 
-    if(targetuser.cash < target) return message.channel.send(new this.client.Embed()
+    if(targetuser.cash < target) return message.channel.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription("Unfortunately you don't have enough for this amount")
       )
 
@@ -66,7 +66,7 @@ export default class SlotsCommand extends Command {
         targetguild.jackpot += Number(Math.round(target/4))
         targetguild.save()
     }
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
     .setDescription(stripIndents`${emojis[board[0]]}${emojis[board[1]]}${emojis[board[2]]}
       ${emojis[board[3]]}${emojis[board[4]]}${emojis[board[5]]}
       ${emojis[board[6]]}${emojis[board[7]]}${emojis[board[8]]}

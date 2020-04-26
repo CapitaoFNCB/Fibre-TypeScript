@@ -34,11 +34,11 @@ export default class GithubCommand extends Command {
             body = data
         })
 
-        if(body.message) return message.util!.send(new this.client.Embed()
+        if(body.message) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription("No User Found")
         )
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setThumbnail(body.avatar_url)
           .addField("Username:", `\`${body.login}\``, true)
           .addField("User ID:", `\`${body.id}\``, true)

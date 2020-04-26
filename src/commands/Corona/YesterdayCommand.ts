@@ -31,11 +31,11 @@ export default class YesterdayCommand extends Command {
     const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries?yesterday=true').then(res => res.json())
     const found: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
     const check: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
-    if(!check.length) return message.util!.send(new this.client.Embed()
+    if(!check.length) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
 
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setTitle(`${found.country}'s Statistics (Yesterday)`)
         .addField("Location:", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases:", found.cases.toLocaleString(), true)

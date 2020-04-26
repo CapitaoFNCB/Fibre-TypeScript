@@ -22,7 +22,7 @@ export default class MemeCommand extends Command {
 
     const data = await api.meme()
 
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setTitle(data.data.title)
       .setDescription(data.data.body)
       .setURL(data.data.url)

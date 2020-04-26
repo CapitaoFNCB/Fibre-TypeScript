@@ -2,12 +2,14 @@ import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { inspect } from "util";
 import { capitalize } from "../../utils/Functions"
+import FibreClient from "client/FibreClient";
 
 export default class EvalCommand extends Command {
   public constructor() {
     super("eval", {
       aliases: ["eval", "evaluate"],
       category: "Owner",
+      ownerOnly: true,
       description: {
         content: "Executes JavaScript code",
         usage: "eval [ code ] < depth >",
@@ -46,11 +48,8 @@ export default class EvalCommand extends Command {
 
   public async exec (message: Message, { toEval, depth, silent }: { toEval: any; depth: number; silent: boolean }) {
 
-    if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
-      .setDescription("Owner Only Command")
-    )  
-    
-    const embed = new this.client.Embed()
+
+    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
     
     try {
       const hrStart: [number, number] = process.hrtime();
@@ -74,22 +73,6 @@ export default class EvalCommand extends Command {
 
       return message.util!.send(embed
         .addField("Response:", `Error: \`\`\`js\n${error}\`\`\``, false));
-    }
-
-    function resolvePromise(promise){
-      setTimeout(() => {
-      const hrStart: [number, number] = process.hrtime();
-      Promise.resolve(promise).then(function(value) {
-        const hrDiff: [number, number] = process.hrtime(hrStart);
-        const execTime = hrDiff[0] > 0 ? `${hrDiff[0]}s` : `${Math.round(hrDiff[1] / 1000)}μ`;
-        let resolved_embed = new MessageEmbed()
-          .setColor("0491e2")
-          .addField("Resolved Promise:", `\`\`\`js\n${value.length > 1010 ? `${value.substr(0, 1010)}...` : value}\`\`\``, false)
-          .addField("Type:", capitalize(typeof value))
-          .addField("Time Taken:", execTime)
-        message.util!.send(resolved_embed)
-        })
-      },1000)
     }
   }
 }

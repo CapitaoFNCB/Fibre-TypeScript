@@ -66,7 +66,7 @@ export default class Help extends Command {
     const buffer = await user();
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    const embed = new this.client.Embed()
+    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .attachFiles(attachment)
       .setImage(`attachment://profile.png`)
    return message.util!.send(embed)

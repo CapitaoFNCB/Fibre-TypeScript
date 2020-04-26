@@ -37,7 +37,7 @@ export default class DiscordJsCommand extends Command {
     await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`).then(res => res.json()).then(body => {
       found = body;
     })
-    if(!found) return message.util!.send(new this.client.Embed()
+    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription(`Nothing found for ${data.searching}`)
     )
     return message.util!.send({embed: found})

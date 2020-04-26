@@ -34,27 +34,27 @@ export default class TagCommand extends Command {
     public async exec (message: Message, { name, content }: { name: string; content: string; }) {
 
         const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-        if(perms.length > 0) return message.util!.send(new this.client.Embed()
+        if(perms.length > 0) return message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
         )
 
         if (name.match(USER_MENTION_REGEX) || name.match(CHANNEL_MENTION_REGEX))
-            return message.util!.send(new this.client.Embed().setDescription(`You cannot name your tag that, as it contains a mention of a channel, or user.`));
+            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`You cannot name your tag that, as it contains a mention of a channel, or user.`));
 
-        if (!name.length) return message.util!.send(new this.client.Embed().setDescription(`Please include a tag name`));
+        if (!name.length) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Please include a tag name`));
 
-        if (name.length > 16) return message.util!.send(new this.client.Embed().setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
+        if (name.length > 16) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
             
         let guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
 
         if(guild.customCommands.find((c) => c.name === name)){
-            return message.util!.send(new this.client.Embed()
+            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
                 .setDescription(`Tag \`${name}\` Already Exists`)
             )
         }
 
         if(guild.customCommands.length == 10){
-            return message.util!.send(new this.client.Embed()
+            return message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
                 .setDescription(`Max Number of tags is 10`)
             )
         }
@@ -70,7 +70,7 @@ export default class TagCommand extends Command {
 
         guild.save()
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription(`Created Tag \`${name}\``)
         )
 

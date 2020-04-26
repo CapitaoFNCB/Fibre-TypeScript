@@ -81,7 +81,6 @@ declare module "discord-akairo" {
        this.guildsData = guildsData;
        this.membersData = membersData;
        
-
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
               let prefix = "+";
@@ -94,20 +93,20 @@ declare module "discord-akairo" {
             handleEdits: true,
             argumentDefaults: {
               prompt: {
-                modifyStart: (_, str?: string) => new this.Embed(_).promptEmbed(str),
-                modifyRetry: (_, str?: string) => new this.Embed(_).promptEmbed(str),
-                cancel: _ =>
+                modifyStart: async (_, str?: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                modifyRetry: async (_, str?: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                cancel: async _ =>
                   new this.Embed(_).promptEmbed(
                     "Alright, I've cancelled the command for you."
-                  ),
-                ended: _ =>
+                    , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                ended: async _ =>
                   new this.Embed(_).promptEmbed(
                     "You took too many tries to respond correctly, so I've cancelled the command"
-                  ),
-                timeout: _ =>
+                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                timeout: async _ =>
                   new this.Embed(_).promptEmbed(
                     "You took long to respond, so I've cancelled the command"
-                  ),
+                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
                 retries: 3,
                 time: 6e4
               },

@@ -34,26 +34,26 @@ export default class PlayCommand extends Command {
     const { channel } = message.member!.voice
 
     if (!channel) {
-        return message.util!.send(new this.client.Embed().setDescription("You Need to be in a voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new this.client.Embed().setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed().setDescription("You need to be in the same voice channel as me to use Play Command"));
+        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Play Command"));
     }
 
-    this.client.manager.search(query, message.author).then(found => {
+    this.client.manager.search(query, message.author).then(async found => {
         switch (found.loadType) {
 
             case "TRACK_LOADED":
                 if(found.tracks[0].isStream){
                     if(found.tracks[0].uri.startsWith("https://www.you")){
-                    return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
+                    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("Unfortunately I cannot play youtube streams right now"))
                     }
                 }
                 player = this.client.manager.players.spawn({
@@ -65,7 +65,7 @@ export default class PlayCommand extends Command {
                 if(!player.playing) player.play();
 
                 if(player.queue.length > 1){
-                    message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                    message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 }
             break;
 
@@ -80,7 +80,7 @@ export default class PlayCommand extends Command {
                 if(!player.playing) player.play();
 
                 if(player.queue.length > 1){
-                    message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                    message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 }
             break;
 
@@ -93,12 +93,12 @@ export default class PlayCommand extends Command {
         
                 found.playlist.tracks.forEach(track => player.queue.add(track));
                 const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
-                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
+                message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                 if(!player.playing) player.play()
             break;
 
             case "LOAD_FAILED":
-                message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`No Songs Found`))
             break;
 
             case "NO_MATCHES":
@@ -109,7 +109,7 @@ export default class PlayCommand extends Command {
                         case "TRACK_LOADED":
                             if(found.tracks[0].isStream){
                                 if(found.tracks[0].uri.startsWith("https://www.you")){
-                                return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
+                                return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("Unfortunately I cannot play youtube streams right now"))
                                 }
                             }
                             player = this.client.manager.players.spawn({
@@ -121,7 +121,7 @@ export default class PlayCommand extends Command {
                             if(!player.playing) player.play();
             
                             if(player.queue.length > 1){
-                                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                                message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                             }
                         break;
 
@@ -136,7 +136,7 @@ export default class PlayCommand extends Command {
                             if(!player.playing) player.play();
             
                             if(player.queue.length > 1){
-                                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                                message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                             }
                         break;
 
@@ -149,16 +149,16 @@ export default class PlayCommand extends Command {
                     
                             found.playlist.tracks.forEach(track => player.queue.add(track));
                             const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
-                            message.util!.send(new this.client.Embed().setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
+                            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                             if(!player.playing) player.play()
                         break;
 
                         case "LOAD_FAILED":
-                            message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
+                            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`No Songs Found`))
                         break; 
 
                         case "NO_MATCHES":
-                            message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
+                            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`No Songs Found`))
                         break;
                     }
                 })

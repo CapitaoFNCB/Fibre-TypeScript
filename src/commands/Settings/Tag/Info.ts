@@ -29,12 +29,12 @@ export default class TagCommand extends Command {
         let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
 
         if(!command){
-            return message.util!.send(new this.client.Embed()
+            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
                 .setDescription(`\`${tag.toLowerCase()}\` is not a valid tag name.`)
             )
         }
 
-        message.util!.send(new this.client.Embed()
+        message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .addField(`Command Name:`,command.name)
             .addField(`Reply:`, command.answer.substr(0,1000))
             .addField(`Created:`, new Date(command.created).toLocaleString('en-GB', { timeZone: 'UTC' }) + " UTC")

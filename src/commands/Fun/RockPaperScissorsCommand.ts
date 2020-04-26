@@ -31,9 +31,9 @@ export default class RockPaperScissorsCommand extends Command {
 
     let bot_choice = choices[(Math.floor(Math.random() * (Math.floor(choices.length) - Math.ceil(0))) + Math.ceil(0))]
 
-    reactions.on('collect', r => {
+    reactions.on('collect', async r => {
 
-      channel_message.edit(new this.client.Embed().setDescription(result(r.emoji.name, bot_choice)))
+      channel_message.edit(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(result(r.emoji.name, bot_choice)))
 
       reactions.stop()
 

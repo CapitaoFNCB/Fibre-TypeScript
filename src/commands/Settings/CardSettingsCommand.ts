@@ -35,19 +35,19 @@ export default class CardSettingsCommand extends Command {
 
     const types: String[] = ["background", "colour"]
 
-    if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed()
+    if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
     )
 
     const founduser = await this.client.findOrCreateUser({id: message.author.id})
 
-    if(!change && message.attachments.size < 1) return message.util!.send(new this.client.Embed()
+    if(!change && message.attachments.size < 1) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription("No Change Found and or made")
     )
 
     if(type.toLowerCase() == "background"){
 
-        if(!founduser.premium) return message.util!.send(new this.client.Embed()
+        if(!founduser.premium) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription("This is premium use only")
         )
 
@@ -56,7 +56,7 @@ export default class CardSettingsCommand extends Command {
             founduser.backgound = await data.buffer()
             founduser.save() 
 
-            return message.util!.send(new this.client.Embed()
+            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
               .setDescription("Changed card background")
             )
         }
@@ -65,7 +65,7 @@ export default class CardSettingsCommand extends Command {
         founduser.backgound = await data.buffer()
         founduser.save()
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription("Changed card background")
        )
 

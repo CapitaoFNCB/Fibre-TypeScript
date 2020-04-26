@@ -26,14 +26,14 @@ export default class TagCommand extends Command {
         let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
 
         const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-        if(perms.length > 0) return message.util!.send(new this.client.Embed()
+        if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
         )
 
         guild.customCommands = guild.customCommands.filter((c) => c.name !== tag.toLowerCase());
         guild.save()
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .setDescription(`Deleted tag: \`${tag.toLowerCase()}\``)
         )
     }

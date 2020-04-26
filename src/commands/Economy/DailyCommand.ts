@@ -33,7 +33,7 @@ export default class DailyCommand extends Command {
         target.cash += daily;
         target.save()
 
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription(`${message.author.username} Claimed $${daily}`)
         )
 
@@ -48,7 +48,7 @@ export default class DailyCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new this.client.Embed()
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription(`You cannot use daily for ${str}`)
       )
     }

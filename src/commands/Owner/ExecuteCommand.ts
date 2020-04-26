@@ -7,6 +7,7 @@ export default class ExecCommand extends Command {
   public constructor() {
     super("exec", {
       aliases: ["exec", "execute"],
+      ownerOnly: true,
       args: [
         {
           id: "execution",
@@ -28,10 +29,6 @@ export default class ExecCommand extends Command {
   }
 
   public async exec(message: Message, { execution }: { execution: string }) {
-
-    if(!this.client.ownerOnly(message.author.id)) return message.util!.send(new this.client.Embed()
-      .setDescription("Owner Only Command")
-    )
 
     try {
       exec(execution, (error, stdout, stderr) => {

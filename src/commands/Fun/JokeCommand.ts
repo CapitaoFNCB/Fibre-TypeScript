@@ -21,7 +21,7 @@ export default class JokeCommand extends Command {
   public async exec(message: Message): Promise<Message> {
     const data = await api.joke()
 
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setTitle(data.data.title)
         .setDescription(data.data.body)
         .setURL(data.data.url)

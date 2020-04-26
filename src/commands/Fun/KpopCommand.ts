@@ -36,11 +36,11 @@ export default class KpopCommand extends Command {
       data = await api.kpop(query)
     }
 
-    if(!data) return message.util!.send(new this.client.Embed()
+    if(!data) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription("Unknown Artist")
     )
 
-    return message.util!.send(new this.client.Embed()
+    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
         .setDescription(`Name: ${data.data.name}\nBand: ${data.data.band}`)
         .setImage(data.data.img)
     )

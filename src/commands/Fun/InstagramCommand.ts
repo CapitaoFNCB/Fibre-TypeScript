@@ -32,7 +32,7 @@ export default class InstagramCommand extends Command {
   public async exec(message: Message, {string}: {string: string}): Promise<Message> {
     const search = await api.instagram(string)
 
-    if(!search.success) return message.util!.send(new this.client.Embed()
+    if(!search.success) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription("No Account with this name")
     )
 
