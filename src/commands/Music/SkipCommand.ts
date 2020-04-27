@@ -28,6 +28,12 @@ export default class SkipCommand extends Command {
 
         if(!guild.skip_users.includes(message.author.id)){
 
+
+            let users: String[] = guild.skip_users
+            users.push(`${message.author.id}`)
+            guild.skip_users = users
+            guild.save()
+
             if(voice_channel!.members.filter(r => r.user.bot !== true).size > 4){
 
                 if(guild.skip_users.length > 2){
