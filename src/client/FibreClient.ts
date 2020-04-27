@@ -158,7 +158,7 @@ declare module "discord-akairo" {
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
-          return data.length ? data : Flag.fail(word);
+          return data.length ? word : Flag.fail(word);
 
         })
 
