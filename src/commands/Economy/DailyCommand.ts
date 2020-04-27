@@ -19,13 +19,15 @@ export default class DailyCommand extends Command {
 
   public async exec(message: Message): Promise<Message> {
     let cooldown = 86400000
-    const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
+    const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild!.id})
+    console.log(target)
     let amount
     if(target.daily_time == 0) {
-        amount = Date.now() + cooldown
+        amount = Date.now() - 172800000  
     }else{
         amount = target.daily_time
     }
+
     if(cooldown - (Date.now() - amount) <= 0){
         target.daily_time = Date.now()
         let daily = (Math.floor(Math.random() * (Math.floor(50) - Math.ceil(25))) + Math.ceil(25))
@@ -38,6 +40,7 @@ export default class DailyCommand extends Command {
         )
 
     }else{
+    
         let str = ""
         if(parse(cooldown - (Date.now() - amount)).hours > 1){
             str += `${parse(cooldown - (Date.now() - amount)).hours}h `

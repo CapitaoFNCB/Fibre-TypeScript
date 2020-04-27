@@ -10,7 +10,8 @@ export function check_emojis(emoji){
     else if(emoji === '3️⃣') return 3
     else if(emoji === '4️⃣') return 4
     else if(emoji === '5️⃣') return 5
-    else if(emoji === '🗑️') return 6
+    else if(emoji === '🔼') return 6
+    else if(emoji === '🗑️') return 7
 }
 
 export function perms(check, member){

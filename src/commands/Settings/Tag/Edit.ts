@@ -4,11 +4,11 @@ import { Message } from "discord.js";
 export default class TagCommand extends Command {
     public constructor() {
         super("tag-edit", {
+            userPermissions: ["MANAGE_GUILD"],
             args: [
                 {
-                    id: "tag",
+                    id: "name",
                     type: "tag",
-                    match: "content",
                     prompt: {
                         start: "Please provide a tag to edit",
                         retry: (msg: Message, { failure }: { failure: { value: string} }) =>
@@ -29,25 +29,13 @@ export default class TagCommand extends Command {
         });
     }
 
-    public async exec(message: Message, { tag, content }: { tag: string; content: string; }) {
+    public async exec(message: Message, { name, content }: { name: string; content: string; }) {
 
         let guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
 
-        let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
+        let command = guild.customCommands.find((c) => c.name === name.toLowerCase())
 
-        const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-        if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
-            .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
-        )
-
-        if(!command){
-            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
-                .setDescription(`\`${tag.toLowerCase()}\` is not a valid tag name.`)
-            )
-        }
-
-
-        let filtered = guild.customCommands.filter((c) => c.name !== tag.toLowerCase());
+        let filtered = guild.customCommands.filter((c) => c.name !== name.toLowerCase());
 
         filtered.push({
             name: command.name.toLowerCase(),
@@ -60,5 +48,9 @@ export default class TagCommand extends Command {
 
         guild.customCommands = filtered
         guild.save()
+
+        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+            .setDescription(`Updated: \`${name.toLowerCase()}\``)
+        )
     }
 }
