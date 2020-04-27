@@ -24,7 +24,7 @@ export default class WorkCommand extends Command {
     let amount
 
     if(target.work_time == 0) {
-        amount = Date.now() + cooldown
+        amount = Date.now() - 172800000
     }else{
         amount = target.work_time
     }

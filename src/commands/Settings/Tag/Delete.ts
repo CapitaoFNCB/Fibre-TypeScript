@@ -4,6 +4,7 @@ import { Message } from "discord.js";
 export default class TagCommand extends Command {
     public constructor() {
         super("tag-delete", {
+            userPermissions: ["MANAGE_GUILD"],
             args: [
                 {
                     id: "tag",
@@ -22,14 +23,7 @@ export default class TagCommand extends Command {
     public async exec(message: Message, { tag }: { tag: string }) {
 
         let guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
-
-        let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
-
-        const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-        if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
-            .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
-        )
-
+        
         guild.customCommands = guild.customCommands.filter((c) => c.name !== tag.toLowerCase());
         guild.save()
 

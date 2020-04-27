@@ -8,7 +8,6 @@ export default class TagCommand extends Command {
                 {
                     id: "tag",
                     type: "tag",
-                    match: "content",
                     prompt: {
                         start: "What tag do you want to know info about",
                         retry: (msg: Message, { failure }: { failure: { value: string} }) =>
@@ -27,12 +26,6 @@ export default class TagCommand extends Command {
         let guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
 
         let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
-
-        if(!command){
-            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
-                .setDescription(`\`${tag.toLowerCase()}\` is not a valid tag name.`)
-            )
-        }
 
         message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
             .addField(`Command Name:`,command.name)

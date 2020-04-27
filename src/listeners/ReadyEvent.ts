@@ -1,6 +1,6 @@
 import { Listener } from "discord-akairo";
 import chalk from "chalk"
-import { ErelaClient } from "erela.js"
+import { ErelaClient, Player } from "erela.js"
 import { nodes, connection } from "../utils/Config"
 import mongoose from "mongoose";
 
@@ -30,12 +30,13 @@ export default class ReadyListener extends Listener {
     .on("nodeConnect", node => this.client.logger.info("New Node Created"))
 
     .on("queueEnd", async (player, track) => {
+      let plater: Player;
       guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
       guildData.last_playing = track.uri
       guildData.save()
 
       if(guildData.notifications){
-        player.textChannel.send(new this.client.Embed()
+        player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
           .setDescription("Queue Has Ended")
         )
       }
@@ -47,7 +48,7 @@ export default class ReadyListener extends Listener {
         guildData.save()
 
         if(guildData.notifications){
-          player.textChannel.send(new this.client.Embed()
+          player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
             .setDescription(`Now playing: ${track.title}`)
           )
         }
