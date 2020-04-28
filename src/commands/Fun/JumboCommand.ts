@@ -49,10 +49,7 @@ export default class JumboCommand extends Command {
             text = text.substring(pos + 5);
             text = text.substring(0, text.length - 3);
             image = text
-            data = await fetch(image)
-            let canvas = new Canvas(200,200)
-                .addImage(await data.buffer(), 0, 0,200, 200)
-            messageAtttachment = new MessageAttachment(canvas.toBuffer(), `emoji.png`)
+            messageAtttachment = new MessageAttachment(image, `emoji.png`)
         } else {
             data = await fetch(`https://cdn.discordapp.com/emojis/${emoji}.gif?size=2048`)
             if(data.status == 200){
@@ -60,9 +57,7 @@ export default class JumboCommand extends Command {
 
             }else{
                 data = await fetch(`https://cdn.discordapp.com/emojis/${emoji}.png?size=2048`)
-                let canvas = new Canvas(200,200)
-                    .addImage(await data.buffer(), 0, 0,200, 200)
-                messageAtttachment = new MessageAttachment(canvas.toBuffer(), `emoji.png`)
+                messageAtttachment = new MessageAttachment(await data.buffer(), `emoji.png`)
             }
         }
 

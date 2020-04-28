@@ -175,7 +175,8 @@ declare module "discord-akairo" {
     }
 
     public async start(): Promise<string> {
-    
+
         return this.login(this.config.token);
+        
     }
 }

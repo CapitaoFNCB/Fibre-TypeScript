@@ -22,8 +22,8 @@ export default class ExecCommand extends Command {
     let send_message = await message.channel.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("Fetching Data!"))
 
       exec("curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -", async (error, stdout, stderr) => {
-        if (error) return message.util!.send(`Error:\n\n\`${error}\``);
-        if (stderr) return message.util!.send(`Bash Error:\n\n\`${stderr}\``);
+        if (error) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error"));
+        if (stderr) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error"));
 
         let data: String[] = stdout.split("\n").filter(string => (string.startsWith("Download") || string.startsWith("Upload")))
         
