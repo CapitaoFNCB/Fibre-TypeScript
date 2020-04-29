@@ -32,15 +32,14 @@ export default class DiscordJsCommand extends Command {
 
     let data: any = this.library(search)
 
-    let found: any;
+    let found: any = await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`)
 
-    await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`).then(res => res.json()).then(body => {
-      found = body;
-    })
+    if(found.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
+
     if(!found) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription(`Nothing found for ${data.searching}`)
     )
-    return message.util!.send({embed: found})
+    return message.util!.send({embed: await found.json()})
   }
 
   private library(array: string[]){

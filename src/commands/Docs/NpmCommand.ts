@@ -31,30 +31,21 @@ export default class NpmCommand extends Command {
 
   public async exec(message: Message, { query }: { query: string }): Promise<Message> {
     
-    let downloads: any;
-    let all: any;
-    let size: any;
-    let files: any;
-    let body: any;
+    let data: any = await fetch(`https://registry.npmjs.org/${query}`)
 
-    await fetch(`https://registry.npmjs.org/${query}`).then(res => res.json()).then(async data => {
+    if(data.error || data.code) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
 
-      if(data.error || data.code) return;
+    let body: any = await data.json()
 
-      body = data
+    let search = await axios(`https://www.npmjs.com/package/${body.name}`)
 
-      await axios(`https://www.npmjs.com/package/${data.name}`).then(response => {
+    const html: string = search.data;
+    const $: any = cheerio.load(html)
+    let all: string[] = $.text().split(" ")
+    let downloads: string = all.filter(x => x.length > 3).filter(x => x.includes("Downloads") &&  !x.includes("DownloadsWeekly")).toString().split("Version")[0].split("Downloads").filter(x => x.length).toString()
+    let size: string = all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total")).length ? all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[0].split("Size")[1] + all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[1].split("Total")[0] : "`Unknown`"
+    let files: string | any = all.filter(x => x.length > 4 && x.includes("Files")).length ? all.filter(x => x.length > 4 && x.includes("Files"))[0].split("Files")[1].match(/\d+/) : "`Unknown`"
 
-        const html = response.data;
-        const $ = cheerio.load(html)
-
-        all = $.text().split(" ")
-
-        downloads = all.filter(x => x.length > 3).filter(x => x.includes("Downloads") &&  !x.includes("DownloadsWeekly")).toString().split("Version")[0].split("Downloads").filter(x => x.length).toString()
-        size = all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total")).length ? all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[0].split("Size")[1] + all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[1].split("Total")[0] : "`Unknown`"
-        files = all.filter(x => x.length > 4 && x.includes("Files")).length ? all.filter(x => x.length > 4 && x.includes("Files"))[0].split("Files")[1].match(/\d+/) : "`Unknown`"
-      });
-    })
 
     if(!body) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setDescription("No Package with this name")  
@@ -80,7 +71,7 @@ export default class NpmCommand extends Command {
       .addField("Number of Files:", `\`${files}\``,true)
       .addField("Maintainers:", `${body.maintainers.map(x => `\`${x.name}\``).join(" ")}`)
       .addField("Key Words:", body.keywords && body.keywords.length ? body.keywords.map(x => `\`${this.client.capitalize(x)}\``).join(" ") : `\`None\``)
-      .addField("Dependencies:", body.versions[body["dist-tags"].latest].dependencies && body.versions[body["dist-tags"].latest].dependencies.size ? Object.keys(body.versions[body["dist-tags"].latest].dependencies).map(x => `\`${x}\``).join(" ") : "`None`")
+      .addField("Dependencies:", body.versions[body["dist-tags"].latest].dependencies ? Object.keys(body.versions[body["dist-tags"].latest].dependencies).map(x => `\`${x}\``).join(" ") : "`None`")
 
     return message.util!.send(embed)
   }
