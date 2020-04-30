@@ -51,6 +51,10 @@ export default class NpmCommand extends Command {
       .setDescription("No Package with this name")  
     )
 
+    if(!body["dist-tags"]) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+      .setDescription("This package is missing information")  
+    )
+
     const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
       .setAuthor(`NPM | ${body.name}`, `https://static.npmjs.com/338e4905a2684ca96e08c7780fc68412.png`)
       .setDescription(body.description)

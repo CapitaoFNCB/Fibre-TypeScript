@@ -37,7 +37,8 @@ export default class JumboCommand extends Command {
         let data;
 
         if(!Number(emoji)) {
-            text = twemoji.parse(query);
+
+            text = twemoji.parse(query.split(" ")[0]);
 
             if(!text.startsWith("<img")){
                 return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))

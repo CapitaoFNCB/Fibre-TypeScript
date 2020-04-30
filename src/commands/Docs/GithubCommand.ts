@@ -28,11 +28,8 @@ export default class GithubCommand extends Command {
     }
     public async exec(message: Message, { query }: { query: string }): Promise<Message> {
 
-        let body: any;
-
-        await fetch(`https://api.github.com/users/${query}`).then(res => res.json()).then(data => {
-            body = data
-        })
+        let data: any = await fetch(`https://api.github.com/users/${query}`)
+        let body: any = await data.json()
 
         if(body.message) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
           .setDescription("No User Found")

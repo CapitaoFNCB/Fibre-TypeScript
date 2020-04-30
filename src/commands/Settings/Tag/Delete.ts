@@ -17,7 +17,8 @@ export default class TagCommand extends Command {
                     }
                 }
             ],
-            category: "flag"
+            category: "flag",
+            typing: true
         });
     }
     public async exec(message: Message, { tag }: { tag: string }) {
