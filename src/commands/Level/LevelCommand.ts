@@ -28,13 +28,13 @@ export default class Help extends Command {
 
   public async exec(message: Message, { member }: {member: GuildMember}): Promise<Message> {
     
-    if(member.user.bot) return message.util!.send(new this.client.Embed()
+    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("No Information is stored for bots")
     )
 
-    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild!.id})
+    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild!.id}, this.client)
 
-    const founduser = await this.client.findOrCreateUser({id: member.id})
+    const founduser = await this.client.findOrCreateUser({id: member.id}, this.client)
 
     let rank: any = 1;
     let members = await membersData.find({ guildId: message.guild!.id }).lean(),
@@ -66,7 +66,7 @@ export default class Help extends Command {
     const buffer = await user();
     const filename = `profile.png`;
     const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .attachFiles(attachment)
       .setImage(`attachment://profile.png`)
    return message.util!.send(embed)

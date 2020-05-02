@@ -1,6 +1,3 @@
-import usersData from "../database/User"
-import membersData from "../database/Member"
-import guildsData from "../database/Guild"
 import { MessageEmbed } from "discord.js"
 import { owners } from "./Config"
 
@@ -90,49 +87,64 @@ export function checkDays(date){
     return days + (days == 1 ? " day" : " days") + " ago";
 }
 
-export async function findOrCreateUser(param, isLean){
-    return new Promise(async function (resolve, reject){
-        let userData = (isLean ? await usersData.findOne(param).lean() : await usersData.findOne(param));
-        if(userData){
-            resolve(userData);
+export async function findOrCreateUser({ id: userID }, client, isLean?){
+    return new Promise(async (resolve) => {
+        if(client.databaseCache.users.get(userID)){
+            resolve(isLean ? client.databaseCache.users.get(userID).toJSON() : client.databaseCache.users.get(userID));
         } else {
-            userData = new usersData(param);
-            await userData.save();
-            resolve((isLean ? userData.toJSON() : userData));
+          let userData = (isLean ? await client.usersData.findOne({ id: userID }).lean() : await client.usersData.findOne({ id: userID }));
+          if(userData){
+              resolve(userData);
+          } else {
+              userData = new client.usersData({ id: userID });
+              await userData.save();
+              resolve((isLean ? userData.toJSON() : userData));
+          }
+          client.databaseCache.users.set(userID, userData);
         }
-    })
-}
+    });
+  }
 
-export async function findOrCreateMember(param, isLean){
-    return new Promise(async function (resolve, reject){
-        let memberData = (isLean ? await membersData.findOne(param).lean() : await membersData.findOne(param));
-        if(memberData){
-            resolve(memberData);
+  export async function findOrCreateGuild({ id: guildID }, client, isLean?){
+    return new Promise(async (resolve) => {
+        if(client.databaseCache.guilds.get(guildID)){
+            resolve(isLean ? client.databaseCache.guilds.get(guildID).toJSON() : client.databaseCache.guilds.get(guildID));
         } else {
-            memberData = new membersData(param);
-            await memberData.save();
-            let guild = await guildsData.findOne({ id: param.guildID });
-            if(guild){
-                guild.members.push(memberData._id);
-                await guild.save();
+          let guildData = (isLean ? await client.guildsData.findOne({ id: guildID }).populate("members").lean() : await client.guildsData.findOne({ id: guildID }).populate("members"));
+          if(guildData){
+              resolve(guildData);
+          } else {
+              guildData = new client.guildsData({ id: guildID });
+              await guildData.save();
+              resolve(guildData.toJSON());
+          }
+          client.databaseCache.guilds.set(guildID, guildData);
+        }
+    });
+  }
+
+  export async function findOrCreateMember({ id: memberID, guildId: id }, client, isLean?){
+    return new Promise(async (resolve) => {
+        if(client.databaseCache.members.get(`${memberID}${id}`)){
+            resolve(isLean ? client.databaseCache.members.get(`${memberID}${id}`).toJSON() : client.databaseCache.members.get(`${memberID}${id}`));
+        } else {
+          let memberData = (isLean ? await client.membersData.findOne({ id: memberID, guildId: id }).lean() : await client.membersData.findOne({ id: memberID, guildId: id }));
+              if(memberData){
+                  resolve(memberData);
+              } else {
+                  memberData = new client.membersData({ id: memberID, guildId: id });
+                  await memberData.save();
+                  let guild: any = await client.findOrCreateGuild({ id: id });
+                  if(guild){
+                      guild.members.push(memberData._id);
+                      await guild.save();
+                  }
+                  resolve((isLean ? memberData.toJSON() : memberData));
+                }
+                client.databaseCache.members.set(`${memberID}${id}`, memberData);
             }
-            resolve((isLean ? memberData.toJSON() : memberData));
-        }
-    });
-}
-
-export async function findOrCreateGuild(param, isLean){
-    return new Promise(async function (resolve, reject){
-        let guildData = (isLean ? await guildsData.findOne(param).populate("members").lean() : await guildsData.findOne(param).populate("members"));
-        if(guildData){
-            resolve(guildData);
-        } else {
-            guildData = new guildsData(param);
-            await guildData.save();
-            resolve(guildData.toJSON());
-        }
-    });
-}
+          });
+      } 
 
 export async function getUsersData(client, users){
     return new Promise(async function(resolve, reject){

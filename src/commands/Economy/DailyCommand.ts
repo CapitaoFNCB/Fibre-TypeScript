@@ -19,8 +19,7 @@ export default class DailyCommand extends Command {
 
   public async exec(message: Message): Promise<Message> {
     let cooldown = 86400000
-    const target = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild!.id})
-    console.log(target)
+    const target = await this.client.membersData.findOne({ id: message.author.id, guildId: message.guild!.id})
     let amount
     if(target.daily_time == 0) {
         amount = Date.now() - 172800000  
@@ -35,7 +34,7 @@ export default class DailyCommand extends Command {
         target.cash += daily;
         target.save()
 
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
           .setDescription(`${message.author.username} Claimed $${daily}`)
         )
 
@@ -51,7 +50,7 @@ export default class DailyCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`You cannot use daily for ${str}`)
       )
     }

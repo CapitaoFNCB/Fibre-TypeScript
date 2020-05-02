@@ -8,6 +8,7 @@ export default class AllCommand extends Command {
     super("all", {
       aliases: ["all"],
       category: "Corona",
+      channel: "guild",
       description: {
         content: "All Command",
         usage: "all",
@@ -20,7 +21,7 @@ export default class AllCommand extends Command {
   public async exec(message: Message): Promise<Message> {
     const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries').then(res => res.json())
 
-    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
             // Cases
         .addField("Cases:",data.map(x => x.cases).reduce((a, b) => a + b).toLocaleString(),true)
         .addField("Today Cases:",data.map(x => x.todayCases).reduce((a, b) => a + b).toLocaleString(),true)

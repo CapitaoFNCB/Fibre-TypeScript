@@ -33,17 +33,17 @@ export default class RadioCommand extends Command {
     let player: any;
     
     if (!channel) {
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
+      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
     }
 
     let filter = {
@@ -59,7 +59,7 @@ export default class RadioCommand extends Command {
         })
     })
 
-    if(!str.length) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!str.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("Invalid Radio Stream")
     )
 
@@ -72,7 +72,7 @@ export default class RadioCommand extends Command {
                 textChannel: message.channel,
             })
           if(player.queue.length > 0){
-            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
           }  
           player.queue.add(res.tracks[0])
           if(!player.playing) player.play()
@@ -80,7 +80,7 @@ export default class RadioCommand extends Command {
         
         case "LOAD_FAILED":
             player = this.client.manager.players.get(message.guild?.id)
-            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
             if(player){
                 if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
             }
@@ -88,7 +88,7 @@ export default class RadioCommand extends Command {
 
         case "NO_MATCHES":
             player = this.client.manager.players.get(message.guild?.id)
-            message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
             if(player){
                 if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
             }

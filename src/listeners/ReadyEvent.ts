@@ -33,7 +33,7 @@ export default class ReadyListener extends Listener {
     .on("nodeConnect", node => this.client.logger.info("New Node Created"))
 
     .on("queueEnd", async (player, track) => {
-      guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+      guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
       guildData.last_playing = track.uri
       guildData.save()
 
@@ -45,7 +45,7 @@ export default class ReadyListener extends Listener {
     })
 
     .on("trackStart", async (player, track) => {
-        guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+        guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
         guildData.skip_users = []
         guildData.save()
 
@@ -59,7 +59,7 @@ export default class ReadyListener extends Listener {
   
 
     .on("trackEnd", async (player, track) => {
-      guildData = await this.client.findOrCreateGuild({ id: player.guild.id });
+      guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
       guildData.last_playing = track.uri
       guildData.save()
     })

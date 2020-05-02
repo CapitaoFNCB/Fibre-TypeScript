@@ -49,7 +49,7 @@ export default class EvalCommand extends Command {
   public async exec (message: Message, { toEval, depth, silent }: { toEval: any; depth: number; silent: boolean }) {
 
 
-    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
     
     try {
       const hrStart: [number, number] = process.hrtime();

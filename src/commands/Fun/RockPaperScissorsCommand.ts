@@ -6,6 +6,7 @@ export default class RockPaperScissorsCommand extends Command {
     super("rps", {
       aliases: ["rps"],
       category: "Fun",
+      channel: "guild",
       description: {
         content: "Rock Paper Scissors Command",
         usage: "rps",
@@ -16,7 +17,7 @@ export default class RockPaperScissorsCommand extends Command {
   }
 
   public async exec(message: Message) {
-      let channel_message = await message.util!.send(new this.client.Embed()
+      let channel_message = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("React to play!")
     )
     channel_message.react("✂️");
@@ -33,7 +34,7 @@ export default class RockPaperScissorsCommand extends Command {
 
     reactions.on('collect', async r => {
 
-      channel_message.edit(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(result(r.emoji.name, bot_choice)))
+      channel_message.edit(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(result(r.emoji.name, bot_choice)))
 
       reactions.stop()
 

@@ -35,19 +35,19 @@ export default class CardSettingsCommand extends Command {
 
     const types: String[] = ["background", "colour"]
 
-    if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!types.includes(type.toLowerCase())) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`There is no setting for ${type.toLowerCase()}\nTry: ${types.map(x => `\`` + x + `\``)}`)
     )
 
-    const founduser = await this.client.findOrCreateUser({id: message.author.id})
+    const founduser = await this.client.usersData.findOne({id: message.author.id})
 
-    if(!change && message.attachments.size < 1) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!change && message.attachments.size < 1) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("No Change Found and or made")
     )
 
     if(type.toLowerCase() == "background"){
 
-        if(!founduser.premium) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        if(!founduser.premium) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
           .setDescription("This is premium use only")
         )
 
@@ -56,7 +56,7 @@ export default class CardSettingsCommand extends Command {
             founduser.backgound = await data.buffer()
             founduser.save() 
 
-            return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+            return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
               .setDescription("Changed card background")
             )
         }
@@ -65,7 +65,7 @@ export default class CardSettingsCommand extends Command {
         founduser.backgound = await data.buffer()
         founduser.save()
 
-        return message.util!.send(new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("Changed card background")
        )
 

@@ -23,12 +23,11 @@ export default class TagCommand extends Command {
 
     public async exec (message: Message, { tag }: { tag: string }) {
 
-
-        let guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
+        let guild = await this.client.guildsData({id: message.guild!.id})
 
         let command = guild.customCommands.find((c) => c.name === tag.toLowerCase())
 
-        message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
             .addField(`Command Name:`,command.name)
             .addField(`Reply:`, command.answer.substr(0,1000))
             .addField(`Created:`, new Date(command.created).toLocaleString('en-GB', { timeZone: 'UTC' }) + " UTC")

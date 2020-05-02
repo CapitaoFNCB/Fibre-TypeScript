@@ -1,8 +1,8 @@
 import { AkairoClient, CommandHandler, ListenerHandler, Flag } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, findOrCreateUser, findOrCreateGuild, findOrCreateMember, guildOnly, ownerOnly, perms, check_emojis, getUsersData } from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser } from "../utils/Functions"
 import { owners } from "../utils/Config";
-import { Message } from "discord.js";
+import { Message, Collection } from "discord.js";
 import guildsData from "../database/Guild"
 import membersData from "../database/Member"
 import usersData from "../database/User"
@@ -31,9 +31,6 @@ declare module "discord-akairo" {
         flag;
         checkDays;
         manager;
-        findOrCreateUser;
-        findOrCreateGuild;
-        findOrCreateMember;
         guildOnly;
         ownerOnly;
         Embed;
@@ -44,6 +41,10 @@ declare module "discord-akairo" {
         usersData;
         guildsData;
         membersData;
+        databaseCache;
+        findOrCreateUser;
+        findOrCreateMember;
+        findOrCreateGuild;
     }
   }
   
@@ -67,9 +68,6 @@ declare module "discord-akairo" {
        this.flag = flag;
        this.resolve = resolve;
        this.capitalize = capitalize;
-       this.findOrCreateGuild = findOrCreateGuild;
-       this.findOrCreateMember = findOrCreateMember;
-       this.findOrCreateUser = findOrCreateUser;
        this.guildOnly = guildOnly;
        this.ownerOnly = ownerOnly;
        this.Embed = Embed;
@@ -80,12 +78,19 @@ declare module "discord-akairo" {
        this.usersData = usersData;
        this.guildsData = guildsData;
        this.membersData = membersData;
+       this.findOrCreateUser = findOrCreateUser;
+       this.findOrCreateMember = findOrCreateMember;
+       this.findOrCreateGuild = findOrCreateGuild;
+       this.databaseCache = {};
+       this.databaseCache.users = new Collection();
+       this.databaseCache.guilds = new Collection();
+       this.databaseCache.members = new Collection();
        
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
               let prefix = "+";
               if(!msg.guild) return prefix;
-              const guild = await guildsData.findOne({ id: msg.guild!.id })
+              const guild = await this.findOrCreateGuild({id: msg.guild.id}, this)
               if(guild) prefix = guild.prefix
               return prefix
             },
@@ -140,11 +145,17 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild = await this.findOrCreateGuild({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id })
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
           return data.length ? Flag.fail(word) : word;
+
+        })
+
+        this.commandHandler.resolver.addType("catAlias", async (msg: Message, word: string) => {
+
+          return this.commandHandler.findCommand(word) ? this.commandHandler.findCommand(word) : this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) ? this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) : null
 
         })
 
@@ -154,7 +165,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild = await this.findOrCreateGuild({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id })
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
@@ -168,7 +179,7 @@ declare module "discord-akairo" {
     }
 
 
-    async broadcastEval(evalStr, onlyOneValid) {
+    public async broadcastEval(evalStr, onlyOneValid) {
       const results = await this.shard!.broadcastEval(evalStr);
       if (onlyOneValid) return results.find(r => r);
       return results;

@@ -7,6 +7,7 @@ export default class CountrylistCommand extends Command {
     super("countrylist", {
       aliases: ["countrylist"],
       category: "Corona",
+      channel: "guild",
       description: {
         content: "Countrylist Command",
         usage: "countrylist",
@@ -23,7 +24,7 @@ export default class CountrylistCommand extends Command {
     const restcontries: string[] = final_data.slice(80,120)
     const finalcontries: string[] = final_data.slice(120,180)
     const finalcontries2: string[] = final_data.slice(180,)
-    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setTitle("Country List")
         .addField(`\u200b`,`\`` + countries.map(x => x).join("\`, \`") + `\``,false)
         .addField(`\u200b`,`\`` + restcontries.map(x => x).join("\`, \`") + `\``,false)

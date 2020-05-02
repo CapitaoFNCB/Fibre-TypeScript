@@ -28,18 +28,18 @@ export default class PrefixCommand extends Command {
   public async exec(message: Message, { prefix }: { prefix: String }) {
 
     const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-    if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
     )
 
-    if(prefix.length > 5) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(prefix.length > 5) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("The Max length of a prefix is 5")
     )
-    const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
+    let guild = await this.client.guildsData({id: message.guild!.id})
     guild.prefix = prefix
     guild.save()
 
-    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`New prefix \`${prefix}\``)
     )
   }

@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 
 export default class TagCommand extends Command {
     public constructor() {
-        super("tag-queueloop", {
+        super("tag-loopnone", {
             category: "flag",
             typing: true
         });
@@ -19,9 +19,10 @@ export default class TagCommand extends Command {
         if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There is no player for this guild"));
         if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Leave Command"));
 
-        player.setQueueRepeat(true)
+        player.setQueueRepeat(false)
+        player.setTrackRepeat(false)
 
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("Looping Queue"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("Looping None"))
 
     }
 }

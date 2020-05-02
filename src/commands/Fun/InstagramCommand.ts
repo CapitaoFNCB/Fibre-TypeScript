@@ -10,6 +10,7 @@ export default class InstagramCommand extends Command {
     super("instagram", {
       aliases: ["instagram"],
       category: "Fun",
+      channel: "guild",
       args: [
         {
           id: "string",
@@ -32,7 +33,7 @@ export default class InstagramCommand extends Command {
   public async exec(message: Message, {string}: {string: string}): Promise<Message> {
     const search = await api.instagram(string)
 
-    if(!search.success) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!search.success) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("No Account with this name")
     )
 

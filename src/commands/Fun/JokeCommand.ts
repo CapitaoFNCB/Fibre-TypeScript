@@ -9,6 +9,7 @@ export default class JokeCommand extends Command {
     super("joke", {
       aliases: ["joke"],
       category: "Fun",
+      channel: "guild",
       description: {
         content: "Joke Command",
         usage: "joke",
@@ -21,7 +22,7 @@ export default class JokeCommand extends Command {
   public async exec(message: Message): Promise<Message> {
     const data = await api.joke()
 
-    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setTitle(data.data.title)
         .setDescription(data.data.body)
         .setURL(data.data.url)

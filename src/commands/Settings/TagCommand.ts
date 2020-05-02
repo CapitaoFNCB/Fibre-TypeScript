@@ -26,11 +26,11 @@ export default class TagCommand extends Command {
         ],
 
         otherwise: async (message: Message) => {
-            const guild = await this.client.findOrCreateGuild({ id: message.guild!.id })
+            const guild = await this.client.findOrCreateGuild({ id: message.guild!.id }, this.client)
 
             let prefix = guild.prefix
 
-            return new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help tag\``)
+            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help tag\``)
         }
     }
 

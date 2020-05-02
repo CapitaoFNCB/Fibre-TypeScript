@@ -8,6 +8,7 @@ export default class GithubCommand extends Command {
       super("github", {
         aliases: ["github"],
         category: "Docs",
+        channel: "guild",
         args: [
           {
               id: "query",
@@ -31,11 +32,11 @@ export default class GithubCommand extends Command {
         let data: any = await fetch(`https://api.github.com/users/${query}`)
         let body: any = await data.json()
 
-        if(body.message) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        if(body.message) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
           .setDescription("No User Found")
         )
 
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
           .setThumbnail(body.avatar_url)
           .addField("Username:", `\`${body.login}\``, true)
           .addField("User ID:", `\`${body.id}\``, true)

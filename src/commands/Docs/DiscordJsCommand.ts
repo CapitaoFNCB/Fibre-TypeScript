@@ -7,6 +7,7 @@ export default class DiscordJsCommand extends Command {
     super("discordjs", {
       aliases: ["discordjs","djs"],
       category: "Docs",
+      channel: "guild",
       args: [
         {
             id: "query",
@@ -34,9 +35,9 @@ export default class DiscordJsCommand extends Command {
 
     let found: any = await fetch(`https://djsdocs.sorta.moe/v2/embed?src=${data.searchlibrary}&q=${data.searching}`)
 
-    if(found.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(found.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
 
-    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription(`Nothing found for ${data.searching}`)
     )
     return message.util!.send({embed: await found.json()})

@@ -9,6 +9,7 @@ export default class BotstatsCommand extends Command {
       super("botstats", {
         aliases: ["botstats"],
         category: "Core",
+        channel: "guild",
         description: {
           content: "Displays the bots statistics",
           usage: "botstats",
@@ -29,7 +30,7 @@ export default class BotstatsCommand extends Command {
         let music: number[] = await this.client.shard!.fetchClientValues('manager.players.size')
         let memory: number[] = await this.client.shard!.broadcastEval('process.memoryUsage().heapUsed / 1024 / 1024 / 1024')
 
-        const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .addField("Bot Information:", `Guilds: \`${guilds.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString()}\`\nUsers: \`${users.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString()}\`\nEmojis: \`${emojis.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString()}\`\nMusic Performances: \`${music.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString()}\``, true)
         .addField("Process Information", `Node.js Version: \`${process.version}\`\nLangauge: [\`Typescript\`](${"https://www.typescriptlang.org"})\nDiscord.js: \`${require("discord.js").version}\`\nDiscord-akairo: \`${require("discord-akairo").version}\``,true)
         .addField("Process Usage", `CPU Usage: \`${cpu == 0 ? "0.1" : cpu}%\`\nMemory Usage: \`${memory.reduce((prev, guildCount) => prev + guildCount, 0).toFixed(2)} / ${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB\`\nNetwork Usage: \`${net.total ? net.total.outputMb : "Hosted On Windows Cannot access"} ⬆️\` / \`${net.total ? net.total.inputMb : "Hosted On Windows Cannot access"} ⬇️\``)

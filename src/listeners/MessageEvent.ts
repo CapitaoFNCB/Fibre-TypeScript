@@ -1,6 +1,5 @@
 import { Listener } from "discord-akairo";
 import { Message } from "discord.js";
-import safe from "safe-eval"
 
 export default class MessageListener extends Listener {
   public constructor() {
@@ -14,12 +13,16 @@ export default class MessageListener extends Listener {
 
     if(!message.guild) return;
     let member;
-    const guild = await this.client.findOrCreateGuild({id: message.guild?.id})
+    const guild = await this.client.findOrCreateGuild({id: message.guild!.id}, this.client)
     if(!message.author.bot){
       if(message.content.startsWith(guild.prefix)) return;
-      
-      member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild?.id})
 
+      let member = await this.client.membersData.findOne({id: message.author.id, guildId: message.guild.id})
+
+      if(!member){
+        member = new this.client.membersData({ id: message.author.id, guildId: message.guild.id });
+        await member.save();
+      }
       if(!guild.level){
         member.characters += message.content.length
         member.save()
@@ -39,6 +42,22 @@ export default class MessageListener extends Listener {
         // message.channel.send(`${message.author.username} Has Leveled Up to level ${member.level}!`)
       }
       member.save()
+
+      this.client.databaseCache.members.set(`${message.author.id}${message.guild.id}`,{
+        xp: member.xp || 0,
+        level: member.level || 0,
+        messages: member.messages || 0,
+        characters: member.characters || 0,
+        cash: member.cash || 0,
+        work_time: member.work_time || 0,
+        rob_time: member.rob_time || 0,
+        daily_time: member.daily_time || 0,
+        _id: member._id || message.author.id,
+        id: member.id,
+        guildId: member.guildId,
+        __v: member.__v || "__v"
+      })
+
     }
   }
 }

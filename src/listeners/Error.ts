@@ -14,7 +14,7 @@ export default class ErrorListener extends Listener {
     this.client.logger.error(`Error: ${error.message}`);
 
     return message.util?.send(
-      new new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).errorEmbed(
+      new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).errorEmbed(
         `There was an error while trying to execute this command. Please report this to the developer.\n\n\`${error.message}\``
       )
     );

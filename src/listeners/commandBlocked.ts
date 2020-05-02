@@ -15,7 +15,7 @@ export default class commandBlockedListener extends Listener {
     switch (reason) {
       case "owner":
           return message.util!.send(
-            new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+            new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
             .setDescription(`You cannot use the command: \`${command}\` due to its owner only`)
           );
           
@@ -23,7 +23,7 @@ export default class commandBlockedListener extends Listener {
 
       case "guild":
           return message.util!.send(
-            new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+            new this.client.Embed(message, "0491e2")
                   .setDescription(`You can only use the command: \`${command}\` in a guild (server)`)
           );
           break;

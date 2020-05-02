@@ -7,6 +7,7 @@ export default class PingCOmmand extends Command {
     super("ping", {
       aliases: ["ping"],
       category: "Core",
+      channel: "guild",
       description: {
         content: "Ping Command", 
         usage: "ping",
@@ -20,7 +21,7 @@ export default class PingCOmmand extends Command {
     return message.util!.send('Pinging...').then(async sent => {
         let timeDiff = Number(sent.editedTimestamp || sent.createdTimestamp) - Number(message.editedTimestamp || message.createdTimestamp)
 
-        return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
           .setDescription(`Response: \`${timeDiff} ms\`\nLatency: \`${Math.round(this.client.ws.ping)} ms\``));
         });
     }

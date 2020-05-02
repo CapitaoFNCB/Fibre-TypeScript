@@ -8,6 +8,7 @@ export default class GraphCommand extends Command {
     super("graph", {
       aliases: ["graph"],
       category: "Corona",
+      channel: "guild",
       args: [
         {
           id: "country",
@@ -17,7 +18,7 @@ export default class GraphCommand extends Command {
         }
       ],
       description: {
-        content: "Corona Command",
+        content: "Graph Command",
         usage: "graph",
         examples: ["graph ireland", "graph"]
       },
@@ -125,9 +126,9 @@ export default class GraphCommand extends Command {
       }
     });
    })
-   if(!image)return message.util!.send(new this.client.Embed().setDescription("No Country with this name"))
+   if(!image)return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("No Country with this name"))
    const attachment = new MessageAttachment(image, "image.png");
-   const embed = new this.client.Embed(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)))
+   const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
     .attachFiles(attachment)
     .setImage(`attachment://image.png`)
    return message.util!.send(embed)

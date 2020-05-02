@@ -8,6 +8,7 @@ export default class KpopCommand extends Command {
   public constructor() {
     super("kpop", {
       aliases: ["kpop"],
+      channel: "guild",
       category: "Fun",
       args: [
         {
@@ -36,11 +37,11 @@ export default class KpopCommand extends Command {
       data = await api.kpop(query)
     }
 
-    if(!data) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(!data) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("Unknown Artist")
     )
 
-    return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`Name: ${data.data.name}\nBand: ${data.data.band}`)
         .setImage(data.data.img)
     )

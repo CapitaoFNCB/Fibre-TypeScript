@@ -9,6 +9,7 @@ export default class JumboCommand extends Command {
     public constructor() {
       super("jumbo", {
         aliases: ["jumbo"],
+        channel: "guild",
         category: "Fun",
         args: [
           {
@@ -41,7 +42,7 @@ export default class JumboCommand extends Command {
             text = twemoji.parse(query.split(" ")[0]);
 
             if(!text.startsWith("<img")){
-                return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+                return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                     .setDescription("I Cannot Find This Emoji")
                 )
             }

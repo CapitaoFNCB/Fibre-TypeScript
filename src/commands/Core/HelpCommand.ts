@@ -1,15 +1,18 @@
-import { Command, Category } from "discord-akairo";
+import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-
+import { Category } from "discord-akairo";
+import { stripIndents } from "common-tags";
+ 
 export default class Help extends Command {
   constructor() {
     super("help", {
       aliases: ["help", "commands"],
       typing: true,
+      channel: "guild",
       args: [
         {
           id: "command",
-          type: "commandAlias",
+          type: "catAlias",
           default: null
         }
       ],
@@ -22,26 +25,39 @@ export default class Help extends Command {
     });
   }
 
-  async exec (message: Message, { command }: {command : Command}): Promise<Message> {
+  async exec (message: Message, { command }: {command : any}): Promise<Message> {
+
     if (!command) {
-      const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+      let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
 
-      for (const [name, category] of this.handler.categories.filter((c: Category<string, Command>) => !["flag"].includes(c.id))) {
+      for (const [name, category] of this.handler.categories.filter((c: Category<string, Command>) => !["flag",...(this.client.ownerID.includes(message.author.id) ? ["flag"] : ["Owner", "flag"])].includes(c.id))) {
         embed.addField(`${name} [${category.size}]`, category.filter(cmd => cmd.aliases.length > 0).map(cmd => `\`${this.client.capitalize(cmd.aliases[0])}\``).join(", ") || "There was an error")
       }
 
     return message.util!.send(embed);
     }
 
-    const embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+    if(command.ownerOnly == undefined){
+
+      let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
-      .setDescription(`
+      .setDescription(stripIndents`
+      **Commands**: ${command.map(command => `\`${command.id}\``).join(", ")}
+      `) 
+
+      return message.util!.send(embed);
+
+    }
+
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+      .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
+      .setDescription(stripIndents`
         **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${this.client.capitalize(alias)}\``).join(", ") : "Unknown"}
         **Usage**: ${command.description.usage || "Unknown"}
         **Description**: ${command.description.content || command}
         **Examples**: ${command.description.examples.map(x => `\`${x}\``).join(" ")}
-      `)
+      `) 
 
     return message.util!.send(embed);
   }

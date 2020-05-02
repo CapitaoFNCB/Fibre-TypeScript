@@ -13,14 +13,14 @@ export default class MissingPermissionsListener extends Listener {
         switch (type) {
             case "client":
                 return message.util!.send(
-                    new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+                    new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                         .setDescription(`I am missing the permission${missing.length > 1 ? "s" : ""}: ${this.missingPermissions(message.guild!.me, missing)} to use the command: \`${command}\``)
                 );
                 break;
             
             case "user":
                 return message.util!.send(
-                    new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+                    new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                         .setDescription(`You are missing the permission${missing.length > 1 ? "s" : ""}: ${this.missingPermissions(message.member, missing)} to use the command: \`${command}\``)
                 );
                 break;
@@ -29,7 +29,7 @@ export default class MissingPermissionsListener extends Listener {
         switch (missing) {
             case "nsfw":
                 return message.util!.send(
-                    new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
+                    new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                         .setDescription(`This channel is not \`NSFW\`. Please enter a \`NSFW\` channel.`)
                 );
                 break;

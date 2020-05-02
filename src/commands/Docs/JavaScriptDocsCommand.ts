@@ -7,6 +7,7 @@ export default class JavaScriptDocsCommand extends Command {
     super("javascript", {
       aliases: ["javascript", "js", "mdn"],
       category: "Docs",
+      channel: "guild",
       args: [
         {
             id: "query",
@@ -28,14 +29,17 @@ export default class JavaScriptDocsCommand extends Command {
 
   public async exec(message: Message, { query }: { query: string }): Promise<Message> {
 
-    let body: any = await fetch(`https://mdn.pleb.xyz/search?q=${query}`)
+    let body: any = await fetch(`https://api.duckduckgo.com/?q=javascript+${query}&format=json&atb=v208-1`)
 
-    if(body.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(body.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
 
-    let { Summary, URL, Title, Tags } = await body.json();
-    let embed = new this.client.Embed(message, await this.client.guildsData.findOne({ id: message.guild!.id }).then(guild => guild.colour))
-      .setAuthor(`JavaScript: ${Title}`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', `https://developer.mozilla.org${URL}`)
-      .setDescription(Summary.replace(/<[^>]*>?/gm, '') + `\n\n**Tags:**\n${Tags.map(x => x).join(", ")}`)
+    let data = await body.json()
+
+    if(!data.AbstractURL.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
+
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+      .setAuthor(`JavaScript`, 'https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png', data.AbstractURL)
+      .setDescription(data.Abstract.replace(/<[^>]*>?/gm, ''))
 
     return message.util!.send(embed)
   }
