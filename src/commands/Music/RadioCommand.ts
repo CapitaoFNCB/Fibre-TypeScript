@@ -67,32 +67,28 @@ export default class RadioCommand extends Command {
       switch (res.loadType){
         case "TRACK_LOADED":
             player = this.client.manager.players.spawn({
-                guild: message.guild,
-                voiceChannel: channel,
-                textChannel: message.channel,
-            })
+              guild: message.guild,
+              textChannel: message.channel,
+              voiceChannel: channel,
+              self_deaf: true
+          });
           if(player.queue.length > 0){
             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
           }  
           player.queue.add(res.tracks[0])
-          if(!player.playing) player.play()
+          let search_data = await this.client.queue.get(message.guild!.id)
+          if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+          if(search_data.paused) return;
+          if(!player.playing) player.play();
         break; 
         
         case "LOAD_FAILED":
-            player = this.client.manager.players.get(message.guild?.id)
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
-            if(player){
-                if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
-            }
+          message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
         break;
 
-        case "NO_MATCHES":
-            player = this.client.manager.players.get(message.guild?.id)
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Radio Station`))
-            if(player){
-                if(!player.playing) this.client.manager.players.destroy(message.guild?.id); 
-            }
-        break;     
+        case "LOAD_FAILED":
+          message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+        break; 
       }
     })
   }

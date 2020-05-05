@@ -47,8 +47,7 @@ export default class NpmCommand extends Command {
     let size: string = all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total")).length ? all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[0].split("Size")[1] + all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[1].split("Total")[0] : "`Unknown`"
     let files: string | any = all.filter(x => x.length > 4 && x.includes("Files")).length ? all.filter(x => x.length > 4 && x.includes("Files"))[0].split("Files")[1].match(/\d+/) : "`Unknown`"
 
-
-    if(!body) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(body.error) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("No Package with this name")  
     )
 

@@ -39,7 +39,7 @@ export default class HtmlCommand extends Command {
 
     let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setAuthor(`HTML`, 'https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_960_720.png', data.AbstractURL)
-      .setDescription(data.Abstract.replace(/<[^>]*>?/gm, ''))
+      .setDescription(data.Abstract.replace(/<[^>]*>?|&lt;[^>]*&gt;?/gmi, ''))
 
     return message.util!.send(embed)
   }

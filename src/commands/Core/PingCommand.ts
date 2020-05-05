@@ -1,6 +1,5 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import moment from "moment";
 
 export default class PingCOmmand extends Command {
   constructor() {

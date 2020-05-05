@@ -18,7 +18,7 @@ export default class PlayBackCommand extends Command {
 
   public async exec(message: Message) {
 
-    let guildData = await this.client.guildsData.findOne({ id: message.guild!.id }, this.client);
+    let guildData = await this.client.guildsData.findOne({ id: message.guild!.id });
     
     if(!guildData.last_playing.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("Play something first before you can use this")
@@ -43,15 +43,20 @@ export default class PlayBackCommand extends Command {
                 player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
-                    voiceChannel: channel
+                    voiceChannel: channel,
+                    self_deaf: true
                 });
 
                 player.queue.add(found.tracks[0]);
-                if(!player.playing) player.play();
-
                 if(player.queue.length > 1){
                     message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 }
+
+                let search_data = await this.client.queue.get(message.guild!.id)
+                if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                if(search_data.paused) return;
+                if(!player.playing) player.play();
+
             break;
 
             case "LOAD_FAILED":

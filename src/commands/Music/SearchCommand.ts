@@ -53,14 +53,19 @@ export default class SearchCommand extends Command {
                 player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
-                    voiceChannel: channel
-                });   
+                    voiceChannel: channel,
+                    self_deaf: true
+                });
                 player.queue.add(found.tracks[0]);
-                if(!player.playing) player.play();
-
                 if(player.queue.length > 1){
                     message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 }
+                
+                let track_data = await this.client.queue.get(message.guild!.id)
+                if(!track_data) track_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                if(track_data.paused) return;
+                if(!player.playing) player.play();
+
             break;
 
             case "SEARCH_RESULT":
@@ -93,16 +98,20 @@ export default class SearchCommand extends Command {
                         player = this.client.manager.players.spawn({
                             guild: message.guild,
                             textChannel: message.channel,
-                            voiceChannel: channel
-                        }); 
+                            voiceChannel: channel,
+                            self_deaf: true
+                        });
                         player.queue.add(tracks[reacted - 1])
-                        if(!player.playing) player.play()
                         if(send_message.editable)
                             send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-                            .setDescription(`Queued: ${tracks[0].title}`)
+                            .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                         )
 
                         send_message.reactions.removeAll().catch(null)
+                        let search_data = await this.client.queue.get(message.guild!.id)
+                        if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                        if(search_data.paused) return;
+                        if(!player.playing) player.play();
                     }
                     reactions.stop()
                 })
@@ -112,13 +121,16 @@ export default class SearchCommand extends Command {
                 player = this.client.manager.players.spawn({
                     guild: message.guild,
                     textChannel: message.channel,
-                    voiceChannel: channel
-                }); 
-        
+                    voiceChannel: channel,
+                    self_deaf: true
+                });
                 found.playlist.tracks.forEach(track => player.queue.add(track));
                 const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
                 message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                if(!player.playing) player.play()
+                let search_data = await this.client.queue.get(message.guild!.id)
+                if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                if(search_data.paused) return;
+                if(!player.playing) player.play();
             break;
 
             case "LOAD_FAILED":
@@ -139,14 +151,19 @@ export default class SearchCommand extends Command {
                             player = this.client.manager.players.spawn({
                                 guild: message.guild,
                                 textChannel: message.channel,
-                                voiceChannel: channel
-                            });   
+                                voiceChannel: channel,
+                                self_deaf: true
+                            });
                             player.queue.add(found.tracks[0]);
-                            if(!player.playing) player.play();
-            
                             if(player.queue.length > 1){
                                 message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
                             }
+
+                            let search_data = await this.client.queue.get(message.guild!.id)
+                            if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                            if(search_data.paused) return;
+                            if(!player.playing) player.play();
+
                         break;
 
                         case "SEARCH_RESULT":
@@ -181,18 +198,23 @@ export default class SearchCommand extends Command {
                                     player = this.client.manager.players.spawn({
                                         guild: message.guild,
                                         textChannel: message.channel,
-                                        voiceChannel: channel
-                                    }); 
+                                        voiceChannel: channel,
+                                        self_deaf: true
+                                    });
                                     player.queue.add(tracks[reacted - 1])
-                                    if(!player.playing) player.play()
                                     if(send_message.editable)
                                         send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-                                        .setDescription(`Queued: ${tracks[0].title}`)
+                                        .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                                     )
 
+                                    let search_data = await this.client.queue.get(message.guild!.id)
+                                    if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                                     send_message.reactions.removeAll().catch(null)
+                                    reactions.stop()
+                                    if(search_data.paused) return;
+                                    if(!player.playing) player.play();
+
                                 }
-                                reactions.stop()
                             })
                         break;
 
@@ -200,13 +222,17 @@ export default class SearchCommand extends Command {
                             player = this.client.manager.players.spawn({
                                 guild: message.guild,
                                 textChannel: message.channel,
-                                voiceChannel: channel
-                            }); 
+                                voiceChannel: channel,
+                                self_deaf: true
+                            });
                     
                             found.playlist.tracks.forEach(track => player.queue.add(track));
                             const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
                             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                            if(!player.playing) player.play()
+                            let playlist_data = await this.client.queue.get(message.guild!.id)
+                            if(!playlist_data) playlist_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                            if(playlist_data.paused) return;
+                            if(!player.playing) player.play();
                         break;
 
                         case "LOAD_FAILED":

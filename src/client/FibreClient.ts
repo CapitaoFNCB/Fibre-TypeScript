@@ -45,6 +45,7 @@ declare module "discord-akairo" {
         findOrCreateUser;
         findOrCreateMember;
         findOrCreateGuild;
+        queue;
     }
   }
   
@@ -85,7 +86,8 @@ declare module "discord-akairo" {
        this.databaseCache.users = new Collection();
        this.databaseCache.guilds = new Collection();
        this.databaseCache.members = new Collection();
-       
+       this.queue = new Collection();
+
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
               let prefix = "+";

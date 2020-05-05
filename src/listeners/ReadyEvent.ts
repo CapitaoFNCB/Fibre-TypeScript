@@ -28,16 +28,15 @@ export default class ReadyListener extends Listener {
       top_gg.init(this.client);
     }
 
-    let guildData;
     this.client.manager = new ErelaClient(this.client, nodes)
     .on("nodeConnect", node => this.client.logger.info("New Node Created"))
 
     .on("queueEnd", async (player, track) => {
-      guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
-      guildData.last_playing = track.uri
-      guildData.save()
+      let queueEnd = await this.client.guildsData.findOne({ id: player.guild!.id })
+      queueEnd.last_playing = track.uri
+      queueEnd.save()
 
-      if(guildData.notifications){
+      if(queueEnd.notifications){
         player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
           .setDescription("Queue Has Ended")
         )
@@ -45,11 +44,11 @@ export default class ReadyListener extends Listener {
     })
 
     .on("trackStart", async (player, track) => {
-        guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
-        guildData.skip_users = []
-        guildData.save()
+        let trackStart = await this.client.guildsData.findOne({ id: player.guild!.id })
+        trackStart.skip_users = []
+        trackStart.save()
 
-        if(guildData.notifications){
+        if(trackStart.notifications){
           player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
             .setDescription(`Now playing: ${track.title}`)
           )
@@ -59,9 +58,9 @@ export default class ReadyListener extends Listener {
   
 
     .on("trackEnd", async (player, track) => {
-      guildData = await this.client.findOrCreateGuild({ id: player.guild.id }, this.client);
-      guildData.last_playing = track.uri
-      guildData.save()
+      let trackEnd = await this.client.guildsData.findOne({ id: player.guild!.id })
+      trackEnd.last_playing = track.uri
+      trackEnd.save()
     })
   }
 }

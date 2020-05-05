@@ -42,16 +42,21 @@ export default class RandomCommand extends Command {
                 case "SEARCH_RESULT":
                     const tracks = found.tracks.slice(0,10);
                     player = this.client.manager.players.spawn({
-                        guild: message.guild,
-                        textChannel: message.channel,
-                        voiceChannel: message.member!.voice.channel
-                    }); 
+                      guild: message.guild,
+                      textChannel: message.channel,
+                      voiceChannel: channel,
+                      self_deaf: true
+                  });
                     player.queue.add(tracks[0]);
-                    if(!player.playing) player.play();
-
                     if(player.queue.length > 1){
                         message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                     }
+
+                    let search_data = await this.client.queue.get(message.guild!.id)
+                    if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                    if(search_data.paused) return;
+                    if(!player.playing) player.play();
+
                 break;
             }
         })

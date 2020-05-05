@@ -21,6 +21,7 @@ export default class SkipCommand extends Command {
     const player = this.client.manager.players.get(message.guild!.id);
     if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There is no player for this guild"));
     if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Skip Command"));
+    if(player.queue.length < 1) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("The queue is empty"));
     const voice_channel = message.guild!.channels.cache.get(player.voiceChannel.id)
     let guild = await this.client.guildsData.findOne({id: message.guild!.id})
 
