@@ -30,6 +30,7 @@ export default class SearchCommand extends Command {
   public async exec(message: Message, { query }: { query: any }) {
 
     let player: any;
+    let filter: any;
 
     const { channel } = message.member!.voice
 
@@ -78,22 +79,58 @@ export default class SearchCommand extends Command {
 
                 let send_message = await message.util!.send(embed);
 
-                send_message.react("1️⃣")
-                send_message.react("2️⃣")
-                send_message.react("3️⃣")
-                send_message.react("4️⃣")
-                send_message.react("5️⃣")
+                if(tracks.length > 4) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 3) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 2) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 1) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if (tracks.length > 0) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                }
+
+                if(tracks.length > 0) send_message.react("1️⃣")
+                if(tracks.length > 1) send_message.react("2️⃣")
+                if(tracks.length > 2) send_message.react("3️⃣")
+                if(tracks.length > 3) send_message.react("4️⃣")
+                if(tracks.length > 4) send_message.react("5️⃣")
+                send_message.react("🔼")
                 send_message.react("🗑️")
-
-                const filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
-
+ 
                 const reactions = send_message.createReactionCollector(filter, { time: 30000 });
                 
                 reactions.on('collect', async r => {
                     let reacted = this.client.check_emojis(r.emoji.name)
 
-                    if(reacted > 5){
-                        if(send_message.deletable) send_message.delete()
+                    if(reacted > 6){
+                        if(send_message.deletable)
+                            send_message.delete()
+
+                    } else if(reacted == 6){
+                        player = this.client.manager.players.spawn({
+                            guild: message.guild,
+                            textChannel: message.channel,
+                            voiceChannel: channel,
+                            self_deaf: true
+                        });
+                        for (const track of tracks){
+                            player.queue.add(track)
+                        }
+                        if(send_message.editable)
+                            send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                            .setDescription(`Queued: All`)
+                        )
+                        
+                        send_message.reactions.removeAll().catch(null)
+
+                        let search_data = await this.client.queue.get(message.guild!.id)
+                        if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                        reactions.stop()
+                        if(search_data.paused) return;
+                        if(!player.playing) player.play();
+
                     }else{
                         player = this.client.manager.players.spawn({
                             guild: message.guild,
@@ -176,24 +213,55 @@ export default class SearchCommand extends Command {
 
                             let send_message = await message.util!.send(embed);
 
-                            send_message.react("1️⃣")
-                            send_message.react("2️⃣")
-                            send_message.react("3️⃣")
-                            send_message.react("4️⃣")
-                            send_message.react("5️⃣")
+                            if(tracks.length > 4) {
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
+                            } else if(tracks.length > 3) {
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '🗑️') && user.id === message.author.id;
+                            } else if(tracks.length > 2) {
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '🗑️') && user.id === message.author.id;
+                            } else if(tracks.length > 1) {
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '🗑️') && user.id === message.author.id;
+                            } else if (tracks.length > 0) {
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '🗑️') && user.id === message.author.id;
+                            }
+            
+                            if(tracks.length > 0) send_message.react("1️⃣")
+                            if(tracks.length > 1) send_message.react("2️⃣")
+                            if(tracks.length > 2) send_message.react("3️⃣")
+                            if(tracks.length > 3) send_message.react("4️⃣")
+                            if(tracks.length > 4) send_message.react("5️⃣")
                             send_message.react("🗑️")
 
-                            const filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
-
-                            const reactions = send_message.createReactionCollector(filter, { time: 30000 });
-                            
                             reactions.on('collect', async r => {
                                 let reacted = this.client.check_emojis(r.emoji.name)
-
-                                if(reacted > 5){
+            
+                                if(reacted > 6){
                                     if(send_message.deletable)
                                         send_message.delete()
+            
+                                } else if(reacted == 6){
+                                    player = this.client.manager.players.spawn({
+                                        guild: message.guild,
+                                        textChannel: message.channel,
+                                        voiceChannel: channel,
+                                        self_deaf: true
+                                    });
+                                    for (const track of tracks){
+                                        player.queue.add(track)
+                                    }
+                                    if(send_message.editable)
+                                        send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                                        .setDescription(`Queued: All`)
+                                    )
                                     
+                                    send_message.reactions.removeAll().catch(null)
+            
+                                    let search_data = await this.client.queue.get(message.guild!.id)
+                                    if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
+                                    reactions.stop()
+                                    if(search_data.paused) return;
+                                    if(!player.playing) player.play();
+            
                                 }else{
                                     player = this.client.manager.players.spawn({
                                         guild: message.guild,
@@ -206,15 +274,14 @@ export default class SearchCommand extends Command {
                                         send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                                         .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                                     )
-
+            
+                                    send_message.reactions.removeAll().catch(null)
                                     let search_data = await this.client.queue.get(message.guild!.id)
                                     if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
-                                    send_message.reactions.removeAll().catch(null)
-                                    reactions.stop()
                                     if(search_data.paused) return;
                                     if(!player.playing) player.play();
-
                                 }
+                                reactions.stop()
                             })
                         break;
 

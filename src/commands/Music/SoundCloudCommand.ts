@@ -30,6 +30,7 @@ export default class SoundCloudCommand extends Command {
   public async exec(message: Message, { query }: { query: string }) {
 
     let player: any;
+    let filter: any;
 
     const { channel } = message.member!.voice
 
@@ -79,15 +80,25 @@ export default class SoundCloudCommand extends Command {
 
                 let send_message = await message.util!.send(embed);
 
-                send_message.react("1️⃣")
-                send_message.react("2️⃣")
-                send_message.react("3️⃣")
-                send_message.react("4️⃣")
-                send_message.react("5️⃣")
+                if(tracks.length > 4) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 3) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 2) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if(tracks.length > 1) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                } else if (tracks.length > 0) {
+                    filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
+                }
+
+                if(tracks.length > 0) send_message.react("1️⃣")
+                if(tracks.length > 1) send_message.react("2️⃣")
+                if(tracks.length > 2) send_message.react("3️⃣")
+                if(tracks.length > 3) send_message.react("4️⃣")
+                if(tracks.length > 4) send_message.react("5️⃣")
                 send_message.react("🔼")
                 send_message.react("🗑️")
-
-                const filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🔼' || '🗑️') && user.id === message.author.id;
 
                 const reactions = send_message.createReactionCollector(filter, { time: 30000 });
                 
