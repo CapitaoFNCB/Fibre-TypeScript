@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+    <%- include('includes/head') %>
+    
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+	<body class="hold-transition skin-blue sidebar-mini">
+
+		<div class="wrapper">
+
+            <style>
+				input:focus {outline:0;}
+                button:focus {outline:0;}
+            </style>
+
+
+			<%- include('includes/header') %>
+			<%- include('includes/sidebar') %>
+
+			<div class="content-wrapper">
+
+
+				<section class="content-header">
+					<h1 style="color: aliceblue;"> Settings </h1>
+                </section>
+                
+                <section class="content">
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Your Profile</h3>
+                                </div>
+                                <form role="form" action="/settings" method="POST">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            <% if(user.premium){ %>
+                                                <label style="color: aliceblue;">Background Image</label>
+                                            </br>
+                                                <input type="text" name="image" placeholder="Image Link" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem; width: 40rem;">
+                                            </br>
+                                            </br>
+                                                <p style="color:aliceblue;" >If url is not an image, image wont show</p>
+                                            <% } %>
+                                                <label style="color: aliceblue;">Level Card Colour Picker </label>
+                                            </br>
+                                                <input type="text" name="colour" placeholder="<%= user.colour %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem">
+                                                <input type="color" name="colour" value="<%= user.colour %>" style="background-color: #333; color: aliceblue; border-color: #333; position: fixed; width: 6rem; height: 4rem; ">
+                                            </br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <%- include('includes/footer') %>
+		</div>
+        <script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="/bower_components/chart.js/Chart.js"></script>
+        <script>
+            $(function(){
+                $("#datepicker").datepicker({
+                    autoclose: true
+                });
+            });
+        </script>
+	</body>
+</html>

@@ -18,9 +18,12 @@ export default class GraphCommand extends Command {
         }
       ],
       description: {
-        content: "Graph Command",
-        usage: "graph",
-        examples: ["graph ireland", "graph"]
+        content: "Shows a graph of coronavirus statistics.",
+        usage: "graph < country >",
+        examples: [
+          "graph ireland", 
+          "graph"
+        ]
       },
       typing: true
     });

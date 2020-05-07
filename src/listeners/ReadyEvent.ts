@@ -14,8 +14,7 @@ export default class ReadyListener extends Listener {
 
   public exec() {
     
-    this.client.user?.setStatus("dnd");
-    this.client.logger.info(`Started!`);
+    this.client.logger.info(`Started ${this.client.user!.tag}`);
     mongoose.connect(connection, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
       this.client.logger.info(`Connected to the Mongodb database!`);
     }).catch((err) => {
@@ -56,7 +55,6 @@ export default class ReadyListener extends Listener {
       }
     )
   
-
     .on("trackEnd", async (player, track) => {
       let trackEnd = await this.client.guildsData.findOne({ id: player.guild!.id })
       trackEnd.last_playing = track.uri

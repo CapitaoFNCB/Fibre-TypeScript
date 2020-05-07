@@ -14,7 +14,6 @@ export default class Embed extends MessageEmbed {
       `Oops, ${this.msg.author.tag}`,
       this.msg.author.displayAvatarURL()
     )
-      .setColor(colour ? colour : "0491e2")
       .setDescription(error || "Unknown Error")
       .setFooter(
         `${this.msg.client.user!.username} • ${new Date(
@@ -25,7 +24,6 @@ export default class Embed extends MessageEmbed {
 
   public promptEmbed(string?: string, colour?: string): this {
     return this
-      .setColor(colour ? colour : "0491e2")
       .setDescription(string || "Unknown Prompt")
   }
 

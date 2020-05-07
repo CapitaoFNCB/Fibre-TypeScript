@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+    <%- include('includes/head') %>
+    
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+	<body class="hold-transition skin-blue sidebar-mini" style="background-color: #333;">
+
+		<div class="wrapper">
+
+			<%- include('includes/header') %>
+            <%- include('includes/sidebar') %>
+			<div class="content-wrapper">
+				<section class="content">
+
+                    <div class="col-md-0">
+                        <div class="box box-solid">
+                            <div class="box-header with-border text-center">
+                                <h3 class="box-title">Syntax: </br> [ ]: Needed, < >: Not Needed </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% bot.commandHandler.categories.forEach(function(category) { %>
+
+                        <% if(category.id !== "flag" && category.id !== "Owner" ) { %>
+                            <h1 style="color: aliceblue;" ><%- category.id %>:</h1>
+                            <% category.forEach(function(command) { %>
+                                <div class="col-md-0">
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border text-center">
+                                            <h3 class="box-title">Command Name: <%= bot.capitalize(command.id) %></h3>
+                                        </br>
+                                            <h3 class="box-title">Command Description: <%= command.description.content %></h3>
+                                        </br>
+                                            <h3 class="box-title">Command Usage: <%= command.description.usage %></h3>
+                                        </br>
+                                            <h3 class="box-title">Command Examples: <%= command.description.examples.map(x => x).join(", ") %></h3>
+                                        </br>
+                                            <h3 class="box-title">Aliases: <%= command.aliases.map(x => x).join(", ") %></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } %>
+                    <% }) %>
+				</section>
+			</div>
+            <%- include ('includes/footer') %>
+		</div>
+	</body>
+</html>

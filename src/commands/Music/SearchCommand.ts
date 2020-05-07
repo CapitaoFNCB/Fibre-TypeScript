@@ -123,7 +123,7 @@ export default class SearchCommand extends Command {
                             .setDescription(`Queued: All`)
                         )
                         
-                        send_message.reactions.removeAll().catch(null)
+                        send_message.reactions.removeAll().catch(error => null)
 
                         let search_data = await this.client.queue.get(message.guild!.id)
                         if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
@@ -144,7 +144,7 @@ export default class SearchCommand extends Command {
                             .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                         )
 
-                        send_message.reactions.removeAll().catch(null)
+                        send_message.reactions.removeAll().catch(error => null)
                         let search_data = await this.client.queue.get(message.guild!.id)
                         if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                         if(search_data.paused) return;
@@ -214,15 +214,15 @@ export default class SearchCommand extends Command {
                             let send_message = await message.util!.send(embed);
 
                             if(tracks.length > 4) {
-                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || '🗑️') && user.id === message.author.id;
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '5️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
                             } else if(tracks.length > 3) {
-                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || '🗑️') && user.id === message.author.id;
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '4️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
                             } else if(tracks.length > 2) {
-                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || '🗑️') && user.id === message.author.id;
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '3️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
                             } else if(tracks.length > 1) {
-                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || '🗑️') && user.id === message.author.id;
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '2️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
                             } else if (tracks.length > 0) {
-                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || '🗑️') && user.id === message.author.id;
+                                filter = (reaction, user) => (reaction.emoji.name === '1️⃣' || "🔼" || '🗑️') && user.id === message.author.id;
                             }
             
                             if(tracks.length > 0) send_message.react("1️⃣")
@@ -230,8 +230,10 @@ export default class SearchCommand extends Command {
                             if(tracks.length > 2) send_message.react("3️⃣")
                             if(tracks.length > 3) send_message.react("4️⃣")
                             if(tracks.length > 4) send_message.react("5️⃣")
+                            send_message.react("🔼")
                             send_message.react("🗑️")
-
+             
+                            const reactions = send_message.createReactionCollector(filter, { time: 30000 });
                             reactions.on('collect', async r => {
                                 let reacted = this.client.check_emojis(r.emoji.name)
             
@@ -254,7 +256,7 @@ export default class SearchCommand extends Command {
                                         .setDescription(`Queued: All`)
                                     )
                                     
-                                    send_message.reactions.removeAll().catch(null)
+                                    send_message.reactions.removeAll().catch(error => null)
             
                                     let search_data = await this.client.queue.get(message.guild!.id)
                                     if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
@@ -275,7 +277,7 @@ export default class SearchCommand extends Command {
                                         .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                                     )
             
-                                    send_message.reactions.removeAll().catch(null)
+                                    send_message.reactions.removeAll().catch(error => null)
                                     let search_data = await this.client.queue.get(message.guild!.id)
                                     if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                                     if(search_data.paused) return;

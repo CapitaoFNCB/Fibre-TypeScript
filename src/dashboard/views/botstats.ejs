@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+    <%- include('includes/head') %>
+    
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+	<body class="hold-transition skin-blue sidebar-mini" style="background-color: #333;">
+
+		<div class="wrapper">
+
+			<%- include('includes/header') %>
+            <%- include('includes/sidebar') %>
+			<div class="content-wrapper">
+				<section class="content">
+
+                    <div class="col-md-0">
+                        <div class="box box-solid">
+                            <div class="box-header with-border text-center">
+                                <h3 class="box-title">Bot Information</h3>
+                            </br>
+                            </br>
+                                <h3 class="box-title">Guilds: <%- guilds.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString() %></h3>
+                            </br>
+                                <h3 class="box-title">Users: <%- users.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString() %></h3>
+                            </br>
+                                <h3 class="box-title">Memory Usage: <%- memory.reduce((prev, guildCount) => prev + guildCount, 0).toFixed(2) %> / <%- totalmem %></h3>
+                            </br>
+                                <h3 class="box-title">Live Music: <%- music.reduce((prev, guildCount) => prev + guildCount, 0).toLocaleString() %></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-0">
+                        <div class="box box-solid">
+                            <div class="box-header with-border text-center">
+                                <h3 class="box-title">Process Information</h3>
+                            </br>
+                            </br>
+                                <h3 class="box-title">Process Version: <%- pversion %></h3>
+                            </br>
+                                <h3 class="box-title">Discord.js Version: <%- djsversion %></h3>
+                            </br>
+                                <h3 class="box-title">Discord-Akairo Version: <%- akversion %></h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-0">
+                        <div class="box box-solid">
+                            <div class="box-header with-border text-center">
+                                <h3 class="box-title">Vps Information</h3>
+                            </br>
+                            </br>
+                                <h3 class="box-title">Cpu Cores: <%- cpus %> <%- cpumodel %></h3>
+                            </br>
+                                <h3 class="box-title">Cpu Usage: <%- cpuusage %></h3>
+                            </br>
+                                <h3 class="box-title">Network Usage: <%- network %></h3>
+                            </br>
+                                <h3 class="box-title">Total Memory: <%- totalmem %> GB</h3>
+                            </br>
+                                <h3 class="box-title">Vps OS: <%- vpsos %></h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+				</section>
+			</div>
+            <%- include ('includes/footer') %>
+		</div>
+	</body>
+</html>

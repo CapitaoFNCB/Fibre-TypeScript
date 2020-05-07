@@ -33,17 +33,19 @@ export default class Help extends Command {
     )
 
     const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild!.id}, this.client)
-
-    const founduser = await this.client.findOrCreateUser({id: member.id}, this.client)
+    
+    let count = 0
+    function test(level, xp){
+      count = 0
+      for (var i = 1; i < level + 1; i ++) {
+          count = count + ((i ** i) + 100) * 2 
+        return count + xp
+      }
+    }
 
     let rank: any = 1;
-    let members = await membersData.find({ guildId: message.guild!.id }).lean(),
-    membersLeaderboard = members.map((m) => {
-      return {
-          id: m.id,
-          value: m.level
-      };
-    }).sort((a,b) => b.value - a.value);
+    let members = await membersData.find({ guildId: message.guild!.id }).lean()
+    let membersLeaderboard = members.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp)
 
     for (const search of membersLeaderboard) {
       const user = this.client.users.cache.get(search.id) || false;
@@ -58,50 +60,44 @@ export default class Help extends Command {
     }
 
     if(!rank.toString().startsWith('#')) rank = '#' + rank
-
+    const user_data = await this.client.usersData.findOne({id: message.author.id })
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.util!.send("Failed to get Avatar");
     const avatar = await result.buffer();
-
     const buffer = await user();
-    const filename = `profile.png`;
-    const attachment = new MessageAttachment(buffer.toBuffer(), filename);
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-      .attachFiles(attachment)
-      .setImage(`attachment://profile.png`)
-   return message.util!.send(embed)
+    const attachment = new MessageAttachment(buffer.toBuffer(), `profile.png`);
+    // const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    //   .attachFiles(attachment)
+    //   .setImage(`attachment://profile.png`)
+   return message.util!.send(attachment)
 
     async function user(){
         return new Canvas(934, 282)
         .setColor("#2C2F33")
-        .addBeveledRect(0, 0, 934, 282)
-        .addBeveledImage(toBuffer(founduser.backgound.buffer), 0, 0, 934, 282)
+        .addRect(0, 0, 934, 282)
+        .addImage(toBuffer(user_data.backgound.buffer), 0, 0, 934, 282)
         .setColor("#2C2F33")
         .setShadowColor('rgba(22, 22, 22, 1)')
         .setShadowOffsetY(5)
-        .setShadowBlur(10) 
-        .addCircle(130, 130, 100)
-        .addCircularImage(avatar,130,130,100)
-        .addBeveledRect(260, 165, 650, 46)
-        .setColor('#2C2F33')
-        .fill()
-        .restore()
-        .addBeveledRect(260, 165, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 6.5), 46)
-        .setColor(founduser.colour)
-        .fill()
-        .restore()
+        .setShadowBlur(10)
+        .setColor(user_data.colour)
+        .addCircle(90, 130, 175)
+        .setColor("#000000")
+        .addCircle(110, 130, 80)
+        .addCircularImage(avatar,110,130,70)
+        .setColor(user_data.colour)
+        .addRect(380, 150, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 4.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 4.5), 46)
+        .setColor("#ffffff")
         .setTextAlign('left')
-        .setTextFont('32px sans-serif')
-        .setColor(founduser.colour)
-        .addText(member.user.tag, 275, 130)
+        .setTextFont('45px arvo')
+        .addText(member.user.tag.length > 15 ? member.user.tag.slice(0,12) + "..." : member.user.tag, 370, 130)
         .setTextAlign('right')
-        .addText(`LEVEL ${found.level}` , 880, 130)
-        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 880, 90)
-        .addText(`${found.level + 1}` , 900, 250)
-        .setTextAlign('center')
-        .addText(`${found.xp}/${((found.level ** found.level) + 100) * 2}` , 575, 250)
+        .setTextFont('25px arvo')
         .setTextAlign('left')
-        .addText(`${found.level}` , 275, 250)
+        .addText(`Level: ${found.level}`, 380, 230)
+        .setTextAlign('right')
+        .addText(`XP: ${size(found.xp)} / ${size(((found.level ** found.level) + 100) * 2)}`, 835, 230)
+        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 835, 260)
     }
   }
 }
@@ -113,4 +109,14 @@ function toBuffer(ab) {
       buf[i] = view[i];
   }
   return buf;
+}
+
+function size(amount: number){
+  if(amount > 1000000) {
+    return (amount / 1000000).toFixed(2) + "M"
+  } else if(amount > 1000) {
+    return (amount / 1000).toFixed(2) + "K"
+  } else {
+    return amount
+  }
 }

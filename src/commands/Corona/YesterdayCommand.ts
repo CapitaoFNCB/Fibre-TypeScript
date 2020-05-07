@@ -15,14 +15,17 @@ export default class YesterdayCommand extends Command {
           type: "string",
           match: "rest",
           prompt:{
-            start: "What country would you like to search?"
+            start: "What country would you like to search for?"
           }
         }
       ],
       description: {
-        content: "Yesterday Command",
-        usage: "yesterday [country]",
-        examples: ["yesterday UK", "yesterday ireland"]
+        content: "Shows statistics of yesterdays statistics.",
+        usage: "yesterday [ country ]",
+        examples: [
+          "yesterday UK", 
+          "yesterday ireland"
+        ]
       },
       typing: true
     });

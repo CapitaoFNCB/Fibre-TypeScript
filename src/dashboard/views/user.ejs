@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+    <%- include('includes/head') %>
+    
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+	<body class="hold-transition skin-blue sidebar-mini">
+
+		<div class="wrapper">
+
+			<!-- The header is the topbar -->
+			<%- include('includes/header') %>
+
+			<!-- The sidebar includes the menu -->
+            <%- include('includes/sidebar') %>
+			<!-- Content Wrapper. Contains page content -->
+			<div class="content-wrapper">
+				<section class="content">
+                    <div class="col-md-12">
+                        <!-- Widget: user widget style 1 -->
+                        <div class="box box-widget widget-user">
+                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="widget-user-header bg-aqua-active">
+                            <h3 class="widget-user-username"><%= userInfos.tag %> </br><%= userInfos.id %></h3>
+                            </div>
+                            <div class="widget-user-image">
+                            <img class="img-circle" src="<%= userInfos.avatarURL %>" alt="User Avatar">
+                            </div>
+                            <div class="box-footer">
+                                
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="description-block">
+                                        <span class="description-text"><%= userInfos.bio || "No Bio" %></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="description-block">
+                                        <span class="description-text"><%- userInfos.activities.map(x => `${x.name}</br>${x.emoji && !x.emoji.id ? x.emoji.name : ''}${x.state || "No Activity Status"}</br></br>`).join(" ")|| "" %></span>
+                                    </div>
+                                    
+                                </div>
+                            </div> 
+                            <!-- /.row -->
+                            
+                            </div>
+                        </div>
+                        <!-- /.widget-user -->
+                        </div>
+                        <!-- /.col -->
+				</section>
+			</div>
+            <!-- /.content-wrapper -->
+            
+            <!-- Footer includes credits and version -->
+            <%- include ('includes/footer') %>
+		</div>
+        <!-- ./wrapper -->
+	</body>
+</html>

@@ -15,14 +15,18 @@ export default class CountrylistCommand extends Command {
           type: "string",
           match: "rest",
           prompt:{
-            start: "What country would you like to search?"
+            start: "What country would you like to search for?"
           }
         }
       ],
       description: {
-        content: "Countrylist Command",
-        usage: "country [country]",
-        examples: ["country UK", "country ireland"]
+        content: "Country statistics for coronavirus.",
+        usage: "country [ country ]",
+        examples: [
+          "country UK", 
+          "country ireland",
+          "c spain",
+        ]
       },
       typing: true
     });
@@ -35,8 +39,29 @@ export default class CountrylistCommand extends Command {
     if(!check.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
+    let wikiName: string;
+    let wikiImage: string;
+    const wikiAliases: any = { 'S. Korea': 'South Korea', 'UK': 'United Kingdom', 'USA': 'United States' };
+    const thePrefixedContries: any[] = ['United States', 'Netherlands', 'United Kingdom'];
+    if(wikiAliases[found.country]){
+      wikiName = wikiAliases[found.country];
+    } else {
+      wikiName = found.country;
+    }
 
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(wikiName == "USA") {
+      wikiImage = `https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/COVID-19_Outbreak_Cases_in_the_United_States_%28Density%29.svg/640px-COVID-19_Outbreak_Cases_in_the_United_States_%28Density%29.svg.png?1588686006705?newest=${Date.now()}`;
+    } else {
+      const WikiPage = await fetch(`https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_${thePrefixedContries.includes(wikiName) ? 'the_' : ''}${wikiName.replace(/' '/gm, '_')}`).then(res => res.text());
+      const ImageRegex = /<meta property="og:image" content="([^<]*)"\/>/;
+      const ImageLink = ImageRegex.exec(WikiPage);
+      let imageLink;
+      if (ImageLink) imageLink = ImageLink[1];
+      if (imageLink) imageLink += `?newest=${Date.now()}`;
+      wikiImage = imageLink;
+    }
+
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location:", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases:", found.cases.toLocaleString(), true)
@@ -53,6 +78,7 @@ export default class CountrylistCommand extends Command {
         .addField("Tests Per Million:", found.testsPerOneMillion == 0 ? "Unknown" : found.testsPerOneMillion.toLocaleString(),true)
         .setThumbnail(found.countryInfo.flag)
         .setFooter(`Last Updated: ${moment(found.updated).format("DD/MMM/YYYY hh:mm")}`)
-    )
+        if (wikiImage) embed.setImage(wikiImage);
+      return message.util!.send(embed)
   }
 }

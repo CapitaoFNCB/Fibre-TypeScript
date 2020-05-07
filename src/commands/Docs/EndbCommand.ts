@@ -14,14 +14,18 @@ export default class EndbCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "Endb Docs Command",
-        usage: "Endb [search]",
-        examples: ["endb all"]
+        content: "Endb documentation command",
+        usage: "Endb [ search ]",
+        examples: [
+          "endb all",
+          "endb db",
+          "endb endb#set"
+        ]
       },
       typing: true
     });

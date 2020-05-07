@@ -15,9 +15,15 @@ export default class AvatarCommand extends Command {
         }
       ],
       description: {
-        content: "Avatar Command", 
-        usage: "avatar",
-        examples: ["avatar pizza#2020"]
+        content: "Display's avatar of a user.", 
+        usage: "avatar < user >",
+        examples: [
+          "avatar pizza#2020",
+          "avatar 665237546183294999",
+          "avatar pizza",
+          "av 665237546183294999",
+          "pfp pizza",
+        ]
       },
       typing: true
     });

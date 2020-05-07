@@ -12,7 +12,11 @@ export default class ExecCommand extends Command {
       description: {
         content: "Tests Internet Speed",
         usage: "speedtest",
-        examples: ["speedtest"]
+        examples: [
+          "speedtest",
+          "speed",
+          "internet"
+        ]
       },
       typing: true
     });

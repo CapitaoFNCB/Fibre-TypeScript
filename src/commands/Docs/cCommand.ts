@@ -14,14 +14,16 @@ export default class JavaCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "C Docs Command",
-        usage: "C [search]",
-        examples: ["C Array"]
+        content: "Shows C Documentation.",
+        usage: "C [ search ]",
+        examples: [
+          "C Array"
+        ]
       },
       typing: true
     });

@@ -7,8 +7,10 @@ module.exports = {
 
         let stats = new DBL(dblapi.apiKey, client)
         client.logger.info("Started Top.GG Webhook")
-        setInterval(function(){
-            stats.postStats(client.guilds.size);
+        setInterval(async function(){
+            let guilds: number[] = await client.shard!.fetchClientValues('guilds.cache.size')
+            let bot_guilds: number = guilds.reduce((prev, guildCount) => prev + guildCount, 0)
+            stats.postStats(bot_guilds);
         }, 60000*10);
 
         let dbl = new DBL(dblapi.apiKey, { webhookPort: 5000, webhookAuth: dblapi.password })

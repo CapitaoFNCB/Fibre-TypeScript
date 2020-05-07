@@ -156,8 +156,25 @@ declare module "discord-akairo" {
         })
 
         this.commandHandler.resolver.addType("catAlias", async (msg: Message, word: string) => {
+          let cat = this.commandHandler.categories.get(this.capitalize(word.toLowerCase()))
+          if(cat) {
+            if(cat!.id === "Owner"){
+              if(!this.ownerID.includes(msg.author.id)){
+                  return null;
+              }
+            }
+          };
 
-          return this.commandHandler.findCommand(word) ? this.commandHandler.findCommand(word) : this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) ? this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) : null
+          let command = this.commandHandler.findCommand(word.toLowerCase())
+          if(command) {
+            if(command!.categoryID === "Owner"){
+              if(!this.ownerID.includes(msg.author.id)){
+                  return null;
+              }
+            }
+          };
+
+          return this.commandHandler.findCommand(word.toLowerCase()) ? this.commandHandler.findCommand(word.toLowerCase()) : this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) ? this.commandHandler.categories.get(this.capitalize(word.toLowerCase())) : null
 
         })
 

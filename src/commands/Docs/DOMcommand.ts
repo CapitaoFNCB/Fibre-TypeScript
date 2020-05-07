@@ -14,14 +14,17 @@ export default class DOMDocsCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "DOM Docs Command",
-        usage: "dom [search]",
-        examples: ["dom events"]
+        content: "DOM documentation command.",
+        usage: "dom [ search ]",
+        examples: [
+          "dom events",
+          "dom tree"
+        ]
       },
       typing: true
     });
@@ -35,7 +38,7 @@ export default class DOMDocsCommand extends Command {
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
 
     let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setAuthor(`DOM`, 'https://www.pikpng.com/pngl/m/110-1104721_how-to-capture-an-image-from-a-dom.png', data.AbstractURL)

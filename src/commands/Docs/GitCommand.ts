@@ -14,14 +14,19 @@ export default class DOMDocsCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "Git Docs Command",
-        usage: "git [search]",
-        examples: ["git status"]
+        content: "Git documentation command",
+        usage: "git [ search ]",
+        examples: [
+          "git status",
+          "git commit",
+          "git push",
+          "git remote"
+        ]
       },
       typing: true
     });
@@ -35,7 +40,7 @@ export default class DOMDocsCommand extends Command {
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
 
     let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setAuthor(`Git`, 'https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png', data.AbstractURL)

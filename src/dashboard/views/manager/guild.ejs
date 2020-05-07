@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+	<%- include('../includes/head') %>
+	
+	<body class="hold-transition skin-blue sidebar-mini">
+
+		<div class="wrapper">
+
+            <style>
+                .button-playing {
+                    height: 20px;
+                    background-color: #494949;
+                    border-color: transparent transparent transparent #202020;
+                    cursor: pointer;
+                    border-style: solid;
+                    border-width: 15px 0 15px 30px;
+                }
+
+                .button-paused {
+                    height: 30px;
+                    background-color: #494949;
+                    border-color: transparent transparent transparent #202020;
+                    cursor: pointer;
+                    border-style: double;
+                    border-width: 0px 0 0px 30px;
+                }
+
+                button:focus {outline:0;}
+                input:focus {outline:0;}
+            </style>
+
+			<!-- The header is the topbar -->
+			<%- include('../includes/header') %>
+
+			<!-- The sidebar includes the menu -->
+			<%- include('../includes/sidebar') %>
+
+			<!-- Content Wrapper. Contains page content -->
+			<div class="content-wrapper">
+
+				<!-- Content Header (Page header) -->
+				<section class="content-header">
+					<br>
+					<ol class="breadcrumb">
+                        <li><a href="/"><i class="fa fa-home"></i>Manage Server</a></li>
+                        <li class="active"><%= guild.name %></li>
+					</ol>
+				</section>
+
+				<section class="content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box box-widget widget-user">
+                                <div class="widget-user-header bg-aqua-active">
+                                    <h3 class="widget-user-username"><%= guild.name %></h3>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="<%= guild.iconURL %>" alt="Server icon">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-12 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header"style="color: aliceblue;"><%= guild.memberCount %></h5>
+                                                <span class="description-text" style="color: aliceblue;">Members</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+
+                            <!-- BASIC CONFIGURATION -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Server Configuration</h3>
+                                </div>
+                                <form role="form" action="/manage/<%= guild.id %>/" method="POST">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label style="color: aliceblue;">Prefix</label>
+                                            <input type="text" name="prefix" class="form-control" placeholder="<%= guild.prefix %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem;border-radius:0.5em">
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                            <label style="color: aliceblue;">Embed Colour</label>
+                                        </br>
+                                            <input type="text" name="colour" placeholder="<%= guild.colour %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem">
+                                            <input type="color" name="colour" value="<%= guild.colour %>" style="background-color: #333; color: aliceblue; border-color: #333; position: fixed; width: 6rem; height: 4rem; ">
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Custom Commands</h3>
+                                    
+                                </div>
+                                <form role="form" action="/manage/<%= guild.id %>/" method="POST">
+
+
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <label style="color: aliceblue;">Create Command</label><br>
+                                                    <input type="text" name="text" placeholder="Command Name" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem; width: 15rem; border-radius:0.5em"> <input type="text" name="reply" placeholder="Command Reply" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem; width: 20rem; border-radius:0.5em"> <button type="submit" class="btn btn-success">Create</button>
+                                                </div>
+                                            </div>
+
+
+
+                                        <% guild.customCommands.forEach(function(command) { %>
+                                        
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <!-- <input type="text" name="prefix" class="form-control" placeholder="<%= guild.prefix %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem; width: 20rem;"> -->
+                                                    <label style="color: aliceblue;"><%- command.name %></label>&emsp; <input type="text" name="text_<%= command.name %>" placeholder="<%= command.answer %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem; width: 20rem; border-radius:0.5em"> <button type="submit" name="editCustomCommand_<%= command.name %>" class="btn btn-primary">Edit</button> <button type="submit" name="deletecustomCommand_<%= command.name %>" class="btn btn-danger">Delete</button>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                                <div class="box box-widget">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">More Coming Soon</h3>
+                                    </div>
+                                    <!-- <form role="form" action="/manage/<%= guild.id %>/" method="POST">
+                                        <div class="box-body">
+                                            <% if(bands && queue.length) { %>
+                                            <div class="form-group">
+                                                <% if(player) { %>
+                                                    <button type="submit" class="button-paused" name="setPause"></button>
+                                                <% } else { %>
+                                                    <button type="submit" class="button-playing" name="setPlay"></button>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </form> -->
+                                <!-- <form role="form" action="/manage/<%= guild.id %>/" method="POST">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label style="color: aliceblue;">Prefix</label>
+                                            <input type="text" name="song" class="form-control" placeholder="<%= guild.prefix %>" style="background-color: #333; color: aliceblue; border: #333; padding: 1rem;border-radius:0.5em">
+                                        </div>
+                                    </div>
+                                </form> -->
+                            </div>
+                        </div>
+				</section>
+			</div>
+            <%- include('../includes/footer') %>
+		</div>
+	</body>
+</html>
+

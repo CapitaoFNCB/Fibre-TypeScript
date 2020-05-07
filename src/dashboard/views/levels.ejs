@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+    <%- include('includes/head') %>
+
+    <style>
+        .avatar {
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+
+        button:focus {outline:0;}
+        
+    </style>
+    
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+	<body class="hold-transition skin-blue sidebar-mini">
+
+		<div class="wrapper">
+
+			<%- include('includes/header') %>
+			<%- include('includes/sidebar') %>
+
+			<div class="content-wrapper">
+
+                <section class="content">
+
+                    <% let count = 0 %>
+
+                    <% function test(level, xp){ %>
+                        <% count = 0 %>
+                        <% for (var i = 1; i < level + 1; i ++) { %>
+                            <% count = count + ((i ** i) + 100) * 2 %>
+                        <% } %>
+                        <% return count + xp %>
+                    <% } %>
+
+                    <% let membersLeaderboard = levels.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp); %>
+
+                    <% let counter = 0 %>
+
+                    <% membersLeaderboard.forEach(function(search) { %>
+
+                        <% if(bot.users.cache.get(search.id)) { %>
+
+                            <% counter = counter + 1 %>
+
+                        <% } %>
+                    <% }) %>
+
+                    <% if(!membersLeaderboard.length || counter == 0) {%>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-widget widget-user">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <h2 style="color: aliceblue; ">No Levels</h2>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <% membersLeaderboard.forEach(function(search) { %>
+
+                        <% if(bot.users.cache.get(search.id)) { %>
+
+                            <form role="form" action="/levels/<%= guild.id %>/" method="POST">    
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box box-widget widget-user">
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <h2 style="color: aliceblue; "><img class="avatar" src="<%= bot.users.cache.get(search.id).displayAvatarURL({ dynamic: true, format: "png", size: 64 }) %>">  <%- bot.users.cache.get(search.id).tag %> &nbsp; Level: <%- search.level %>&nbsp; XP: <%- search.xp %> / <%- ((search.level ** search.level) + 100) * 2 %> <% if(user.displayedGuilds.find(search_guild => search_guild.id == guild.id)) { %> <button type="submit" name="xpReset_<%= search.id %>" class="btn btn-danger">Reset Level</button> <% } %></h2>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                            </form>
+                        <% } %>
+                    <% }) %>
+
+                </section>
+            </div>
+            <%- include('includes/footer') %>
+		</div>
+        <script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+        <script src="/bower_components/chart.js/Chart.js"></script>
+        <script>
+
+
+            $(function(){
+                $("#datepicker").datepicker({
+                    autoclose: true
+                });
+            });
+        </script>
+	</body>
+</html>
