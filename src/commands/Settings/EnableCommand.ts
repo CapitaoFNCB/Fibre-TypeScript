@@ -1,56 +1,38 @@
-import { Command } from "discord-akairo";
+import { Command, Flag } from "discord-akairo";
 import { Message } from "discord.js";
 
 export default class EnableCommand extends Command {
   public constructor() {
     super("enable", {
-      aliases: ["enable"],
+      aliases: ["enable", "e", "en"],
       category: "Settings",
       channel: "guild",
-      args: [
-        {
-            id: "type",
-            type: "string",
-            prompt:{
-              start: "What would you like to enable?"
-            }
-          }
-      ],
       description: {
-        content: "Enable Command",
-        usage: "enable [type]",
-        examples: ["enable level"]
+        content: "Enables surtain aspects.",
+        usage: "enable [ type ]",
+        examples: [
+          "enable level"
+        ]
       },
       typing: true
     });
   }
+  public *args(): object {
+    const method = yield {
+        type: [
+            ["enable-level", "level", "lvl","l"],
+        ],
 
-  public async exec(message: Message, { type }: { type: String }) {
+        otherwise: async (message: Message) => {
+            const guild = await this.client.findOrCreateGuild({ id: message.guild!.id }, this.client)
 
-    const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-    if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-        .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
-    )
+            let prefix = guild.prefix
 
-    const types = ["level"]
-
-    if(!types.includes(type.toLowerCase())){
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-            .setDescription(`There is no setting with this name\nValid settings: ${types.map(x => `\`` + x + `\``)}`)
-        )
-    }
-    let guild = await this.client.guildsData({id: message.guild!.id})
-
-    if(type.toLowerCase() == "level"){
-        if(guild.level == true) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-            .setDescription("Level System is Already Enabled")
-        )
-        guild.level = true
-        message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-            .setDescription("Enabled Level System")
-        )
+            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help enable\``)
+        }
     }
 
-    guild.save()
+    return Flag.continue(method);
+
   }
 }

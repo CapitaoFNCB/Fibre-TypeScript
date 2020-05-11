@@ -1,5 +1,5 @@
 import { Command } from "discord-akairo";
-import { Message } from "discord.js";
+import { Message, GuildMember } from "discord.js";
 
 export default class BalanceCommand extends Command {
   public constructor() {
@@ -9,30 +9,31 @@ export default class BalanceCommand extends Command {
       channel: "guild",
       args: [
         {
-            id: "target",
-            type: "string",
-            match: "rest",
-            default: null
-          }
+          id: "member",
+          type: "member",
+          default: (_) => _.member
+        }
       ],
       description: {
-        content: "Balance Command",
-        usage: "balance",
-        examples: ["balance"]
+        content: "Shows user's balance.",
+        usage: "balance < user >",
+        examples: [
+          "balance",
+          "balance pizza",
+          "balance 424566306042544128"
+        ]
       },
       typing: true
     });
   }
 
-  public async exec(message: Message, {target}: {target: any}): Promise<Message> {
-
-    let member = await message.mentions.members!.first() || await this.client.resolve("member",target, message.guild,this.client) || message.member
+  public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
 
     if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("No Information is stored for bots")
     )
 
-    const user = await this.client.membersData.findOne({ id: message.author.id, guildId: message.guild!.id})
+    const user = await this.client.membersData.findOne({ id: member.id, guildId: message.guild!.id})
     return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`Cash: ${user.cash}`)
     )

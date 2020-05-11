@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler, Flag } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser } from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser, creatOrFind } from "../utils/Functions"
 import { owners } from "../utils/Config";
 import { Message, Collection } from "discord.js";
 import guildsData from "../database/Guild"
@@ -9,7 +9,9 @@ import usersData from "../database/User"
 import Logger from "@ayanaware/logger";
 import { DefaultFormatter, DefaultFormatterColor, Color } from "@ayanaware/logger"
 import Embed from "./FibreEmbed";
-import { load } from "../dashboard/app"
+import { load } from "../dashboard/app";
+import { emojiList } from "../utils/EmojiList";
+import "../extensions/FibreMember";
 
 Logger.setFormatter(new DefaultFormatter({
   colorMap: new Map([
@@ -18,6 +20,12 @@ Logger.setFormatter(new DefaultFormatter({
     [DefaultFormatterColor.LOG_UNIQUE_MARKER, Color.WHITE]
   ])
 }));
+
+declare module "discord.js" {
+  interface GuildMember {
+    owner: any;
+  }
+}
 
 
 declare module "discord-akairo" {
@@ -33,7 +41,7 @@ declare module "discord-akairo" {
         manager;
         guildOnly;
         ownerOnly;
-        Embed;
+        Embed: typeof Embed;
         perms;
         check_emojis;
         load;
@@ -46,6 +54,8 @@ declare module "discord-akairo" {
         findOrCreateMember;
         findOrCreateGuild;
         queue;
+        creatOrFind;
+        emojiList;
     }
   }
   
@@ -65,6 +75,7 @@ declare module "discord-akairo" {
         );
     
        this.config = config;
+       this.creatOrFind = creatOrFind;
        this.checkDays = checkDays; 
        this.flag = flag;
        this.resolve = resolve;
@@ -87,6 +98,7 @@ declare module "discord-akairo" {
        this.databaseCache.guilds = new Collection();
        this.databaseCache.members = new Collection();
        this.queue = new Collection();
+       this.emojiList = emojiList;
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
@@ -100,20 +112,20 @@ declare module "discord-akairo" {
             handleEdits: true,
             argumentDefaults: {
               prompt: {
-                modifyStart: async (_, str?: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
-                modifyRetry: async (_, str?: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                modifyStart: async (_, str: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), true),
+                modifyRetry: async (_, str: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), true),
                 cancel: async _ =>
                   new this.Embed(_).promptEmbed(
                     "Alright, I've cancelled the command for you."
-                    , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                    , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
                 ended: async _ =>
                   new this.Embed(_).promptEmbed(
                     "You took too many tries to respond correctly, so I've cancelled the command"
-                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
                 timeout: async _ =>
                   new this.Embed(_).promptEmbed(
                     "You took long to respond, so I've cancelled the command"
-                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour)),
+                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
                 retries: 3,
                 time: 6e4
               },
@@ -147,7 +159,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id }, this)
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
@@ -184,7 +196,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id },this)
 
           let data = guild.customCommands.filter((c) => c.name == word);
 

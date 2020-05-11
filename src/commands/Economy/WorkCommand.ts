@@ -9,7 +9,7 @@ export default class WorkCommand extends Command {
       category: "Economy",
       channel: "guild",
       description: {
-        content: "Work Command",
+        content: "Collects your 6 hour bonus.",
         usage: "work",
         examples: ["work"]
       },

@@ -8,7 +8,7 @@ export default class RockPaperScissorsCommand extends Command {
       category: "Fun",
       channel: "guild",
       description: {
-        content: "Rock Paper Scissors Command",
+        content: "Play's a game of Rock, Paper and Scissors game",
         usage: "rps",
         examples: ["rps"]
       },
@@ -18,7 +18,7 @@ export default class RockPaperScissorsCommand extends Command {
 
   public async exec(message: Message) {
       let channel_message = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-        .setDescription("React to play!")
+        .setDescription("React to this message to play!")
     )
     channel_message.react("✂️");
     channel_message.react("📰");
@@ -34,7 +34,7 @@ export default class RockPaperScissorsCommand extends Command {
 
     reactions.on('collect', async r => {
 
-      channel_message.edit(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(result(r.emoji.name, bot_choice)))
+      channel_message.edit(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`${result(r.emoji.name, bot_choice)}\n ${r.emoji.name} vs ${bot_choice}`))
 
       reactions.stop()
 

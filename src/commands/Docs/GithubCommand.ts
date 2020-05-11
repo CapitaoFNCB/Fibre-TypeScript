@@ -20,9 +20,12 @@ export default class GithubCommand extends Command {
             }
         ],
         description: {
-          content: "Github Command",
-          usage: "github [search]",
-          examples: ["github discord.js"]
+          content: "Github User / Organisation informations.",
+          usage: "github [ search ]",
+          examples: [
+            "github discord.js",
+            "github PizzaOnTop"
+          ]
         },
         typing: true
       });

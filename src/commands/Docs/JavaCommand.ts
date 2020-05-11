@@ -19,9 +19,12 @@ export default class JavaCommand extends Command {
           }
       ],
       description: {
-        content: "Java Docs Command",
-        usage: "Java [search]",
-        examples: ["Java Array"]
+        content: "Hava documentation command.",
+        usage: "Java [ search ]",
+        examples: [
+          "Java Array",
+          "Java class"
+        ]
       },
       typing: true
     });

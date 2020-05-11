@@ -4,13 +4,23 @@ import { Message } from "discord.js";
 export default class LoopCommand extends Command {
   public constructor() {
     super("loop", {
-      aliases: ["loop"],
+      aliases: ["loop", "l"],
       category: "Music",
       channel: "guild",
       description: {
-        content: "Loop Command",
+        content: "Loops music.",
         usage: "loop [ track | queue | none ]",
-        examples: ["tag create pizza ez"]
+        examples: [
+          "loop track",
+          "loop single",
+          "loop current",
+          "loop t",
+          "loop queue",
+          "loop all",
+          "loop q",
+          "loop n",
+          "loop n"
+        ]
       },
       typing: true
     });

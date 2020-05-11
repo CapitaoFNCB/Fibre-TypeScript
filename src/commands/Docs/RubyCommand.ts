@@ -14,14 +14,17 @@ export default class DOMDocsCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "Ruby Docs Command",
-        usage: "ruby [search]",
-        examples: ["ruby array"]
+        content: "Ruby documentation command.",
+        usage: "ruby [ search ]",
+        examples: [
+          "ruby array",
+          "ruby class"
+        ]
       },
       typing: true
     });

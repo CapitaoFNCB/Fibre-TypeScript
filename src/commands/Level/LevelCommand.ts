@@ -18,49 +18,42 @@ export default class Help extends Command {
         }
       ],
       description: {
-        content: "Level Command", 
-        usage: "level",
-        examples: ["level"]
+        content: "Shows user's level.", 
+        usage: "level < user >",
+        examples: [
+          "level",
+          "level 665237546183294999",
+          "level pizza",
+          "level pizza#2020"
+        ]
       },
       typing: true
     });
   }
 
-  public async exec(message: Message, { member }: {member: GuildMember}): Promise<Message> {
+  public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
     
     if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("No Information is stored for bots")
     )
 
-    const found = await this.client.findOrCreateMember({id: member.id, guildId: message.guild!.id}, this.client)
+    const found = await this.client.membersData.findOne({id: member.id, guildId: message.guild!.id})
+
+    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+      .setDescription("Couldn't find data in database")
+    )
     
-    let count = 0
     function test(level, xp){
-      count = 0
+      let count = 0
       for (var i = 1; i < level + 1; i ++) {
-          count = count + ((i ** i) + 100) * 2 
-        return count + xp
+          count = count + ((i ** i) + 100) * 2
       }
-    }
-
-    let rank: any = 1;
-    let members = await membersData.find({ guildId: message.guild!.id }).lean()
-    let membersLeaderboard = members.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp)
-
-    for (const search of membersLeaderboard) {
-      const user = this.client.users.cache.get(search.id) || false;
-      if(user){
-              if(user.id === member.id){
-                rank = "#"+ rank 
-                 break
-            }if(user.id !== member.id){
-              rank++ 
-            }
-        }
-    }
-
-    if(!rank.toString().startsWith('#')) rank = '#' + rank
-    const user_data = await this.client.usersData.findOne({id: message.author.id })
+      return count + xp
+  }
+    let levels = await this.client.membersData.find({ guildId: message.guild!.id }).lean()
+    let membersLeaderboard = await levels.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp);
+    let leader_rank: number | string = membersLeaderboard.map(user => user.id).indexOf(member.id) + 1 == 0 ? "Unknown" : membersLeaderboard.map(user => user.id).indexOf(member.id) + 1
+    const user_data = await this.client.usersData.findOne({id: member.id })
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.util!.send("Failed to get Avatar");
     const avatar = await result.buffer();
@@ -97,7 +90,7 @@ export default class Help extends Command {
         .addText(`Level: ${found.level}`, 380, 230)
         .setTextAlign('right')
         .addText(`XP: ${size(found.xp)} / ${size(((found.level ** found.level) + 100) * 2)}`, 835, 230)
-        .addText(`RANK ${rank !== undefined ? rank : "N/A"}` , 835, 260)
+        .addText(`${found.xp == 0 && found.level == 1 ? "" : `Rank ${leader_rank == 0 ? "Unranked" : "#" + leader_rank}`}`, 835, 260)
     }
   }
 }

@@ -3,12 +3,14 @@ import { Message } from "discord.js";
 
 import { exec } from "child_process";
 
-export default class ExecCommand extends Command {
+export default class SpeedtestCommand extends Command {
   public constructor() {
     super("speedtest", {
       aliases: ["speedtest", "speed","internet"],
       category: "Core",
       channel: "guild",
+      cooldown: 50000,
+      ratelimit: 1,
       description: {
         content: "Tests Internet Speed",
         usage: "speedtest",

@@ -18,9 +18,12 @@ export default class JackpotCommand extends Command {
           }
       ],
       description: {
-        content: "Jackpot Command",
-        usage: "jackpot [amount]",
-        examples: ["jackpot 100"]
+        content: "Gamble for jackpot.",
+        usage: "jackpot [ amount ]",
+        examples: [
+          "jackpot 100",
+          "jackpot 1000"
+        ]
       },
       typing: true
     });
@@ -67,6 +70,8 @@ export default class JackpotCommand extends Command {
       message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`${winner.username} Won!!`)
       )
+
+      message2.reactions.removeAll().catch(err => null)
 
       setTimeout(async () =>{
         let target = await this.client.membersData.findOne({id: winner.id, guildId: message.guild?.id})

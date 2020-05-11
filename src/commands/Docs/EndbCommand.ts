@@ -19,7 +19,7 @@ export default class EndbCommand extends Command {
           }
       ],
       description: {
-        content: "Endb documentation command",
+        content: "Endb documentation command.",
         usage: "Endb [ search ]",
         examples: [
           "endb all",

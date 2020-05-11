@@ -130,7 +130,7 @@ export default class GraphCommand extends Command {
     });
    })
    if(!image)return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("No Country with this name"))
-   const attachment = new MessageAttachment(image, "image.png");
+   const attachment = new MessageAttachment(image, "image.png") as any;
    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
     .attachFiles(attachment)
     .setImage(`attachment://image.png`)

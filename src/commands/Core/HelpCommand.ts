@@ -34,7 +34,7 @@ export default class Help extends Command {
 
     if (!command) {
       let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-        .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
+        .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) as string : message.author.displayAvatarURL({ dynamic: true }) as string)
 
       for (const [name, category] of this.handler.categories.filter((c: Category<string, Command>) => !["flag",...(this.client.ownerID.includes(message.author.id) ? ["flag"] : ["Owner", "flag"])].includes(c.id))) {
         embed.addField(`${name} [${category.size}]`, category.filter(cmd => cmd.aliases.length > 0).map(cmd => `\`${this.client.capitalize(cmd.aliases[0])}\``).join(" ") || "There was an error")
@@ -46,7 +46,7 @@ export default class Help extends Command {
     if(command.ownerOnly == undefined){
 
       let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-      .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
+      .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) as string : message.author.displayAvatarURL({ dynamic: true }) as string)
       .setDescription(stripIndents`
       **Commands**: ${command.map(command => `\`${command.id}\``).join(" ")}
       `) 
@@ -56,7 +56,7 @@ export default class Help extends Command {
     }
 
     let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-      .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) : message.author.displayAvatarURL({ dynamic: true }))
+      .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) as string : message.author.displayAvatarURL({ dynamic: true }) as string)
       .setDescription(stripIndents`
         **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${this.client.capitalize(alias)}\``).join(", ") : "Unknown"}
         **Usage**: \`${command.description.usage || "Unknown"}\`

@@ -5,13 +5,16 @@ import { Player } from "erela.js";
 export default class NotificationsCommand extends Command {
   constructor() {
     super("notifications", {
-      aliases: ["notifications"],
+      aliases: ["notifications", "alerts"],
       channel: "guild",
       category: "Music",
       description: {
-        content: "Notifications Command", 
+        content: "Enabled or Disabled music notifications.", 
         usage: "notifications",
-        examples: ["notifications"]
+        examples: [
+          "notifications",
+          "alerts"
+        ]
       },
       typing: true
     });

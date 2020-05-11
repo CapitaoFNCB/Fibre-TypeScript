@@ -9,7 +9,7 @@ export default class TagCommand extends Command {
       channel: "guild",
       description: {
         content: "Tag Command",
-        usage: "Tag <create | delete | edit | info | list>",
+        usage: "Tag [ create | delete | edit | info | list ] < arguments >",
         examples: ["tag create pizza ez"]
       },
       typing: true

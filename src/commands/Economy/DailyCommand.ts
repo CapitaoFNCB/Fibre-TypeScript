@@ -9,9 +9,11 @@ export default class DailyCommand extends Command {
       channel: "guild",
       category: "Economy",
       description: {
-        content: "Daily Command",
+        content: "Claims daily bonus.",
         usage: "daily",
-        examples: ["daily"]
+        examples: [
+          "daily"
+        ]
       },
       typing: true
     });

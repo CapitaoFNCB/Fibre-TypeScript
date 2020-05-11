@@ -12,6 +12,8 @@ export default class commandBlockedListener extends Listener {
 
   public async exec(message: Message, command: Command, reason: String): Promise<Message | any> {
     
+    console.log(reason)
+
     switch (reason) {
       case "owner":
           return message.util!.send(
@@ -20,14 +22,6 @@ export default class commandBlockedListener extends Listener {
           );
           
           break;
-
-      case "guild":
-          return message.util!.send(
-            new this.client.Embed(message, "0491e2")
-                  .setDescription(`You can only use the command: \`${command}\` in a guild (server)`)
-          );
-          break;
-    
     }
   }
 }

@@ -19,7 +19,7 @@ export default class DOMDocsCommand extends Command {
           }
       ],
       description: {
-        content: "Git documentation command",
+        content: "Git documentation command.",
         usage: "git [ search ]",
         examples: [
           "git status",

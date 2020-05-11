@@ -8,7 +8,7 @@ import { Canvas } from 'canvas-constructor';
 export default class JumboCommand extends Command {
     public constructor() {
       super("jumbo", {
-        aliases: ["jumbo"],
+        aliases: ["jumbo", "enlarge"],
         channel: "guild",
         category: "Fun",
         args: [
@@ -22,8 +22,8 @@ export default class JumboCommand extends Command {
             }
         ],
         description: {
-          content: "Jumbo Command",
-          usage: "jumbo [search]",
+          content: "Enlarges a secific emoji.",
+          usage: "jumbo [ emoji ]",
           examples: ["jumbo 🏓"]
         },
         typing: true
@@ -40,7 +40,6 @@ export default class JumboCommand extends Command {
         if(!Number(emoji)) {
 
             text = twemoji.parse(query.split(" ")[0]);
-
             if(!text.startsWith("<img")){
                 return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                     .setDescription("I Cannot Find This Emoji")

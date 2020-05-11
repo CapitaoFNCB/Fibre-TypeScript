@@ -1,5 +1,6 @@
-import { MessageEmbed } from "discord.js"
-import { owners } from "./Config"
+import { MessageEmbed } from "discord.js";
+import { owners } from "./Config";
+import guildsData from "../database/Guild";
 
 export function check_emojis(emoji){
     if(emoji === '1️⃣') return 1
@@ -105,6 +106,19 @@ export async function findOrCreateUser({ id: userID }, client, isLean?){
     });
   }
 
+  export async function creatOrFind(param, isLean){
+    return new Promise(async function (resolve, reject){
+        let guildData = (isLean ? await guildsData.findOne(param).populate("members").lean() : await guildsData.findOne(param).populate("members"));
+        if(guildData){
+            resolve(guildData);
+        } else {
+            guildData = new guildsData(param);
+            await guildData.save();
+            resolve(guildData.toJSON());
+        }
+    });
+}
+
   export async function findOrCreateGuild({ id: guildID }, client, isLean?){
     return new Promise(async (resolve) => {
         if(client.databaseCache.guilds.get(guildID)){
@@ -134,11 +148,6 @@ export async function findOrCreateUser({ id: userID }, client, isLean?){
               } else {
                   memberData = new client.membersData({ id: memberID, guildId: id });
                   await memberData.save();
-                  let guild: any = await client.findOrCreateGuild({ id: id });
-                  if(guild){
-                      guild.members.push(memberData._id);
-                      await guild.save();
-                  }
                   resolve((isLean ? memberData.toJSON() : memberData));
                 }
                 client.databaseCache.members.set(`${memberID}${id}`, memberData);

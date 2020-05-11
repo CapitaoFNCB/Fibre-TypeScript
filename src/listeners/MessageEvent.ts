@@ -13,17 +13,18 @@ export default class MessageListener extends Listener {
 
     if(!message.guild) return;
     let member;
-    const guild = await this.client.findOrCreateGuild({id: message.guild!.id}, this.client)
-    if(!message.author.bot){
-      if(message.content.startsWith(guild.prefix)) return;
+    if(message.author.bot) return;
+    const guild_member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild!.id}, this.client)
+    const user = await this.client.findOrCreateUser({id: message.author.id}, this.client)
+    let guild = await this.client.creatOrFind({id: message.guild!.id})
 
-      let member = await this.client.membersData.findOne({id: message.author.id, guildId: message.guild.id})
+    let useGuld = await this.client.guildsData.findOne({id: message.guild.id})
 
-      if(!member){
-        member = new this.client.membersData({ id: message.author.id, guildId: message.guild.id });
-        await member.save();
-      }
-      if(!guild.level){
+    if(message.content.startsWith(useGuld.prefix)) return;
+
+      member = await this.client.membersData.findOne({id: message.author.id, guildId: message.guild.id})
+
+      if(!useGuld.level){
         member.characters += message.content.length
         member.save()
         return;
@@ -56,9 +57,7 @@ export default class MessageListener extends Listener {
         id: member.id,
         guildId: member.guildId,
         __v: member.__v || "__v"
-      })
-
-    }
+    })
   }
 }
 

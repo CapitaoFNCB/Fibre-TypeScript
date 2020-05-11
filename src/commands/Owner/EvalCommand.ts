@@ -1,8 +1,7 @@
 import { Command } from "discord-akairo";
 import { Message, MessageEmbed } from "discord.js";
 import { inspect } from "util";
-import { capitalize } from "../../utils/Functions"
-import FibreClient from "client/FibreClient";
+import fetch from "node-fetch";
 
 export default class EvalCommand extends Command {
   public constructor() {
@@ -47,29 +46,33 @@ export default class EvalCommand extends Command {
   }
 
   public async exec (message: Message, { toEval, depth, silent }: { toEval: any; depth: number; silent: boolean }) {
-
-
     const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-    
     try {
       const hrStart: [number, number] = process.hrtime();
       let toEvaluate = await eval(toEval);
-      let type = toEvaluate
-      if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth: depth });
       const hrDiff: [number, number] = process.hrtime(hrStart);
-
+      let type = toEvaluate
+      if (typeof toEvaluate !== "string") toEvaluate = await inspect(toEvaluate, { depth });
       const execTime = hrDiff[0] > 0 ? `${hrDiff[0]}s` : `${Math.round(hrDiff[1] / 1000)}μ`;
 
       if(silent) return;
 
-
+      if(toEvaluate.length > 1500) {
+        const res = await fetch(`https://hasteb.in/documents`, {
+          method: 'POST',
+          body: toEvaluate,
+          headers: {
+            'User-Agent': `Node.js/10.15.3`
+          }
+        });
+        let json = await res.json();
+        toEvaluate = `https://hasteb.in/${json.key}.js` ;
+      }
       return message.util!.send(embed
-        .addField("Response:", `\`\`\`js\n${toEvaluate.length > 1010 ? `${toEvaluate.substr(0, 1010)}...` : toEvaluate}\`\`\``, false)
+        .addField("Response:", `\`\`\`js\n${toEvaluate.replace(this.client.token, "Fuck Off")}\`\`\``, false)
         .addField("Type:", this.client.capitalize(typeof type))
         .addField("Time Taken:", execTime))
     } catch (error) {
-
-      if(silent) return;
 
       return message.util!.send(embed
         .addField("Response:", `Error: \`\`\`js\n${error}\`\`\``, false));

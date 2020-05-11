@@ -19,9 +19,12 @@ export default class HtmlCommand extends Command {
           }
       ],
       description: {
-        content: "Html Docs Command",
-        usage: "html [search]",
-        examples: ["html div"]
+        content: "HTML documentation command.",
+        usage: "html [ search ]",
+        examples: [
+          "html div",
+          "html nav"
+        ]
       },
       typing: true
     });

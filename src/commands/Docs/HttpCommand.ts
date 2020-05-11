@@ -14,14 +14,16 @@ export default class HTTPDocsCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "HTTP Docs Command",
-        usage: "http [search]",
-        examples: ["http authentication"]
+        content: "HTTP documentation command.",
+        usage: "http [ search ]",
+        examples: [
+          "http authentication"
+        ]
       },
       typing: true
     });

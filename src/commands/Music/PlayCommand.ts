@@ -1,6 +1,7 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
 import { Utils } from "erela.js";
+import { Emoji } from "discord.js";
 
 export default class PlayCommand extends Command {
   constructor() {
@@ -63,10 +64,8 @@ export default class PlayCommand extends Command {
                     selfDeaf: true
                 });
                 player.queue.add(found.tracks[0]);
-                if(player.queue.length > 1){
-                    message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
-                }
-
+                message.react(this.client.emojiList.reaction.accept).catch(() => null)
+                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 let search_data = await this.client.queue.get(message.guild!.id)
                 if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                 if(search_data.paused) return;
@@ -83,9 +82,8 @@ export default class PlayCommand extends Command {
                     selfDeaf: true
                 }); 
                 player.queue.add(tracks[0]);
-                if(player.queue.length > 1){
-                    message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
-                }
+                message.react(this.client.emojiList.reaction.accept).catch(() => null)
+                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                 let track_data = await this.client.queue.get(message.guild!.id)
                 if(!track_data) track_data = await this.client.queue.set(message.guild!.id, { paused: false })
                 if(track_data.paused) return;
@@ -102,10 +100,9 @@ export default class PlayCommand extends Command {
                 });
         
                 found.playlist.tracks.forEach(track => player.queue.add(track));
+                message.react(this.client.emojiList.reaction.accept).catch(() => null)
                 const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
                 message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-
-
                 let data = await this.client.queue.get(message.guild!.id)
                 if(!data) data = await this.client.queue.set(message.guild!.id, { paused: false })
                 if(data.paused) return;
@@ -115,6 +112,7 @@ export default class PlayCommand extends Command {
 
             case "LOAD_FAILED":
                 message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+                message.react(this.client.emojiList.reaction.deny).catch(() => null)
             break;
 
             case "NO_MATCHES":
@@ -135,10 +133,8 @@ export default class PlayCommand extends Command {
                                 self_deaf: true
                             });
                             player.queue.add(found.tracks[0]);
-                            if(player.queue.length > 1){
-                                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
-                            }
-            
+                            message.react(this.client.emojiList.reaction.accept).catch(() => null)
+                            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                             let search_data = await this.client.queue.get(message.guild!.id)
                             if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                             if(search_data.paused) return;
@@ -155,9 +151,8 @@ export default class PlayCommand extends Command {
                                 self_deaf: true
                             });
                             player.queue.add(tracks[0]);
-                            if(player.queue.length > 1){
-                                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
-                            }
+                            message.react(this.client.emojiList.reaction.accept).catch(() => null)
+                            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                             let track_data = await this.client.queue.get(message.guild!.id)
                             if(!track_data) track_data = await this.client.queue.set(message.guild!.id, { paused: false })
                             if(track_data.paused) return;
@@ -174,10 +169,9 @@ export default class PlayCommand extends Command {
                             });
                     
                             found.playlist.tracks.forEach(track => player.queue.add(track));
+                            message.react(this.client.emojiList.reaction.accept).catch(() => null)
                             const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
                             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-            
-            
                             let data = await this.client.queue.get(message.guild!.id)
                             if(!data) data = await this.client.queue.set(message.guild!.id, { paused: false })
                             if(data.paused) return;
@@ -187,10 +181,12 @@ export default class PlayCommand extends Command {
                         
                         case "LOAD_FAILED":
                             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+                            message.react(this.client.emojiList.reaction.deny).catch(() => null)
                         break; 
 
                         case "NO_MATCHES":
                             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+                            message.react(this.client.emojiList.reaction.deny).catch(() => null)
                         break;
                     }
                 })

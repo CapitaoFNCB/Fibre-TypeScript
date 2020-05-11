@@ -32,7 +32,7 @@ export default class TagCommand extends Command {
 
     public async exec(message: Message, { name, content }: { name: string; content: string; }) {
 
-        let guild = await this.client.guildsData({id: message.guild!.id})
+        let guild = await this.client.guildsData.findOne({id: message.guild!.id})
 
         let command = guild.customCommands.find((c) => c.name === name.toLowerCase())
 

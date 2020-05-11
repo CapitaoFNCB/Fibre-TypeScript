@@ -171,7 +171,7 @@ export default class SearchCommand extends Command {
             break;
 
             case "LOAD_FAILED":
-                message.util!.send(new this.client.Embed().setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
             break;
 
             case "NO_MATCHES":
@@ -182,7 +182,7 @@ export default class SearchCommand extends Command {
                         case "TRACK_LOADED":
                             if(found.tracks[0].isStream){
                                 if(found.tracks[0].uri.startsWith("https://www.you")){
-                                return message.util!.send(new this.client.Embed().setDescription("Unfortunately I cannot play youtube streams right now"))
+                                return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("Unfortunately I cannot play youtube streams right now"))
                                 }
                             }
                             player = this.client.manager.players.spawn({
@@ -193,7 +193,7 @@ export default class SearchCommand extends Command {
                             });
                             player.queue.add(found.tracks[0]);
                             if(player.queue.length > 1){
-                                message.util!.send(new this.client.Embed().setDescription(`Queued ${found.tracks[0].title}`))
+                                message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
                             }
 
                             let search_data = await this.client.queue.get(message.guild!.id)
@@ -206,7 +206,7 @@ export default class SearchCommand extends Command {
                         case "SEARCH_RESULT":
                             let i = 1
                             const tracks = found.tracks.slice(0,5);
-                            const embed = new this.client.Embed()
+                            const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                                 .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
                                 .setDescription(tracks.map(video => `**${i++} -** ${video.title}`))
                                 .setFooter("Your response time closes within the next 30 seconds. Use 🗑️ to cancel the selection");

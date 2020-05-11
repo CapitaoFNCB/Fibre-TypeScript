@@ -14,14 +14,17 @@ export default class PythonCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "Python Docs Command",
-        usage: "python [search]",
-        examples: ["python Array"]
+        content: "Python documentation command.",
+        usage: "python [ search ]",
+        examples: [
+          "python list",
+          "python sort"
+        ]
       },
       typing: true
     });

@@ -11,9 +11,11 @@ export default class JokeCommand extends Command {
       category: "Fun",
       channel: "guild",
       description: {
-        content: "Joke Command",
+        content: "Tells a joke from an API.",
         usage: "joke",
-        examples: ["joke"]
+        examples: [
+          "joke"
+        ]
       },
       typing: true
     });

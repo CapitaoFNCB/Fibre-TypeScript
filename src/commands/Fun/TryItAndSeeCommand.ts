@@ -1,7 +1,5 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import fetch from "node-fetch";
-import { MessageAttachment } from "discord.js";
 
 export default class TiasCommand extends Command {
   public constructor() {
@@ -9,7 +7,7 @@ export default class TiasCommand extends Command {
       aliases: ["tias"],
       category: "Fun",
       description: {
-        content: "Tias Command",
+        content: "Shows a MP4 file.",
         usage: "tias",
         examples: ["tias"]
       },

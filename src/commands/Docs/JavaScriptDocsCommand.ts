@@ -14,14 +14,17 @@ export default class JavaScriptDocsCommand extends Command {
             type: "string",
             match: "rest",
             prompt: {
-                start: "What would you like to search?"
+                start: "What would you like to search for?"
             }
           }
       ],
       description: {
-        content: "JavaScript Docs Command",
-        usage: "javascript [search]",
-        examples: ["javascript map"]
+        content: "Javascript documentation command.",
+        usage: "javascript [ search ]",
+        examples: [
+          "javascript map",
+          "js Array"
+        ]
       },
       typing: true
     });

@@ -8,7 +8,7 @@ export default class LevelsCommand extends Command {
       category: "Level",
       channel: "guild",
       description: {
-        content: "Levels Command",
+        content: "Show's url to guild's level.",
         usage: "levels",
         examples: ["levels"]
       },
@@ -19,7 +19,7 @@ export default class LevelsCommand extends Command {
   public async exec(message: Message): Promise<Message> {
     return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setAuthor(`${message.guild!.name}'s Levels`)
-        .setDescription(`\`https://fibrebot.xyz/levels/${message.guild!.id}\``)
+        .setDescription(`[\`https://fibrebot.xyz/levels/${message.guild!.id}\`](https://fibrebot.xyz/levels/${message.guild!.id})`)
     )
   }
 }

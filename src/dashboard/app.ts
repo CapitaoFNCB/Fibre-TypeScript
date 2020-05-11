@@ -6,7 +6,8 @@ import session from "express-session";
 import path from "path";
 import passport from "passport";
 import { Strategy } from "passport-discord";
-import utils from "./utils"
+import utils from "./utils";
+import subdomain from "express-subdomain";
 
 export function load(client) {
 
@@ -17,7 +18,6 @@ export function load(client) {
     loginRouter = require("./routes/login"),
     settingsRouter = require("./routes/settings"),
     guildManagerRouter = require("./routes/guild-manager"),
-    apiRouter = require("./routes/api"),
     commandsRouter = require("./routes/commands"),
     botStatsRouter = require("./routes/botstats"),
     levelsRouter = require("./routes/levels")
@@ -44,12 +44,10 @@ export function load(client) {
     .use("/manage", guildManagerRouter)
     .use("/settings", settingsRouter)
     .use("/user", userRouter)
-    .use("/api", apiRouter)
     .use("/commands", commandsRouter)
     .use("/botstats", botStatsRouter)
     .use("/levels", levelsRouter)
     .use("/", mainRouter)
-
     .use(CheckAuth, function(req, res, next){
         res.status(404).render("404", {
             user: req.userInfos,

@@ -20,21 +20,24 @@ export default class SlotsCommand extends Command {
           }
       ],
       description: {
-        content: "Slots Command",
-        usage: "slots",
-        examples: ["slots"]
+        content: "Gamble with slots.",
+        usage: "slots [ amount ]",
+        examples: [
+          "slots 100",
+          "slots 1000"
+        ]
       },
       typing: true
     });
   }
 
-  public async exec(message: Message, {target}: {target: number}): Promise<Message> {
+  public async exec(message: Message, { target }: { target: number }): Promise<Message> {
 
     if(target < 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("You Can't Use Negative Numbers")  
     )
 
-    let emojis: any = ['🥭','🍓','🍋','🍑','🍈','🍊','🍐','🍇','🍒','🍅']
+    let emojis: any = ['🥭','🍓','🍋','🍑','🍈','🍊','🍐','🍇','🍒','🍅','🍎','🥕','🍌','🥝','🍆']
 
     let board: any = [];
 

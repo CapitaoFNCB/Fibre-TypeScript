@@ -19,7 +19,7 @@ export default class JavaCommand extends Command {
           }
       ],
       description: {
-        content: "Shows C Documentation.",
+        content: "Shows C documentation.",
         usage: "C [ search ]",
         examples: [
           "C Array"

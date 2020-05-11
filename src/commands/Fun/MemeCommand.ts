@@ -11,7 +11,7 @@ export default class MemeCommand extends Command {
       category: "Fun",
       channel: "guild",
       description: {
-        content: "Meme Command",
+        content: "Shows a meme image from an API.",
         usage: "meme",
         examples: ["meme"]
       },

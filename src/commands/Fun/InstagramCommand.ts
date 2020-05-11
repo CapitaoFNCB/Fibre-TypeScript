@@ -22,15 +22,18 @@ export default class InstagramCommand extends Command {
         }
       ],
       description: {
-        content: "Instagram Command",
-        usage: "instagram <username>",
-        examples: ["instagram gucci"]
+        content: "Shows instagram profile.",
+        usage: "instagram [] username ]",
+        examples: [
+          "instagram gucci",
+          "instagram menudocs"
+        ]
       },
       typing: true
     });
   }
 
-  public async exec(message: Message, {string}: {string: string}): Promise<Message> {
+  public async exec(message: Message, { string }: { string: string }): Promise<Message> {
     const search = await api.instagram(string)
 
     if(!search.success) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))

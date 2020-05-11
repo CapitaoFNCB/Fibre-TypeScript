@@ -15,11 +15,22 @@ router.get("/:serverID", CheckAuth, async(req, res) => {
         });
     }
 
-   
+    function test(level, xp){
+        let count = 0
+        for (var i = 1; i < level + 1; i ++) {
+            count = count + ((i ** i) + 100) * 2
+        }
+        return count + xp
+    }
+
+    let levels = await req.client.membersData.find({ guildId: guildInfos.id }).lean()
+
+    let membersLeaderboard = await levels.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp);
 
     res.render("levels", {
         guild: guildInfos,
-        levels: await req.client.membersData.find({ guildId: guildInfos.id }).lean(),
+        membersLeaderboard: membersLeaderboard,
+        levels: levels,
         user: req.userInfos,
         bot: req.client,
         currentURL: `${dashboard.baseURL}/${req.originalUrl}`
@@ -40,12 +51,11 @@ router.post("/:serverID", CheckAuth, async(req, res) => {
     let data = req.body;
 
     if(Object.keys(data)[0]){ 
-        let save_data = await req.client.findOrCreateMember({id: Object.keys(data)[0].split("_")[1], guildId: guild.id})
+        let save_data = await req.client.membersData.findOne({id: Object.keys(data)[0].split("_")[1], guildId: guild.id})
         save_data.level = 1
         save_data.xp = 0
         save_data.save()
     }
-
     res.redirect(303, "/levels/"+guild.id);
 });
 

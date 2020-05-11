@@ -25,9 +25,10 @@ async function fetchGuild(guildID, client, guilds){
     `, true);
     if(!guildData) return;
     const guild = {...guildData,...{ roles: rolesData },... { channels: channelsData }};
-    let conf: any = await client.findOrCreateGuild({id:guild.id});
-    let data = conf ? conf.JSON() : conf
-    return { ...guild, data, ...guilds.find((g) => g.id === guild.id) };
+    let any: any = await client.findOrCreateGuild({id:guild.id}, client);
+    let conf: any = await client.guildsData.findOne({ id: guild.id })
+    let data = conf ? conf.toJSON() : conf
+    return { ...guild, ...conf.toJSON(), ...guilds.find((g) => g.id === guild.id) };
 }
 
 /**

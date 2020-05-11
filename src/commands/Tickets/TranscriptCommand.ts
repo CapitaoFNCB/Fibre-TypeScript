@@ -14,9 +14,11 @@ export default class TranscriptCommand extends Command {
       channel: "guild",
       category: "Ticket",
       description: {
-        content: "Transcript Command",
+        content: "Stores all messages and displays in an HTML file.",
         usage: "transcript",
-        examples: ["transcript"]
+        examples: [
+          "transcript"
+        ]
       },
       typing: true
     });

@@ -4,11 +4,11 @@ import { Message } from "discord.js";
 export default class JoinCommand extends Command {
   constructor() {
     super("join", {
-      aliases: ["join"],
+      aliases: ["join", "summon"],
       channel: "guild",
       category: "Music",
       description: {
-        content: "Join Command", 
+        content: "Summons bot to your voice channel.", 
         usage: "join",
         examples: ["join"]
       },

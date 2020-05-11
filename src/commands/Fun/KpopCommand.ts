@@ -19,9 +19,12 @@ export default class KpopCommand extends Command {
           }
       ],
       description: {
-        content: "Kpop Command",
-        usage: "kpop",
-        examples: ["kpop"]
+        content: "Shows kpop artist information from API.",
+        usage: "kpop < artist >",
+        examples: [
+          "kpop",
+          "kpop Win Win"
+        ]
       },
       typing: true
     });

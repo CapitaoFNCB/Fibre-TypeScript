@@ -8,7 +8,7 @@ export default class LeaveCommand extends Command {
       channel: "guild",
       category: "Music",
       description: {
-        content: "Leave Command", 
+        content: "Removes bot from your voice channel.", 
         usage: "leave",
         examples: ["leave"]
       },
