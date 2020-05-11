@@ -40,12 +40,12 @@ export default class TagCommand extends Command {
 
         if (!name.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Please include a tag name`));
 
-        if (name.length > 16) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client)).setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
+        if (name.length > 16) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
             
         let guild = await this.client.guildsData.findOne({id: message.guild!.id})
 
         if(guild.customCommands.length == 10){
-            return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client))
+            return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
                 .setDescription(`Max Number of tags is 10`)
             )
         }
@@ -61,7 +61,7 @@ export default class TagCommand extends Command {
 
         guild.save()
 
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription(`Created Tag \`${name}\``)
         )
 

@@ -8,7 +8,7 @@ export default class LoopCommand extends Command {
       category: "Music",
       channel: "guild",
       description: {
-        content: "Loops music.",
+        content: "Loops currentl music.",
         usage: "loop [ track | queue | none ]",
         examples: [
           "loop track",

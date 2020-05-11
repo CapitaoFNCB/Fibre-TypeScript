@@ -159,7 +159,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id }, this)
+          let guild: any = await this.guildsData.findOne({ id: msg.guild.id })
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
@@ -196,7 +196,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.findOrCreateGuild({ id: msg.guild.id },this)
+          let guild: any = await this.guildsData.findOne({ id: msg.guild.id })
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
