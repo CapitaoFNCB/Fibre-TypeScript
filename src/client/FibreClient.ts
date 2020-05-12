@@ -12,6 +12,7 @@ import Embed from "./FibreEmbed";
 import { load } from "../dashboard/app";
 import { emojiList } from "../utils/EmojiList";
 import "../extensions/FibreMember";
+import { ErelaClient } from "erela.js";
 
 Logger.setFormatter(new DefaultFormatter({
   colorMap: new Map([
@@ -38,7 +39,7 @@ declare module "discord-akairo" {
         resolve;
         flag;
         checkDays;
-        manager;
+        manager: ErelaClient;
         guildOnly;
         ownerOnly;
         Embed: typeof Embed;

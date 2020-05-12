@@ -29,7 +29,7 @@ export default class VolumeCommand extends Command {
 
   async exec (message: Message, { amount }: { amount: number }) {
 
-    const player = this.client.manager.players.get(message.guild?.id)
+    const player = this.client.manager.players.get(message.guild!.id)
 
     const { channel } = message.member!.voice;
 

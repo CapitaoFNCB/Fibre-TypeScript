@@ -23,7 +23,7 @@ export default class JoinCommand extends Command {
     if(!channel) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("You Need to be in a voice channel")
       )
-
+    
     let player = this.client.manager.players.get(message.guild!.id)
     if(player) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("I'm already in a voice channel")
@@ -41,7 +41,7 @@ export default class JoinCommand extends Command {
         guild: message.guild,
         textChannel: message.channel,
         voiceChannel: channel,
-        self_deaf: true
+        self_deaf: true,
     }) 
 
     return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))

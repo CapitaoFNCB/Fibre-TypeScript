@@ -164,8 +164,10 @@ export default class SoundCloudCommand extends Command {
                     self_deaf: true
                 });
         
-                found.playlist.tracks.forEach(track => player.queue.add(track));
-                const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
+                for (const track of found.playlist.tracks){
+                    player.queue.add(track)
+                }
+                const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                 message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                 let playlist_data = await this.client.queue.get(message.guild!.id)
                 if(!playlist_data) playlist_data = await this.client.queue.set(message.guild!.id, { paused: false })

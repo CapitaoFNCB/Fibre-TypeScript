@@ -1,6 +1,6 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-import { Utils } from "erela.js";
+import { Utils, Track } from "erela.js";
 import { Emoji } from "discord.js";
 
 export default class PlayCommand extends Command {
@@ -61,7 +61,7 @@ export default class PlayCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    self_deaf: true
                 });
                 player.queue.add(found.tracks[0]);
                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -79,7 +79,7 @@ export default class PlayCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    self_deaf: true
                 }); 
                 player.queue.add(tracks[0]);
                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -96,12 +96,14 @@ export default class PlayCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    self_deaf: true
                 });
         
-                found.playlist.tracks.forEach(track => player.queue.add(track));
+                for (const track of found.playlist.tracks){
+                    player.queue.add(track)
+                }
                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
+                const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                 message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued: ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                 let data = await this.client.queue.get(message.guild!.id)
                 if(!data) data = await this.client.queue.set(message.guild!.id, { paused: false })
@@ -168,9 +170,11 @@ export default class PlayCommand extends Command {
                                 self_deaf: true
                             });
                     
-                            found.playlist.tracks.forEach(track => player.queue.add(track));
+                            for (const track of found.playlist.tracks){
+                                player.queue.add(track)
+                            }
                             message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                            const duration = Utils.formatTime(found.playlist.tracks.reduce((acc, cur) => ({duration: acc.duration + cur.duration})).duration, true);
+                            const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued: ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
                             let data = await this.client.queue.get(message.guild!.id)
                             if(!data) data = await this.client.queue.set(message.guild!.id, { paused: false })
