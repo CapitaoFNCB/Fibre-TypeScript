@@ -70,7 +70,7 @@ export default class RadioCommand extends Command {
               guild: message.guild,
               textChannel: message.channel,
               voiceChannel: channel,
-              self_deaf: true
+              selfDeaf: true
           });
           if(player.queue.length > 0){
             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))

@@ -7,7 +7,6 @@ import path from "path";
 import passport from "passport";
 import { Strategy } from "passport-discord";
 import utils from "./utils";
-import subdomain from "express-subdomain";
 
 export function load(client) {
 
@@ -20,7 +19,8 @@ export function load(client) {
     guildManagerRouter = require("./routes/guild-manager"),
     commandsRouter = require("./routes/commands"),
     botStatsRouter = require("./routes/botstats"),
-    levelsRouter = require("./routes/levels")
+    levelsRouter = require("./routes/levels"),
+    logoutRouter = require("./routes/logout")
 
     app
     .use(bodyParser.json())
@@ -47,6 +47,7 @@ export function load(client) {
     .use("/commands", commandsRouter)
     .use("/botstats", botStatsRouter)
     .use("/levels", levelsRouter)
+    .use("/logout", logoutRouter)
     .use("/", mainRouter)
     .use(CheckAuth, function(req, res, next){
         res.status(404).render("404", {

@@ -56,7 +56,7 @@ export default class SoundCloudCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    self_deaf: true
+                    selfDeaf: true
                 });
                 player.queue.add(found.tracks[0]);
                 if(player.queue.length > 1){
@@ -114,7 +114,7 @@ export default class SoundCloudCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            self_deaf: true
+                            selfDeaf: true
                         });
                         for (const track of tracks){
                             player.queue.add(track)
@@ -137,7 +137,7 @@ export default class SoundCloudCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            self_deaf: true
+                            selfDeaf: true
                         });
                         player.queue.add(tracks[reacted - 1])
                         if(send_message.editable)
@@ -161,7 +161,7 @@ export default class SoundCloudCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    self_deaf: true
+                    selfDeaf: true
                 });
         
                 for (const track of found.playlist.tracks){

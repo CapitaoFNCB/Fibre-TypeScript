@@ -45,7 +45,7 @@ export default class RandomCommand extends Command {
                       guild: message.guild,
                       textChannel: message.channel,
                       voiceChannel: channel,
-                      self_deaf: true
+                      selfDeaf: true
                   });
                     player.queue.add(tracks[0]);
                     if(player.queue.length > 1){

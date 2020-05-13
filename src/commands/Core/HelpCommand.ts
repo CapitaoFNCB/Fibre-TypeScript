@@ -30,7 +30,7 @@ export default class Help extends Command {
     });
   }
 
-  async exec (message: Message, { command }: {command : any}): Promise<Message> {
+  async exec (message: Message, { command }: { command : any }): Promise<Message> {
 
     if (!command) {
       let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))

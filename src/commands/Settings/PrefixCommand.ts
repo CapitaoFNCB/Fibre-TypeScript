@@ -21,16 +21,12 @@ export default class PrefixCommand extends Command {
         usage: "prefix [new prefix]",
         examples: ["prefix !"]
       },
-      typing: true
+      typing: true,
+      userPermissions: ["MANAGE_GUILD"]
     });
   }
 
   public async exec(message: Message, { prefix }: { prefix: String }) {
-
-    const perms = await this.client.perms(["ADMINISTRATOR"],message.member)
-    if(perms.length > 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-        .setDescription(`You need these permissions ${perms.map(x => `\`` + x + `\``)}`)
-    )
 
     if(prefix.length > 5) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
         .setDescription("The Max length of a prefix is 5")
