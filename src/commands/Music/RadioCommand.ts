@@ -140,9 +140,8 @@ export default class RadioCommand extends Command {
                 voiceChannel: channel,
                 selfDeaf: true
             });
-            if(player.queue.length > 0){
-              message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
-            }  
+            send_message.reactions.removeAll().catch(() => null)
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
             player.queue.add(res.tracks[0])
             let search_data = await this.client.queue.get(message.guild!.id)
             if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
