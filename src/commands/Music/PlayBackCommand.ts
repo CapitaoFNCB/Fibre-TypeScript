@@ -50,7 +50,8 @@ export default class PlayBackCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    selfDeaf: true,
+                    volume: guildData
                 });
 
                 player.queue.add(found.tracks[0]);

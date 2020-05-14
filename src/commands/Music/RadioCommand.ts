@@ -65,7 +65,12 @@ export default class RadioCommand extends Command {
     for(const radio of radios){
       stations.push(radio)
     }
+
+    if(!stations.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No radio stations found for \`${station}\``))
+
     let i: number = 1;
+
+    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
 
     if(stations.length == 1){
       return this.client.manager.search(stations[0].url, message.author).then(async res => {
@@ -75,7 +80,8 @@ export default class RadioCommand extends Command {
                 guild: message.guild,
                 textChannel: message.channel,
                 voiceChannel: channel,
-                selfDeaf: true
+                selfDeaf: true,
+                volume: guild.volume
             });
             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
             player.queue.add(res.tracks[0])
@@ -138,7 +144,8 @@ export default class RadioCommand extends Command {
                 guild: message.guild,
                 textChannel: message.channel,
                 voiceChannel: channel,
-                selfDeaf: true
+                selfDeaf: true,
+                volume: guild.volume
             });
             send_message.reactions.removeAll().catch(() => null)
             message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))

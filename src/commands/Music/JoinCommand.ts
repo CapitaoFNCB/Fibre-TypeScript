@@ -37,11 +37,14 @@ export default class JoinCommand extends Command {
       .setDescription("I cannot speak this voice channel")
     )
 
+    let guild = await this.client.guildsData.findOne({ id: message.guild!.id })
+
     player = this.client.manager.players.spawn({
         guild: message.guild,
         textChannel: message.channel,
         voiceChannel: channel,
         selfDeaf: true,
+        volume: guild.volume
     }) 
 
     return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))

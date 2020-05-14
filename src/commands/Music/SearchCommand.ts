@@ -45,6 +45,7 @@ export default class SearchCommand extends Command {
     }else if(!channel!.speakable){
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
+    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
 
     this.client.manager.search(query, message.author).then(async found => {
         switch (found.loadType) {
@@ -59,7 +60,8 @@ export default class SearchCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    selfDeaf: true,
+                    volume: guild.volume
                 });
                 player.queue.add(found.tracks[0]);
                 if(player.queue.length > 1){
@@ -117,7 +119,8 @@ export default class SearchCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            selfDeaf: true
+                            selfDeaf: true,
+                            volume: guild.volume
                         });
                         for (const track of tracks){
                             player.queue.add(track)
@@ -140,7 +143,8 @@ export default class SearchCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            selfDeaf: true
+                            selfDeaf: true,
+                            volume: guild.volume
                         });
                         player.queue.add(tracks[reacted - 1])
                         if(send_message.editable)
@@ -163,7 +167,8 @@ export default class SearchCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    selfDeaf: true,
+                    volume: guild.volume
                 });
                 for (const track of found.playlist.tracks){
                     player.queue.add(track)
@@ -195,7 +200,8 @@ export default class SearchCommand extends Command {
                                 guild: message.guild,
                                 textChannel: message.channel,
                                 voiceChannel: channel,
-                                selfDeaf: true
+                                selfDeaf: true,
+                                volume: guild.volume
                             });
                             player.queue.add(found.tracks[0]);
                             if(player.queue.length > 1){
@@ -252,7 +258,8 @@ export default class SearchCommand extends Command {
                                         guild: message.guild,
                                         textChannel: message.channel,
                                         voiceChannel: channel,
-                                        selfDeaf: true
+                                        selfDeaf: true,
+                                        volume: guild.volume
                                     });
                                     for (const track of tracks){
                                         player.queue.add(track)
@@ -275,7 +282,8 @@ export default class SearchCommand extends Command {
                                         guild: message.guild,
                                         textChannel: message.channel,
                                         voiceChannel: channel,
-                                        selfDeaf: true
+                                        selfDeaf: true,
+                                        volume: guild.volume
                                     });
                                     player.queue.add(tracks[reacted - 1])
                                     if(send_message.editable)
@@ -298,7 +306,8 @@ export default class SearchCommand extends Command {
                                 guild: message.guild,
                                 textChannel: message.channel,
                                 voiceChannel: channel,
-                                selfDeaf: true
+                                selfDeaf: true,
+                                volume: guild.volume
                             });
                     
                             for (const track of found.playlist.tracks){

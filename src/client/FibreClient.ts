@@ -14,6 +14,8 @@ import { emojiList } from "../utils/EmojiList";
 import "../extensions/FibreMember";
 import { ErelaClient } from "erela.js";
 import { KSoftClient } from "@ksoft/api";
+// import Constants from "discord.js/src/util/Constants";
+// Constants.DefaultOptions.ws.properties.$browser = "Discord Android"
 
 Logger.setFormatter(new DefaultFormatter({
   colorMap: new Map([

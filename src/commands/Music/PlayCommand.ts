@@ -51,6 +51,8 @@ export default class PlayCommand extends Command {
         if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Play Command"));
     }
 
+    let guild = await this.client.guildsData.findOne({ id: message.guild!.id })
+
     let data = await getData(query).catch(() => null)
     let counter: number = 0
     if(data) {
@@ -66,7 +68,8 @@ export default class PlayCommand extends Command {
                                     guild: message.guild,
                                     textChannel: message.channel,
                                     voiceChannel: channel,
-                                    selfDeaf: true
+                                    selfDeaf: true,
+                                    volume: guild.volume
                                 }); 
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -100,7 +103,8 @@ export default class PlayCommand extends Command {
                                     guild: message.guild,
                                     textChannel: message.channel,
                                     voiceChannel: channel,
-                                    selfDeaf: true
+                                    selfDeaf: true,
+                                    volume: guild.volume
                                 }); 
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -142,7 +146,8 @@ export default class PlayCommand extends Command {
                         guild: message.guild,
                         textChannel: message.channel,
                         voiceChannel: channel,
-                        selfDeaf: true
+                        selfDeaf: true,
+                        volume: guild.volume
                     });
                     player.queue.add(found.tracks[0]);
                     message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -160,7 +165,8 @@ export default class PlayCommand extends Command {
                         guild: message.guild,
                         textChannel: message.channel,
                         voiceChannel: channel,
-                        selfDeaf: true
+                        selfDeaf: true,
+                        volume: guild.volume
                     }); 
                     player.queue.add(tracks[0]);
                     message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -177,7 +183,8 @@ export default class PlayCommand extends Command {
                         guild: message.guild,
                         textChannel: message.channel,
                         voiceChannel: channel,
-                        selfDeaf: true
+                        selfDeaf: true,
+                        volume: guild.volume
                     });
             
                     for (const track of found.playlist.tracks){
@@ -213,7 +220,8 @@ export default class PlayCommand extends Command {
                                     guild: message.guild,
                                     textChannel: message.channel,
                                     voiceChannel: channel,
-                                    selfDeaf: true
+                                    selfDeaf: true,
+                                    volume: guild.volume
                                 });
                                 player.queue.add(found.tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -231,7 +239,8 @@ export default class PlayCommand extends Command {
                                     guild: message.guild,
                                     textChannel: message.channel,
                                     voiceChannel: channel,
-                                    selfDeaf: true
+                                    selfDeaf: true,
+                                    volume: guild.volume
                                 });
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
@@ -248,7 +257,8 @@ export default class PlayCommand extends Command {
                                     guild: message.guild,
                                     textChannel: message.channel,
                                     voiceChannel: channel,
-                                    selfDeaf: true
+                                    selfDeaf: true,
+                                    volume: guild.volume
                                 });
                         
                                 for (const track of found.playlist.tracks){

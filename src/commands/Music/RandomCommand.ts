@@ -36,6 +36,8 @@ export default class RandomCommand extends Command {
       if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
     }
 
+    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
+
     fetch('https://fibreapi.glitch.me/song').then(res => res.json()).then(results => {
         this.client.manager.search(results.song, message.author).then(async found => {
             switch (found.loadType) {
@@ -45,7 +47,8 @@ export default class RandomCommand extends Command {
                       guild: message.guild,
                       textChannel: message.channel,
                       voiceChannel: channel,
-                      selfDeaf: true
+                      selfDeaf: true,
+                      volume: guild.volume
                   });
                     player.queue.add(tracks[0]);
                     if(player.queue.length > 1){

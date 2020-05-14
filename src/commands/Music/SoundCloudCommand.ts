@@ -49,7 +49,7 @@ export default class SoundCloudCommand extends Command {
     if(player){
         if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Play Command"));
     }
-
+    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
     this.client.manager.search({source: "soundcloud", query: query }, message.author).then(async found => {
         switch (found.loadType) {
 
@@ -58,7 +58,8 @@ export default class SoundCloudCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    selfDeaf: true,
+                    volume: guild.volume
                 });
                 player.queue.add(found.tracks[0]);
                 if(player.queue.length > 1){
@@ -116,7 +117,8 @@ export default class SoundCloudCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            selfDeaf: true
+                            selfDeaf: true,
+                            volume: guild.volume
                         });
                         for (const track of tracks){
                             player.queue.add(track)
@@ -139,7 +141,8 @@ export default class SoundCloudCommand extends Command {
                             guild: message.guild,
                             textChannel: message.channel,
                             voiceChannel: channel,
-                            selfDeaf: true
+                            selfDeaf: true,
+                            volume: guild.volume
                         });
                         player.queue.add(tracks[reacted - 1])
                         if(send_message.editable)
@@ -163,7 +166,8 @@ export default class SoundCloudCommand extends Command {
                     guild: message.guild,
                     textChannel: message.channel,
                     voiceChannel: channel,
-                    selfDeaf: true
+                    selfDeaf: true,
+                    volume: guild.volume
                 });
         
                 for (const track of found.playlist.tracks){
