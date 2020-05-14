@@ -5,7 +5,8 @@ let User = new mongoose.Schema({
         id: { type: String },
         backgound: { type: Buffer, default: ``},
         colour: { type: String, default: "#ffffff"},
-        premium: { type: Boolean, default: false }
+        premium: { type: Boolean, default: false },
+        blacklisted: { type: Boolean, default: false }
     
 })
 

@@ -52,7 +52,7 @@ async function fetchUser(userData, client, query?){
             guild.settingsUrl = (guildExists ? `/manage/${guild.id}/` : `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=2146958847&guild_id=${guild.id}`);
             guild.statsUrl = (guildExists ? `/stats/${guild.id}/` : `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=2146958847&guild_id=${guild.id}`);
             guild.levelsUrl = (guildExists ? `/levels/${guild.id}/` : `https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=2146958847&guild_id=${guild.id}`);
-            guild.iconURL = (guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128` : "https://discordemoji.com/assets/emoji/discordcry.png");
+            guild.iconURL = (guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=128` : "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fgeeknewscentral.com%2Fwp-content%2Fuploads%2F2017%2F08%2FDiscord-logo-300x300.jpg&f=1&nofb=1");
             guild.displayed = (query ? guild.name.toLowerCase().includes(query.toLowerCase()) : true);
             guild.inGuild = (guildExists ? true : false);
         });

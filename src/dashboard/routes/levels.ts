@@ -67,13 +67,6 @@ router.post("/:serverID", CheckAuth, async(req, res) => {
         }
     })
 
-    // let guild_info = await req.client.broadcastEval(`this.guilds.cache.get("${guild.id}") ? this.guilds.cache.get("${guild.id}") : null`, true)
-
-    // let perms = guild_info.members.get(`${req.user.id}`)
-
-    // console.log(perms)
-
-
     res.redirect(303, "/levels/"+guild.id);
 });
 

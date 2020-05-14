@@ -1,6 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import { owners } from "./Config";
 import guildsData from "../database/Guild";
+import membersData from "../database/Member";
 
 export function check_emojis(emoji){
     if(emoji === '1️⃣') return 1
@@ -105,7 +106,6 @@ export async function findOrCreateUser({ id: userID }, client, isLean?){
         }
     });
   }
-
   export async function creatOrFind(param, isLean){
     return new Promise(async function (resolve, reject){
         let guildData = (isLean ? await guildsData.findOne(param).populate("members").lean() : await guildsData.findOne(param).populate("members"));
@@ -154,6 +154,24 @@ export async function findOrCreateUser({ id: userID }, client, isLean?){
             }
           });
       } 
+
+export async function createOrFind ({ id: memberID, guildId: id }, client, isLean?){
+    return new Promise(async function (resolve, reject){
+        let memberData = (isLean ? await client.membersData.findOne({ id: memberID, guildId: id }).lean() : await client.membersData.findOne({ id: memberID, guildId: id }));
+        if(memberData){
+            resolve(memberData);
+        } else {
+            memberData = new membersData({ id: memberID, guildId: id });
+            await memberData.save();
+            let guild = await guildsData.findOne({ id: id });
+            if(guild){
+                guild.members.push(memberData._id);
+                await guild.save();
+            }
+            resolve((isLean ? memberData.toJSON() : memberData));
+        }
+    });
+    } 
 
 export async function getUsersData(client, users){
     return new Promise(async function(resolve, reject){

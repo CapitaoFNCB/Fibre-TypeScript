@@ -16,7 +16,7 @@ const Guild = new mongoose.Schema({
     commandChannel: { type: Object, default: { enabled: false, channel: null } },
     djRole: { type: String, default: null },
     volume: { type: Number, default: 100 },
-    tickets: { type: Boolean, default: false },
+    tickets: { type: Boolean, default: false }
 
 })
 export default mongoose.model("Guild", Guild);

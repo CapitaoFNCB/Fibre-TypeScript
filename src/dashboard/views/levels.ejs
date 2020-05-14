@@ -32,7 +32,7 @@
                     <% function test(level, xp){ %>
                         <% count = 0 %>
                         <% for (var i = 1; i < level + 1; i ++) { %>
-                            <% count = count + ((i ** i) + 100) * 2 %>
+                            <% count = count + i * 650 %>
                         <% } %>
                         <% return count + xp %>
                     <% } %>
@@ -75,7 +75,7 @@
                                         <div class="box box-widget widget-user">
                                             <div class="box-body">
                                                 <div class="form-group">
-                                                    <h2 style="color: aliceblue; "><img class="avatar" src="<%= bot.users.cache.get(search.id).displayAvatarURL({ dynamic: true, format: "png", size: 64 }) %>">  <%- bot.users.cache.get(search.id).tag %> &nbsp; Level: <%- search.level %>&nbsp; XP: <%- search.xp %> / <%- ((search.level ** search.level) + 100) * 2 %> <% if(user.displayedGuilds.find(search_guild => search_guild.id == guild.id)) { %> <button type="submit" name="xpReset_<%= search.id %>" class="btn btn-danger">Reset Level</button> <% } %></h2>
+                                                    <h2 style="color: aliceblue; "><img class="avatar" src="<%= bot.users.cache.get(search.id).displayAvatarURL({ dynamic: true, format: "png", size: 64 }) %>">  <%- bot.users.cache.get(search.id).tag %> &nbsp; Level: <%- search.level %>&nbsp; XP: <%- search.xp %> / <%- search.level * 650 %> <% if(user.displayedGuilds.find(search_guild => search_guild.id == guild.id)) { %> <button type="submit" name="xpReset_<%= search.id %>" class="btn btn-danger">Reset Level</button> <% } %></h2>
                                                 </div>
                                             </div>
                                         </div>    

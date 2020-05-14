@@ -10,7 +10,7 @@ export default class JoinCommand extends Command {
       description: {
         content: "Summons bot to your voice channel.", 
         usage: "join",
-        examples: ["join"]
+        examples: ["join"],
       },
       typing: true
     });
@@ -34,9 +34,9 @@ export default class JoinCommand extends Command {
     )
 
     if(!channel.speakable) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-    .setDescription("I cannot speak this voice channel")
-  )
-    
+      .setDescription("I cannot speak this voice channel")
+    )
+
     player = this.client.manager.players.spawn({
         guild: message.guild,
         textChannel: message.channel,

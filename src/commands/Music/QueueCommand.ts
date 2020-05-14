@@ -39,7 +39,7 @@ export default class QueueCommand extends Command {
         let current = 1;
         let data = await this.client.guildsData.findOne({ id: message.guild!.id })
         let embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false).addField(`Queue`, queuelist, false).setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${data.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
-        await message.channel.send(embed).then(async (msg) => {
+        await message.util!.send(embed).then(async (msg) => {
             msg.delete({ timeout: 60000 });
             if (Math.floor((player.queue.slice(2).length + 10) / 10) > 1) {
             await msg.react('⏪');

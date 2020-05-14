@@ -11,7 +11,11 @@ export default class SearchCommand extends Command {
       args: [
         {
             id: "query",
-            type: "string",
+            type: (message: Message, song: String) => {
+                if(!message.member!.voice.channelID) return "This user is not in a voice channel, ask to join"
+                if(message.attachments.size) return message.attachments.first()!.proxyURL
+                if(song) return song
+            },
             match: "rest",
             prompt:{
               start: "What would you like to play?"
@@ -32,13 +36,13 @@ export default class SearchCommand extends Command {
     let player: any;
     let filter: any;
 
+    if(query == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in a voice channel"))
+
     const { channel } = message.member!.voice
 
-    if (!channel) {
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
-    }else if (!channel.joinable) {
+    if (!channel!.joinable) {
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
-    }else if(!channel.speakable){
+    }else if(!channel!.speakable){
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
@@ -120,10 +124,10 @@ export default class SearchCommand extends Command {
                         }
                         if(send_message.editable)
                             send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-                            .setDescription(`Queued: All`)
+                            .setDescription(`Queued: All songs`)
                         )
                         
-                        send_message.reactions.removeAll().catch(error => null)
+                        send_message.reactions.removeAll().catch(() => null)
 
                         let search_data = await this.client.queue.get(message.guild!.id)
                         if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
@@ -144,7 +148,7 @@ export default class SearchCommand extends Command {
                             .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                         )
 
-                        send_message.reactions.removeAll().catch(error => null)
+                        send_message.reactions.removeAll().catch(() => null)
                         let search_data = await this.client.queue.get(message.guild!.id)
                         if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                         if(search_data.paused) return;
@@ -255,10 +259,10 @@ export default class SearchCommand extends Command {
                                     }
                                     if(send_message.editable)
                                         send_message.edit("", new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-                                        .setDescription(`Queued: All`)
+                                        .setDescription(`Queued: All songs`)
                                     )
                                     
-                                    send_message.reactions.removeAll().catch(error => null)
+                                    send_message.reactions.removeAll().catch(() => null)
             
                                     let search_data = await this.client.queue.get(message.guild!.id)
                                     if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
@@ -279,7 +283,7 @@ export default class SearchCommand extends Command {
                                         .setDescription(`Queued: ${tracks[reacted - 1].title}`)
                                     )
             
-                                    send_message.reactions.removeAll().catch(error => null)
+                                    send_message.reactions.removeAll().catch(() => null)
                                     let search_data = await this.client.queue.get(message.guild!.id)
                                     if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
                                     if(search_data.paused) return;

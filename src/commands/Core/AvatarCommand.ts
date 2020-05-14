@@ -32,7 +32,7 @@ export default class AvatarCommand extends Command {
   async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
     return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setAuthor(`${member === message.member ? "Your" : `${member.user.username}'s`} Avatar`)
-      .setImage(member.user.displayAvatarURL({ dynamic: true, size: 2048 }))
+      .setImage(member.user.displayAvatarURL({ format: "png", dynamic: true, size: 2048 }))
     )
   }
 }

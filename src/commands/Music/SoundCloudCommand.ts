@@ -11,7 +11,10 @@ export default class SoundCloudCommand extends Command {
       args: [
         {
             id: "query",
-            type: "string",
+            type: (message: Message, song: String) => {
+                if(!message.member!.voice.channelID) return "This user is not in a voice channel, ask to join"
+                if(song) return song
+            },
             match: "rest",
             prompt:{
               start: "What would you like to play?"
@@ -32,13 +35,12 @@ export default class SoundCloudCommand extends Command {
     let player: any;
     let filter: any;
 
-    const { channel } = message.member!.voice
+    if(query == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in a voice channel"))
 
-    if (!channel) {
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
-    }else if (!channel.joinable) {
+    const { channel } = message.member!.voice
+    if (!channel!.joinable) {
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
-    }else if(!channel.speakable){
+    }else if(!channel!.speakable){
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 

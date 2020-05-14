@@ -1,7 +1,7 @@
 import { AkairoClient, CommandHandler, ListenerHandler, Flag } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser, creatOrFind } from "../utils/Functions"
-import { owners } from "../utils/Config";
+import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser, creatOrFind, createOrFind } from "../utils/Functions"
+import { owners, KSOFT_TOKEN } from "../utils/Config";
 import { Message, Collection } from "discord.js";
 import guildsData from "../database/Guild"
 import membersData from "../database/Member"
@@ -13,6 +13,7 @@ import { load } from "../dashboard/app";
 import { emojiList } from "../utils/EmojiList";
 import "../extensions/FibreMember";
 import { ErelaClient } from "erela.js";
+import { KSoftClient } from "@ksoft/api";
 
 Logger.setFormatter(new DefaultFormatter({
   colorMap: new Map([
@@ -57,6 +58,8 @@ declare module "discord-akairo" {
         queue;
         creatOrFind;
         emojiList;
+        ksoft: KSoftClient;
+        createOrFind;
     }
   }
   
@@ -100,6 +103,8 @@ declare module "discord-akairo" {
        this.databaseCache.members = new Collection();
        this.queue = new Collection();
        this.emojiList = emojiList;
+       this.ksoft = new KSoftClient(KSOFT_TOKEN)
+       this.createOrFind = createOrFind;
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {

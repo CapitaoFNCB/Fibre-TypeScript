@@ -30,6 +30,7 @@ export default class ClapCommand extends Command {
   }
 
   public async exec(message: Message, { string }: { string: String }): Promise<Message> {
+
     if(string.length > 1000) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
       .setDescription("Cannot clapify this due to its length")
     )

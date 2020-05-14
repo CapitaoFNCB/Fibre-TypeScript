@@ -59,9 +59,6 @@ export default class Help extends Command {
     const avatar = await result.buffer();
     const buffer = await user();
     const attachment = new MessageAttachment(buffer.toBuffer(), `profile.png`);
-    // const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
-    //   .attachFiles(attachment)
-    //   .setImage(`attachment://profile.png`)
    return message.util!.send(attachment)
 
     async function user(){
@@ -79,7 +76,7 @@ export default class Help extends Command {
         .addCircle(110, 130, 80)
         .addCircularImage(avatar,110,130,70)
         .setColor(user_data.colour)
-        .addRect(380, 150, ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 4.5) == 0 ? 1 : ((100 / (((found.level ** found.level) + 100) * 2) * found.xp) * 4.5), 46)
+        .addRect(380, 150,(100 / ((found.level * 650)) * 4.5) * found.xp == 0 ? 1 : (100 / ((found.level * 650)) * 4.5) * found.xp, 46)
         .setColor("#ffffff")
         .setTextAlign('left')
         .setTextFont('45px arvo')
@@ -89,11 +86,13 @@ export default class Help extends Command {
         .setTextAlign('left')
         .addText(`Level: ${found.level}`, 380, 230)
         .setTextAlign('right')
-        .addText(`XP: ${size(found.xp)} / ${size(((found.level ** found.level) + 100) * 2)}`, 835, 230)
+        .addText(`XP: ${size(found.xp)} / ${size(found.level * 650)}`, 835, 230)
         .addText(`${found.xp == 0 && found.level == 1 ? "" : `Rank ${leader_rank == 0 ? "Unranked" : "#" + leader_rank}`}`, 835, 260)
     }
   }
 }
+
+// ( ((100 / ((found.level * 650) * found.xp) * 4.5) == 0 ? 1 : (100 / ((found.level * 650) * found.xp) * 4.5)
 
 function toBuffer(ab) {
   var buf = Buffer.alloc(ab.byteLength);

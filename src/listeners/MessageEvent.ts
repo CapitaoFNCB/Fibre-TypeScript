@@ -24,6 +24,10 @@ export default class MessageListener extends Listener {
 
       member = await this.client.membersData.findOne({id: message.author.id, guildId: message.guild.id})
 
+      if(!member){
+        member = this.client.createOrFind({id: message.author.id, guildId: message.guild.id})
+      }
+
       if(!useGuld.level){
         member.characters += message.content.length
         member.save()
@@ -33,7 +37,7 @@ export default class MessageListener extends Listener {
       member.characters += message.content.length
 
       const amount = randomXP()
-      const updatelevel = ((member.level ** member.level) + 100) * 2
+      const updatelevel = member.level * 650
 
       member.xp += amount
 
