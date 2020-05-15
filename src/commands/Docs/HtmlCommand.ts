@@ -26,7 +26,6 @@ export default class HtmlCommand extends Command {
           "html nav"
         ]
       },
-      typing: true
     });
   }
 
@@ -34,13 +33,13 @@ export default class HtmlCommand extends Command {
 
     let body: any = await fetch(`https://api.duckduckgo.com/?q=html+${query}&format=json&atb=v208-1`)
 
-    if(body.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(body.status != 200) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
 
-    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setAuthor(`HTML`, 'https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_960_720.png', data.AbstractURL)
       .setDescription(data.Abstract.replace(/<[^>]*>?|&lt;[^>]*&gt;?/gmi, ''))
 

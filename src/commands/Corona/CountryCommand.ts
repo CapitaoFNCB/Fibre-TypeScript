@@ -28,7 +28,6 @@ export default class CountrylistCommand extends Command {
           "c spain",
         ]
       },
-      typing: true
     });
   }
 
@@ -36,7 +35,7 @@ export default class CountrylistCommand extends Command {
     const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries').then(res => res.json())
     const found: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())[0]
     const check: any = data.filter(u => u['country'].toLowerCase() == country.toLowerCase())
-    if(!check.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(!check.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription("Invalid Country \n Check +countrylist for Countries")
     )
     let wikiName: string;
@@ -61,7 +60,7 @@ export default class CountrylistCommand extends Command {
       wikiImage = imageLink;
     }
 
-    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setTitle(`${found.country}'s Statistics`)
         .addField("Location:", `${found.countryInfo.long} Longitude, ${found.countryInfo.lat} Latitude`)
         .addField("Cases:", found.cases.toLocaleString(), true)

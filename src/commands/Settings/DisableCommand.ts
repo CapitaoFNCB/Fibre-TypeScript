@@ -8,13 +8,12 @@ export default class DisableCommand extends Command {
       category: "Settings",
       channel: "guild",
       description: {
-        content: "Disables surtain aspects.",
+        content: "Disables curtain aspects.",
         usage: "disable [ type ]",
         examples: [
           "disable level"
         ]
       },
-      typing: true
     });
   }
   public *args(): object {
@@ -28,7 +27,7 @@ export default class DisableCommand extends Command {
 
             let prefix = guild.prefix
 
-            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help enable\``)
+            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help disable\``)
         }
     }
 

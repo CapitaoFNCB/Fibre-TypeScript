@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class LoopCommand extends Command {
   public constructor() {
     super("loop", {
-      aliases: ["loop", "l"],
+      aliases: ["loop", "l", "repeat"],
       category: "Music",
       channel: "guild",
       description: {
@@ -12,17 +12,10 @@ export default class LoopCommand extends Command {
         usage: "loop [ track | queue | none ]",
         examples: [
           "loop track",
-          "loop single",
-          "loop current",
-          "loop t",
-          "loop queue",
-          "loop all",
-          "loop q",
-          "loop n",
-          "loop n"
+          "l track",
+          "repeate none"
         ]
       },
-      typing: true
     });
   }
   public *args(): object {
@@ -38,7 +31,7 @@ export default class LoopCommand extends Command {
 
             let prefix = guild.prefix
 
-            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help loop\``)
+            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help loop\``)
         }
     }
 

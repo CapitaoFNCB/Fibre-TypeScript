@@ -33,13 +33,13 @@ export default class Help extends Command {
 
   public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
     
-    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription("No Information is stored for bots")
     )
 
-    const found = await this.client.membersData.findOne({id: member.id, guildId: message.guild!.id})
+    const found = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
 
-    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(!found) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("Couldn't find data in database")
     )
     
@@ -53,7 +53,7 @@ export default class Help extends Command {
     let levels = await this.client.membersData.find({ guildId: message.guild!.id }).lean()
     let membersLeaderboard = await levels.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp);
     let leader_rank: number | string = membersLeaderboard.map(user => user.id).indexOf(member.id) + 1 == 0 ? "Unknown" : membersLeaderboard.map(user => user.id).indexOf(member.id) + 1
-    const user_data = await this.client.usersData.findOne({id: member.id })
+    const user_data = await this.client.findOrCreateUser({ id: member.id })
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.util!.send("Failed to get Avatar");
     const avatar = await result.buffer();

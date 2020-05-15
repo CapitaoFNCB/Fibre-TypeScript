@@ -26,7 +26,6 @@ export default class JumboCommand extends Command {
           usage: "jumbo [ emoji ]",
           examples: ["jumbo 🏓"]
         },
-        typing: true
       });
     }
     public async exec(message: Message, { query }: { query: string }): Promise<Message> {
@@ -41,7 +40,7 @@ export default class JumboCommand extends Command {
 
             text = twemoji.parse(query.split(" ")[0]);
             if(!text.startsWith("<img")){
-                return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
                     .setDescription("I Cannot Find This Emoji")
                 )
             }

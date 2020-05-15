@@ -13,14 +13,13 @@ export default class WorkCommand extends Command {
         usage: "work",
         examples: ["work"]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message): Promise<Message> {
 
     let cooldown = 21600000
-    const target = await this.client.membersData.findOne({ id: message.author.id, guildId: message.guild!.id})
+    const target = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
     let amount
 
     if(target.work_time == 0) {
@@ -36,7 +35,7 @@ export default class WorkCommand extends Command {
         target.cash += amount * hours;
         target.save()
 
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
           .setDescription(`${message.author.username} worked for ${hours} hours at a rate of $${amount} an hour`)
         )
 
@@ -51,7 +50,7 @@ export default class WorkCommand extends Command {
         if(parse(cooldown - (Date.now() - amount)).seconds > 1){
             str += `${parse(cooldown - (Date.now() - amount)).seconds}s`
         }
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
           .setDescription(`You cannot work for ${str}`)
         )
     }

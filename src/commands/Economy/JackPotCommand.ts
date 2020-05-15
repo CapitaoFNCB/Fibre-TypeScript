@@ -25,18 +25,17 @@ export default class JackpotCommand extends Command {
           "jackpot 1000"
         ]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message, { amount }: { amount: Number }) {
 
-    if(isNaN(Number(amount))) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(isNaN(Number(amount))) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("Invalid Amount")
     )
 
 
-    const message2 = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    const message2 = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setTitle("JACKPOT!!")
       .setDescription("React with 💰 to enter the jackpot. You have 30 seconds")
       .setFooter("If you don't have enough your reaction will be removed"))
@@ -47,7 +46,7 @@ export default class JackpotCommand extends Command {
     collector.on('collect', async (r,user) => {
       if(user.bot) return;
       
-      let target = await this.client.membersData.findOne({id: user.id, guildId: message.guild?.id})
+      let target = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
 
       if(target.cash < amount) r.users.remove(user.id)
 
@@ -55,26 +54,26 @@ export default class JackpotCommand extends Command {
     collector.on('end', async (r, time) => {
       let users = r.first()?.users.cache.filter(u => !u.bot)
 
-      if(!users?.size) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+      if(!users?.size) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription("No one Entered the jackpot")
       )
 
       await users?.forEach(async user => {
-        let all_users = await this.client.membersData.findOne({id: user.id, guildId: message.guild?.id})
+        let all_users = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
         all_users.cash -= Number(amount)
         all_users.save()
       })
 
       let winner = users?.random()
 
-      message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+      message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription(`${winner.username} Won!!`)
       )
 
       message2.reactions.removeAll().catch(err => null)
 
       setTimeout(async () =>{
-        let target = await this.client.membersData.findOne({id: winner.id, guildId: message.guild?.id})
+        let target = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
         target.cash += Number(users?.size) * Number(amount)
 
         target.save()

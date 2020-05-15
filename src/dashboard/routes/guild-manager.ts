@@ -37,7 +37,7 @@ router.post("/:serverID", CheckAuth, async(req, res) => {
             currentURL: `${dashboard.baseURL}/${req.originalUrl}`
         });
     }
-    let guildData = await req.client.guildsData.findOne({ id: guild.id });
+    let guildData = await req.client.findOrCreateGuild({id: guild.id});
     let data = req.body;
     let remove = Object.keys(data).map(x => x).filter(x => x.startsWith("deletecustomCommand"))[0] ? Object.keys(data).map(x => x).filter(x => x.startsWith("deletecustomCommand"))[0].split("_")[1] : "";
     let edit = Object.keys(data).map(x => x).filter(x => x.startsWith("editCustomCommand"))[0] ? Object.keys(data).map(x => x).filter(x => x.startsWith("editCustomCommand"))[0].split("_")[1] : "";
@@ -78,6 +78,9 @@ router.post("/:serverID", CheckAuth, async(req, res) => {
     if (data.prefix && (data.prefix.length > 0 && data.prefix.length <= 5)) {
         guildData.prefix = data.prefix;
     }
+    if(data.volume){
+        if(Number(data.volume) && Number(data.volume) > 0 && Number(data.volume) < 1000) guildData.volume = data.volume;
+    }
     if (data.colour) {
         if (data.colour[0]) {
             if (isHex(data.colour[0]))
@@ -89,7 +92,6 @@ router.post("/:serverID", CheckAuth, async(req, res) => {
         }
     }
     guildData.save();
-    req.client.broadcastEval(`this.guilds.cache.get('${req.params.serverID}') ? this.databaseCache.guilds.set('${req.params.serverID}', { prefix : "${guildData.prefix}", colour: "${guildData.colour}" }) : ""`);
     res.redirect(303, "/manage/" + guild.id);
 });
 

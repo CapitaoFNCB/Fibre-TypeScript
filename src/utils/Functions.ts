@@ -2,6 +2,7 @@ import { MessageEmbed } from "discord.js";
 import { owners } from "./Config";
 import guildsData from "../database/Guild";
 import membersData from "../database/Member";
+import usersData from "../database/User";
 
 export function check_emojis(emoji){
     if(emoji === '1️⃣') return 1
@@ -56,6 +57,13 @@ export function flag(string){
     return region[string]
 }
 
+export function checkDays(date){
+    let now = new Date();
+    let diff = now.getTime() - date.getTime();
+    let days = Math.floor(diff / 86400000);
+    return days + (days == 1 ? " day" : " days") + " ago";
+}
+
 export function resolve(type, value, guild,client){
     if (!value) return value;
     if (!type || typeof type !== "string") throw new TypeError("Must pass `type` as string");
@@ -82,102 +90,50 @@ export function resolve(type, value, guild,client){
     }
 }
 
-export function checkDays(date){
-    let now = new Date();
-    let diff = now.getTime() - date.getTime();
-    let days = Math.floor(diff / 86400000);
-    return days + (days == 1 ? " day" : " days") + " ago";
-}
-
-export async function findOrCreateUser({ id: userID }, client, isLean?){
-    return new Promise(async (resolve) => {
-        if(client.databaseCache.users.get(userID)){
-            resolve(isLean ? client.databaseCache.users.get(userID).toJSON() : client.databaseCache.users.get(userID));
+export async function findOrCreateUser({ id: userID }, isLean?){
+    return new Promise(async function (resolve, reject){
+        let userData = (isLean ? await usersData.findOne({ id: userID }).lean() : await usersData.findOne({ id: userID }));
+        if(userData){
+            resolve(userData);
         } else {
-          let userData = (isLean ? await client.usersData.findOne({ id: userID }).lean() : await client.usersData.findOne({ id: userID }));
-          if(userData){
-              resolve(userData);
-          } else {
-              userData = new client.usersData({ id: userID });
-              await userData.save();
-              resolve((isLean ? userData.toJSON() : userData));
-          }
-          client.databaseCache.users.set(userID, userData);
+            userData = new usersData({ id: userID });
+            await userData.save();
+            resolve((isLean ? userData.toJSON() : userData));
         }
     });
   }
-  export async function creatOrFind(param, isLean){
+
+  export async function findOrCreateGuild({ id: guildID }, isLean?){
     return new Promise(async function (resolve, reject){
-        let guildData = (isLean ? await guildsData.findOne(param).populate("members").lean() : await guildsData.findOne(param).populate("members"));
+        let guildData = (isLean ? await guildsData.findOne({ id: guildID }).populate("members").lean() : await guildsData.findOne({ id: guildID }).populate("members"));
         if(guildData){
             resolve(guildData);
         } else {
-            guildData = new guildsData(param);
+            guildData = new guildsData({ id: guildID });
             await guildData.save();
             resolve(guildData.toJSON());
         }
     });
-}
-
-  export async function findOrCreateGuild({ id: guildID }, client, isLean?){
-    return new Promise(async (resolve) => {
-        if(client.databaseCache.guilds.get(guildID)){
-            resolve(isLean ? client.databaseCache.guilds.get(guildID).toJSON() : client.databaseCache.guilds.get(guildID));
-        } else {
-          let guildData = (isLean ? await client.guildsData.findOne({ id: guildID }).populate("members").lean() : await client.guildsData.findOne({ id: guildID }).populate("members"));
-          if(guildData){
-              resolve(guildData);
-          } else {
-              guildData = new client.guildsData({ id: guildID });
-              await guildData.save();
-              resolve(guildData.toJSON());
-          }
-          client.databaseCache.guilds.set(guildID, guildData);
-        }
-    });
   }
 
-  export async function findOrCreateMember({ id: memberID, guildId: id }, client, isLean?){
-    return new Promise(async (resolve) => {
-        if(client.databaseCache.members.get(`${memberID}${id}`)){
-            resolve(isLean ? client.databaseCache.members.get(`${memberID}${id}`).toJSON() : client.databaseCache.members.get(`${memberID}${id}`));
-        } else {
-          let memberData = (isLean ? await client.membersData.findOne({ id: memberID, guildId: id }).lean() : await client.membersData.findOne({ id: memberID, guildId: id }));
-              if(memberData){
-                  resolve(memberData);
-              } else {
-                  memberData = new client.membersData({ id: memberID, guildId: id });
-                  await memberData.save();
-                  resolve((isLean ? memberData.toJSON() : memberData));
-                }
-                client.databaseCache.members.set(`${memberID}${id}`, memberData);
-            }
-          });
-      } 
-
-export async function createOrFind ({ id: memberID, guildId: id }, client, isLean?){
+  export async function findOrCreateMember({ id: memberID, guildId: id }, isLean?){
     return new Promise(async function (resolve, reject){
-        let memberData = (isLean ? await client.membersData.findOne({ id: memberID, guildId: id }).lean() : await client.membersData.findOne({ id: memberID, guildId: id }));
+        let memberData = (isLean ? await membersData.findOne({ id: memberID, guildId: id }).lean() : await membersData.findOne({ id: memberID, guildId: id }));
         if(memberData){
             resolve(memberData);
         } else {
             memberData = new membersData({ id: memberID, guildId: id });
             await memberData.save();
-            let guild = await guildsData.findOne({ id: id });
-            if(guild){
-                guild.members.push(memberData._id);
-                await guild.save();
-            }
             resolve((isLean ? memberData.toJSON() : memberData));
         }
     });
-    } 
+} 
 
 export async function getUsersData(client, users){
     return new Promise(async function(resolve, reject){
         let usersData: any[] = [];
         for(let u of users){
-            let result = await client.usersData.find({id: u.id});
+            let result = await client.findOrCreateUser({ id: u.id })
             if(result[0]){
                 usersData.push(result[0]);
             } else {

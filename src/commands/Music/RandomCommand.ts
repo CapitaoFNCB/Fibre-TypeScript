@@ -9,11 +9,10 @@ export default class RandomCommand extends Command {
       channel: "guild",
       category: "Music",
       description: {
-        content: "Random Command",
+        content: "Gets a random song from an api and plays it.",
         usage: "random",
         examples: ["random"]
       },
-      typing: true
     });
   }
 
@@ -23,20 +22,20 @@ export default class RandomCommand extends Command {
     const { channel } = message.member!.voice
 
     if (!channel) {
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You Need to be in a voice channel"))
     }else if (!channel.joinable) {
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel.speakable){
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
+      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
     }
 
-    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
+    let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
 
     fetch('https://fibreapi.glitch.me/song').then(res => res.json()).then(results => {
         this.client.manager.search(results.song, message.author).then(async found => {
@@ -51,15 +50,8 @@ export default class RandomCommand extends Command {
                       volume: guild.volume
                   });
                     player.queue.add(tracks[0]);
-                    if(player.queue.length > 1){
-                        message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
-                    }
-
-                    let search_data = await this.client.queue.get(message.guild!.id)
-                    if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
-                    if(search_data.paused) return;
-                    if(!player.playing) player.play();
-
+                    message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Queued ${found.tracks[0].title}`))
+                    if(!player.playing && player.queue.length < 2) player.play();
                 break;
             }
         })

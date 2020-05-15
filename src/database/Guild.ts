@@ -10,7 +10,7 @@ const Guild = new mongoose.Schema({
     last_playing: { type: String, default: "" },
     notifications: { type: Boolean, default: true },
     customCommands: { type: Array, default: [] },
-    colour: { type: String, default: "0491e2" },
+    colour: { type: String, default: "#0491e2" },
     modlogs: { type: Object, default: { enabled: false, channel: null } },
     musicChannel: { type: Object, default: { enabled: false, channel: null } },
     commandChannel: { type: Object, default: { enabled: false, channel: null } },

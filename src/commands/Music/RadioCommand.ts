@@ -12,10 +12,15 @@ export default class RadioCommand extends Command {
       args: [
         {
             id: "station",
-            type: (message: Message, song: String) => {
-                if(!message.member!.voice.channelID) return "This user is not in a voice channel, ask to join"
-                if(song) return song
-              },
+            type: async (message: Message, song: String) => {
+              if(!message.member!.voice.channelID) return "This user is not in a voice channel, ask to join"
+              let player = await this.client.manager.players.get(message.guild!.id)
+              if(player) {
+                  if(message.member!.voice.channelID !== player.voiceChannel.id) return "This user is in the incorrect voice channel, connect to correct";
+              }
+              if(message.attachments.size) return message.attachments.first()!.proxyURL
+              if(song) return song
+            },
             match: "rest",
             prompt:{
               start: "What radio station would you like to listen too?"
@@ -23,33 +28,32 @@ export default class RadioCommand extends Command {
           }
       ],
       description: {
-        content: "Radio Command",
-        usage: "radio [Radio Station]",
+        content: "Plays live radio radio.",
+        usage: "radio [ Radio Station ]",
         examples: ["radio Kiss Uk"]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message, { station }: { station: any }) {
 
 
-    if(station == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in a voice channel"))
-
+    if(station == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in a voice channel"))
+    if(station == "This user is in the incorrect voice channel, connect to correct") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`You need to be in the same voice channel as me to use Radio Command.`));
 
     let player: any;
     
     const { channel } = message.member!.voice
     if (!channel!.joinable) {
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("I don't seem to have permission to enter this voice channel"))
     }else if(!channel!.speakable){
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("I don't seem to have permission to speak this voice channel"))
     }
 
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
+      if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Random Command"));
     }
 
     let filter = {
@@ -66,11 +70,11 @@ export default class RadioCommand extends Command {
       stations.push(radio)
     }
 
-    if(!stations.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No radio stations found for \`${station}\``))
+    if(!stations.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`No radio stations found for \`${station}\``))
 
     let i: number = 1;
 
-    let guild = this.client.guildsData.findOne({ id: message.guild!.id })
+    let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
 
     if(stations.length == 1){
       return this.client.manager.search(stations[0].url, message.author).then(async res => {
@@ -83,22 +87,19 @@ export default class RadioCommand extends Command {
                 selfDeaf: true,
                 volume: guild.volume
             });
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
             player.queue.add(res.tracks[0])
-            let search_data = await this.client.queue.get(message.guild!.id)
-            if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
-            if(search_data.paused) return;
-            if(!player.playing) player.play();
+            if(!player.playing && player.queue.length < 2) player.play();
           break; 
           
           case "LOAD_FAILED":
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`No Songs Found`))
         break;
           }
         })
     }
 
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setAuthor("Song Selection.", message.author.displayAvatarURL({dynamic: true, size: 2048}))
       .setDescription(stripIndents`${stations.map(radio => `**${i++} -** ${radio.name}`).join("\n")}`)
       .setFooter("Your response time closes within the next 30 seconds. Use 🗑️ to cancel the selection");
@@ -148,16 +149,13 @@ export default class RadioCommand extends Command {
                 volume: guild.volume
             });
             send_message.reactions.removeAll().catch(() => null)
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Queued ${res.tracks[0].title}`))
             player.queue.add(res.tracks[0])
-            let search_data = await this.client.queue.get(message.guild!.id)
-            if(!search_data) search_data = await this.client.queue.set(message.guild!.id, { paused: false })
-            if(search_data.paused) return;
-            if(!player.playing) player.play();
+            if(!player.playing && player.queue.length < 2) player.play();
           break; 
           
           case "LOAD_FAILED":
-            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`No Songs Found`))
+            message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`No Songs Found`))
           break;
     
           }

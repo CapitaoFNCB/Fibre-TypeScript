@@ -20,7 +20,6 @@ export default class TranscriptCommand extends Command {
           "transcript"
         ]
       },
-      typing: true
     });
   }
 
@@ -28,7 +27,7 @@ export default class TranscriptCommand extends Command {
 
     const channel = message.guild!.channels.cache.get(message.channel!.id)
 
-    if(!channel!.name.startsWith("ticket-")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(!channel!.name.startsWith("ticket-")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("This command can used for Tickets")
     )
 

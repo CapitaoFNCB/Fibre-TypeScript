@@ -27,7 +27,6 @@ export default class LyricsCommand extends Command {
           "lyrics"
         ]
       },
-      typing: true
     });
   }
 
@@ -47,7 +46,7 @@ export default class LyricsCommand extends Command {
 
         } else {
 
-          message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("Please make sure you specify a song or have a player playing."))
+          message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("Please make sure you specify a song or have a player playing."))
 
         }
 
@@ -57,24 +56,24 @@ export default class LyricsCommand extends Command {
     res = await res.text();
     let $ = await cheerio.load(res);
     let songLink = `https://musixmatch.com${$("h2[class=\"media-card-title\"]").find("a").attr("href")}`;
-    if(songLink.includes("undefined")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
+    if(songLink.includes("undefined")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
     res = await fetch(songLink);
     res = await res.text();
     $ = await cheerio.load(res);
     lyrics = await $("p[class=\"mxm-lyrics__content \"]").text();
-    if(!lyrics.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
-    let page: number = Math.floor(120);
-    let pages = Math.floor((lyrics.split(" ").length + 120) / 120);
+    if(!lyrics.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
+    let page: number = Math.floor(2048);
+    let pages = Math.floor((lyrics.length + 2048) / 2048);
     let current = 1;
     let next_embed;
-    let list = lyrics.split(" ").splice(page - 120, page)
-    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(list.join(" "))
+    let list = lyrics.slice(page - 2048, page)
+    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(list)
 
     message.util!.send(embed).then(async (msg) => {
 
         msg.delete({ timeout: 60000 }).catch(() => null);
 
-        if(lyrics.split(" ").length > 120) {
+        if(lyrics.length > 2048) {
 
             await msg.react('⏪');
             await msg.react('◀');
@@ -90,10 +89,10 @@ export default class LyricsCommand extends Command {
                     case "⏪":
                         if (current === 1) return collected.users.remove(message.author).catch(error => null)
                         current = 1;
-                        page = Math.floor(current) * 120;
-                        list = lyrics.split(" ").splice(page - 120, page).join(" ")
+                        page = Math.floor(current) * 2048;
+                        list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
                             .setDescription(list)
                         msg.edit("", next_embed).catch(() => null)
                     break;
@@ -101,10 +100,10 @@ export default class LyricsCommand extends Command {
                     case "◀":
                         if (current === 1) return collected.users.remove(message.author).catch(error => null)
                         await current--;
-                        page = Math.floor(current) * 120;
-                        list = lyrics.split(" ").splice(page - 120, page).join(" ")
+                        page = Math.floor(current) * 2048;
+                        list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
                             .setDescription(list)
                         msg.edit("", next_embed).catch(() => null)
                     break;
@@ -112,10 +111,10 @@ export default class LyricsCommand extends Command {
                     case "▶":
                         if (current === pages) return collected.users.remove(message.author).catch(error => null)
                         await current++;
-                        page = Math.floor(current) * 120;
-                        list = lyrics.split(" ").splice(page - 120, page).join(" ")
+                        page = Math.floor(current) * 2048;
+                        list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
                             .setDescription(list)
                         msg.edit("", next_embed).catch(() => null)
                     break;
@@ -123,10 +122,10 @@ export default class LyricsCommand extends Command {
                     case "⏩":
                         if (current === pages) return collected.users.remove(message.author).catch(error => null)
                         current = pages;
-                        page = Math.floor(current) * 120;
-                        list = lyrics.split(" ").splice(page - 120, page).join(" ")
+                        page = Math.floor(current) * 2048;
+                        list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
                             .setDescription(list)
                         msg.edit("", next_embed).catch(() => null)
                     break;

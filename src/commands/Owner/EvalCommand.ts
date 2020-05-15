@@ -41,12 +41,11 @@ export default class EvalCommand extends Command {
           flag: ["-silent", "-s"],
         },
       ],
-      typing: true
     });
   }
 
   public async exec (message: Message, { toEval, depth, silent }: { toEval: any; depth: number; silent: boolean }) {
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
     try {
       const hrStart: [number, number] = process.hrtime();
       let toEvaluate = await eval(toEval);
@@ -57,7 +56,7 @@ export default class EvalCommand extends Command {
 
       if(silent) return;
 
-      if(toEvaluate.length > 1500) {
+      if(toEvaluate.length > 1024) {
         const res = await fetch(`https://hasteb.in/documents`, {
           method: 'POST',
           body: toEvaluate,

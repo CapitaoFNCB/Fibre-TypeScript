@@ -27,13 +27,12 @@ export default class SlotsCommand extends Command {
           "slots 1000"
         ]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message, { target }: { target: number }): Promise<Message> {
 
-    if(target < 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(target < 0) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("You Can't Use Negative Numbers")  
     )
 
@@ -41,8 +40,8 @@ export default class SlotsCommand extends Command {
 
     let board: any = [];
 
-    let targetuser = await this.client.membersData.findOne({ id: message.author.id, guildId: message.guild!.id})
-    if(targetuser.cash < target) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    let targetuser = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
+    if(targetuser.cash < target) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("Unfortunately you don't have enough for this amount")
       )
 
@@ -50,7 +49,7 @@ export default class SlotsCommand extends Command {
         board.push(Math.floor(Math.random() * (Math.floor(10) - Math.ceil(1))) + Math.ceil(1))
     }
 
-    let targetguild = await this.client.guildsData.findOne({id: message.guild!.id})
+    let targetguild = await this.client.findOrCreateGuild({id: message.guild!.id})
 
     if(emojis[board[3]] == emojis[board[4]] && emojis[board[4]] == emojis[board[5]]) {
         targetuser.cash += targetguild.jackpot
@@ -68,7 +67,7 @@ export default class SlotsCommand extends Command {
         targetguild.jackpot += Number(Math.round(target/4))
         targetguild.save()
     }
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
     .setDescription(stripIndents`${emojis[board[0]]}${emojis[board[1]]}${emojis[board[2]]}
       ${emojis[board[3]]}${emojis[board[4]]}${emojis[board[5]]}
       ${emojis[board[6]]}${emojis[board[7]]}${emojis[board[8]]}

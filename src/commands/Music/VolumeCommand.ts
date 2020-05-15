@@ -19,11 +19,10 @@ export default class VolumeCommand extends Command {
           }
       ],
       description: {
-        content: "Volume Command", 
-        usage: "volume [amount]",
+        content: "Sets the current volume of a player.", 
+        usage: "volume [ amount ]",
         examples: ["volume 150"]
       },
-      typing: true
     });
   }
 
@@ -33,11 +32,11 @@ export default class VolumeCommand extends Command {
 
     const { channel } = message.member!.voice;
 
-    if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("There is no player for this guild"));
-    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Leave Command"));
-    if(amount < 1 || amount > 1000) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription("The volume range is 1 - 1000"));
+    if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("There is no player for this guild"));
+    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Leave Command"));
+    if(amount < 1 || amount > 1000) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("The volume range is 1 - 1000"));
     
-    message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription(`Player volume set from ${player.volume} to ${amount}`)
     )
 

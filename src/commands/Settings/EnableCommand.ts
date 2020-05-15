@@ -14,7 +14,6 @@ export default class EnableCommand extends Command {
           "enable level"
         ]
       },
-      typing: true
     });
   }
   public *args(): object {
@@ -28,7 +27,7 @@ export default class EnableCommand extends Command {
 
             let prefix = guild.prefix
 
-            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help enable\``)
+            return new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Invalid Usage:\nRun: \`${prefix}help enable\``)
         }
     }
 

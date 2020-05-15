@@ -23,18 +23,17 @@ export default class BalanceCommand extends Command {
           "balance 424566306042544128"
         ]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
 
-    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setDescription("No Information is stored for bots")
     )
 
-    const user = await this.client.membersData.findOne({ id: member.id, guildId: message.guild!.id})
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    const user = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setDescription(`Cash: ${user.cash}`)
     )
   }

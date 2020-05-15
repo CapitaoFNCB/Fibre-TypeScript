@@ -11,7 +11,6 @@ export default class TiasCommand extends Command {
         usage: "tias",
         examples: ["tias"]
       },
-      typing: true
     });
   }
 

@@ -15,7 +15,6 @@ export default class MemeCommand extends Command {
         usage: "meme",
         examples: ["meme"]
       },
-      typing: true
     });
   }
 
@@ -23,7 +22,7 @@ export default class MemeCommand extends Command {
 
     const data = await api.meme()
 
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
       .setTitle(data.data.title)
       .setDescription(data.data.body)
       .setURL(data.data.url)

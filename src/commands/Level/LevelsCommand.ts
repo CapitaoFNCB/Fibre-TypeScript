@@ -12,12 +12,11 @@ export default class LevelsCommand extends Command {
         usage: "levels",
         examples: ["levels"]
       },
-      typing: true
     });
   }
 
   public async exec(message: Message): Promise<Message> {
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}, this.client).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
         .setAuthor(`${message.guild!.name}'s Levels`)
         .setDescription(`[\`https://fibrebot.xyz/levels/${message.guild!.id}\`](https://fibrebot.xyz/levels/${message.guild!.id})`)
     )

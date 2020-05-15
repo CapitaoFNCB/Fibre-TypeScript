@@ -1,6 +1,6 @@
 import { AkairoClient, CommandHandler, ListenerHandler, Flag } from "discord-akairo";
 import { join } from 'path';
-import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser, creatOrFind, createOrFind } from "../utils/Functions"
+import { capitalize, resolve, flag, checkDays, guildOnly, ownerOnly, perms, check_emojis, getUsersData, findOrCreateMember, findOrCreateGuild, findOrCreateUser } from "../utils/Functions"
 import { owners, KSOFT_TOKEN } from "../utils/Config";
 import { Message, Collection } from "discord.js";
 import guildsData from "../database/Guild"
@@ -53,15 +53,14 @@ declare module "discord-akairo" {
         usersData;
         guildsData;
         membersData;
-        databaseCache;
         findOrCreateUser;
         findOrCreateMember;
         findOrCreateGuild;
-        queue;
         creatOrFind;
         emojiList;
         ksoft: KSoftClient;
         createOrFind;
+        snipes: Map<string, any>
     }
   }
   
@@ -72,6 +71,7 @@ declare module "discord-akairo" {
   
   export default class FibreClient extends AkairoClient {
     public logger: Logger = Logger.get(FibreClient);
+    public snipes: Map<string, object> = new Map();
 
     public constructor(config: Options) {
         super(
@@ -81,7 +81,6 @@ declare module "discord-akairo" {
         );
     
        this.config = config;
-       this.creatOrFind = creatOrFind;
        this.checkDays = checkDays; 
        this.flag = flag;
        this.resolve = resolve;
@@ -99,20 +98,14 @@ declare module "discord-akairo" {
        this.findOrCreateUser = findOrCreateUser;
        this.findOrCreateMember = findOrCreateMember;
        this.findOrCreateGuild = findOrCreateGuild;
-       this.databaseCache = {};
-       this.databaseCache.users = new Collection();
-       this.databaseCache.guilds = new Collection();
-       this.databaseCache.members = new Collection();
-       this.queue = new Collection();
        this.emojiList = emojiList;
        this.ksoft = new KSoftClient(KSOFT_TOKEN)
-       this.createOrFind = createOrFind;
 
        this.commandHandler = new CommandHandler(this, {
             prefix: async (msg: Message) => {
               let prefix = "+";
               if(!msg.guild) return prefix;
-              const guild = await this.findOrCreateGuild({id: msg.guild.id}, this)
+              const guild = await this.findOrCreateGuild({id: msg.guild.id})
               if(guild) prefix = guild.prefix
               return prefix
             },
@@ -167,7 +160,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.guildsData.findOne({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({id: msg.guild.id})
 
           let data = guild.customCommands.filter((c) => c.name == word);
 
@@ -204,7 +197,7 @@ declare module "discord-akairo" {
           if (!word || !msg.guild || this.commandHandler.modules.has(word))
               return Flag.fail(word);
 
-          let guild: any = await this.guildsData.findOne({ id: msg.guild.id })
+          let guild: any = await this.findOrCreateGuild({id: msg.guild.id})
 
           let data = guild.customCommands.filter((c) => c.name == word);
 

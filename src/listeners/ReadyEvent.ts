@@ -31,24 +31,24 @@ export default class ReadyListener extends Listener {
     .on("nodeConnect", node => this.client.logger.info("New Node Created"))
 
     .on("queueEnd", async (player, track) => {
-      let queueEnd = await this.client.guildsData.findOne({ id: player.guild!.id })
+      let queueEnd = await this.client.findOrCreateGuild({id: player.guild.id})
       queueEnd.last_playing = track.uri
       queueEnd.save()
 
       if(queueEnd.notifications){
-        player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
+        player.textChannel.send(new this.client.Embed(null, await this.client.findOrCreateGuild({id: player.guild.id}).then(guild => guild.colour))
           .setDescription("Queue Has Ended")
         )
       }
     })
 
     .on("trackStart", async (player, track) => {
-        let trackStart = await this.client.guildsData.findOne({ id: player.guild!.id })
+        let trackStart = await this.client.findOrCreateGuild({id: player.guild.id})
         trackStart.skip_users = []
         trackStart.save()
 
         if(trackStart.notifications){
-          player.textChannel.send(new this.client.Embed(null, await this.client.guildsData.findOne({ id: player.guild!.id }).then(guild => guild.colour))
+          player.textChannel.send(new this.client.Embed(null, await this.client.findOrCreateGuild({id: player.guild.id}).then(guild => guild.colour))
             .setDescription(`Now playing: ${track.title}`)
           )
         }
@@ -56,7 +56,7 @@ export default class ReadyListener extends Listener {
     )
   
     .on("trackEnd", async (player, track) => {
-      let trackEnd = await this.client.guildsData.findOne({ id: player.guild!.id })
+      let trackEnd = await this.client.findOrCreateGuild({id: player.guild.id})
       trackEnd.last_playing = track.uri
       trackEnd.save()
     })
