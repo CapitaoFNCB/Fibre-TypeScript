@@ -33,10 +33,10 @@ export default class StackCommand extends Command {
   }
 
   public async exec(message: Message, { query }: { query: string }): Promise<Message> {
-
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     const { body } = await request.get('http://api.stackexchange.com/2.2/search/advanced').query({ order: 'asc', sort: 'relevance', q: query, site: 'stackoverflow', key: STACKOVERFLOWKEY }) as any;
-    if(!body.items.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${query}`))
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    if(!body.items.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}`))
+    return message.util!.send(new this.client.Embed(message, colour)
             .setThumbnail("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgoingconcern-fe8.kxcdn.com%2Fwp-content%2Fuploads%2F2019%2F03%2FStack-Overflow-logo-1024x768.jpg&f=1&nofb=1")
             .setTitle(body.items[0].title.replace(/&#39;|&quot;/gm, "'"))
             .setURL(body.items[0].link)

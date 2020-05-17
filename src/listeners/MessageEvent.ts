@@ -12,15 +12,12 @@ export default class MessageListener extends Listener {
   public async exec(message: Message) {
 
     if(!message.guild) return;
-    let member;
     if(message.author.bot) return;
-    const guild_member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild!.id})
+    let member = await this.client.findOrCreateMember({id: message.author.id, guildId: message.guild!.id})
     const user = await this.client.findOrCreateUser({id: message.author.id})
     let useGuld = await this.client.findOrCreateGuild({id: message.guild!.id})
 
     if(message.content.startsWith(useGuld.prefix)) return;
-
-      member = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
 
       if(!useGuld.level){
         member.characters += message.content.length

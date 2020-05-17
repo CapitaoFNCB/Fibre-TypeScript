@@ -30,15 +30,15 @@ export default class GithubCommand extends Command {
       });
     }
     public async exec(message: Message, { query }: { query: string }): Promise<Message> {
-
+        let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
         let data: any = await fetch(`https://api.github.com/users/${query}`)
         let body: any = await data.json()
 
-        if(body.message) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+        if(body.message) return message.util!.send(new this.client.Embed(message, colour)
           .setDescription("No User Found")
         )
 
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, colour)
           .setThumbnail(body.avatar_url)
           .addField("Username:", `\`${body.login}\``, true)
           .addField("User ID:", `\`${body.id}\``, true)

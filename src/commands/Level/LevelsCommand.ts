@@ -16,7 +16,8 @@ export default class LevelsCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    return message.util!.send(new this.client.Embed(message, colour)
         .setAuthor(`${message.guild!.name}'s Levels`)
         .setDescription(`[\`https://fibrebot.xyz/levels/${message.guild!.id}\`](https://fibrebot.xyz/levels/${message.guild!.id})`)
     )

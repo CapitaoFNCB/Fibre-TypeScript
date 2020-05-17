@@ -19,10 +19,10 @@ export default class MemeCommand extends Command {
   }
 
   public async exec(message: Message): Promise<Message> {
-
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     const data = await api.meme()
 
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, colour)
       .setTitle(data.data.title)
       .setDescription(data.data.body)
       .setURL(data.data.url)

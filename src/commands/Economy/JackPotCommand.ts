@@ -28,14 +28,10 @@ export default class JackpotCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { amount }: { amount: Number }) {
+  public async exec(message: Message, { amount }: { amount: number }) {
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
 
-    if(isNaN(Number(amount))) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-      .setDescription("Invalid Amount")
-    )
-
-
-    const message2 = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    const message2 = await message.util!.send(new this.client.Embed(message, colour)
       .setTitle("JACKPOT!!")
       .setDescription("React with 💰 to enter the jackpot. You have 30 seconds")
       .setFooter("If you don't have enough your reaction will be removed"))
@@ -54,7 +50,7 @@ export default class JackpotCommand extends Command {
     collector.on('end', async (r, time) => {
       let users = r.first()?.users.cache.filter(u => !u.bot)
 
-      if(!users?.size) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+      if(!users?.size) return message.util!.send(new this.client.Embed(message, colour)
         .setDescription("No one Entered the jackpot")
       )
 
@@ -66,7 +62,7 @@ export default class JackpotCommand extends Command {
 
       let winner = users?.random()
 
-      message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+      message.util!.send(new this.client.Embed(message, colour)
         .setDescription(`${winner.username} Won!!`)
       )
 

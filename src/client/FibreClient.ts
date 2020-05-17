@@ -113,20 +113,11 @@ declare module "discord-akairo" {
             handleEdits: true,
             argumentDefaults: {
               prompt: {
-                modifyStart: async (_, str: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), true),
-                modifyRetry: async (_, str: string) => new this.Embed(_).promptEmbed(str, await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), true),
-                cancel: async _ =>
-                  new this.Embed(_).promptEmbed(
-                    "Alright, I've cancelled the command for you."
-                    , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
-                ended: async _ =>
-                  new this.Embed(_).promptEmbed(
-                    "You took too many tries to respond correctly, so I've cancelled the command"
-                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
-                timeout: async _ =>
-                  new this.Embed(_).promptEmbed(
-                    "You took long to respond, so I've cancelled the command"
-                  , await guildsData.findOne({ id: _.guild!.id }).then(guild => guild.colour), false),
+                modifyStart: async (_, str: string) => new this.Embed(_, await this.findOrCreateGuild({id: _.guild!.id}).then(guild => guild.colour)).promptEmbed(str, true),
+                modifyRetry: async (_, str: string) => new this.Embed(_, await this.findOrCreateGuild({id: _.guild!.id}).then(guild => guild.colour)).promptEmbed(str, true),
+                cancel: async _ => new this.Embed(_, await this.findOrCreateGuild({id: _.guild.id}).then(guild => guild.colour)).promptEmbed("Alright, I've cancelled the command for you.", false),
+                ended: async _ => new this.Embed(_, await this.findOrCreateGuild({id: _.guild.id}).then(guild => guild.colour)).promptEmbed("You took too many tries to respond correctly, so I've cancelled the command.", false),
+                timeout: async _ => new this.Embed(_, await this.findOrCreateGuild({id: _.guild.id}).then(guild => guild.colour)).promptEmbed("You took long to respond, so I've cancelled the command.", false),
                 retries: 3,
                 time: 6e4
               },

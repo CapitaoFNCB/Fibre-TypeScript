@@ -29,6 +29,7 @@ export default class GraphCommand extends Command {
   }
 
   public async exec(message: Message, { country }: { country: any }): Promise<Message> {
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let image: any;
     await fetch('https://coronavirus-tracker-api.herokuapp.com/all').then(r => r.json()).then(async r => {
       let v = Object.keys(r.confirmed.locations[0].history)
@@ -128,9 +129,9 @@ export default class GraphCommand extends Command {
       }
     });
    })
-   if(!image)return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("No Country with this name"))
+   if(!image)return message.util!.send(new this.client.Embed(message, colour).setDescription("No Country with this name"))
    const attachment = new MessageAttachment(image, "image.png") as any;
-   const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+   const embed = new this.client.Embed(message, colour)
     .attachFiles(attachment)
     .setImage(`attachment://image.png`)
    return message.util!.send(embed)

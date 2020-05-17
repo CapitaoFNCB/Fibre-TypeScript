@@ -16,7 +16,8 @@ export default class RockPaperScissorsCommand extends Command {
   }
 
   public async exec(message: Message) {
-      let channel_message = await message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+      let channel_message = await message.util!.send(new this.client.Embed(message, colour)
         .setDescription("React to this message to play!")
     )
     channel_message.react("✂️");
@@ -33,7 +34,7 @@ export default class RockPaperScissorsCommand extends Command {
 
     reactions.on('collect', async r => {
 
-      channel_message.edit(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`${result(r.emoji.name, bot_choice)}\n ${r.emoji.name} vs ${bot_choice}`))
+      channel_message.edit(new this.client.Embed(message, colour).setDescription(`${result(r.emoji.name, bot_choice)}\n ${r.emoji.name} vs ${bot_choice}`))
 
       reactions.stop()
 

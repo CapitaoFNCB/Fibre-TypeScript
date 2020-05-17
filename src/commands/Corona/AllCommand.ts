@@ -21,8 +21,8 @@ export default class AllCommand extends Command {
 
   public async exec(message: Message): Promise<Message> {
     const data: any[] = await fetch('https://corona.lmao.ninja/v2/countries').then(res => res.json())
-
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    return message.util!.send(new this.client.Embed(message, colour)
         .setAuthor("Current statistics for coronavirus")
             // Cases
         .addField("Cases:",data.map(x => x.cases).reduce((a, b) => a + b).toLocaleString(),true)

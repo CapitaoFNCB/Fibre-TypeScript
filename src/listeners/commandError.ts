@@ -11,11 +11,10 @@ export default class ErrorListener extends Listener {
   }
 
   public async exec(error: Error, message: Message, command: Command) {
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     this.client.logger.error(`Error: ${error.message}`);
     return message.util?.send(
-        new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).errorEmbed(
-          `There was an error while trying to execute this command. Please report this to the developer.\n\n\`${error.message}\``
-        )
+        new this.client.Embed(message, colour).errorEmbed(`There was an error while trying to execute this command. Please report this to the developer.\n\n\`${error.message}\``)
     );
   }
 }

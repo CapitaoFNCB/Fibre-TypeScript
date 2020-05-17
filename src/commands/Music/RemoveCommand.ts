@@ -20,7 +20,7 @@ export default class RemoveCommand extends Command {
   }
 
   async exec (message: Message) {
-
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     message.util!.send("Adding now :)")
  
   }

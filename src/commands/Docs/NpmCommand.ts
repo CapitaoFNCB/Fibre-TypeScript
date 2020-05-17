@@ -33,10 +33,10 @@ export default class NpmCommand extends Command {
   }
 
   public async exec(message: Message, { query }: { query: string }): Promise<Message> {
-    
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let data: any = await fetch(`https://registry.npmjs.org/${query}`)
 
-    if(data.error || data.code) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(data.error || data.code) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)"))
 
     let body: any = await data.json()
 
@@ -49,15 +49,15 @@ export default class NpmCommand extends Command {
     let size: string = all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total")).length ? all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[0].split("Size")[1] + all.filter(x => x.length > 4 && x.includes("Size") || x.includes("Total"))[1].split("Total")[0] : "`Unknown`"
     let files: string | any = all.filter(x => x.length > 4 && x.includes("Files")).length ? all.filter(x => x.length > 4 && x.includes("Files"))[0].split("Files")[1].match(/\d+/) : "`Unknown`"
 
-    if(body.error) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    if(body.error) return message.util!.send(new this.client.Embed(message, colour)
       .setDescription("No Package with this name")  
     )
 
-    if(!body["dist-tags"]) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    if(!body["dist-tags"]) return message.util!.send(new this.client.Embed(message, colour)
       .setDescription("This package is missing information")  
     )
 
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    const embed = new this.client.Embed(message, colour)
       .setAuthor(`NPM | ${body.name}`, `https://static.npmjs.com/338e4905a2684ca96e08c7780fc68412.png`)
       .setDescription(body.description)
       .addField("Name:", `\`${body.name}\``, true)

@@ -35,12 +35,12 @@ export default class JumboCommand extends Command {
         let text;
         let messageAtttachment;
         let data;
-
+        let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
         if(!Number(emoji)) {
 
             text = twemoji.parse(query.split(" ")[0]);
             if(!text.startsWith("<img")){
-                return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                return message.util!.send(new this.client.Embed(message, colour)
                     .setDescription("I Cannot Find This Emoji")
                 )
             }

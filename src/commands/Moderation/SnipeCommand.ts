@@ -29,10 +29,11 @@ export default class SnipeCommand extends Command {
 
   public async exec(message: Message, { channel }: { channel: TextChannel } ): Promise<Message | any> {
         let deleted_message = (this.client.snipes.get(channel.id) || []).reverse()
-        if(!deleted_message.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("No deleted messages.").setAuthor(`Channel: ${this.client.capitalize(channel.name)}`))
+        let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+        if(!deleted_message.length) return message.util!.send(new this.client.Embed(message, colour).setDescription("No deleted messages.").setAuthor(`Channel: ${this.client.capitalize(channel.name)}`))
         let index = 0
         let selected = deleted_message.slice(0,11).map(message => `**${++index}.** \`${message.author.tag}\` ${message.content.length > 130 ? `${message.content.slice(0,130)}...` : message.content} ${message.image ? `[\`Image\`](${message.image})`: ""}`).join("\n")
-        let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+        let embed = new this.client.Embed(message, colour)
         return message.util!.send(
           embed.setDescription(selected)
           .setAuthor(`Channel: ${this.client.capitalize(channel.name)}`)

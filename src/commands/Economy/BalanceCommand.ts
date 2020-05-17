@@ -27,13 +27,13 @@ export default class BalanceCommand extends Command {
   }
 
   public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
-
-    if(member.user.bot) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    if(member.user.bot) return message.util!.send(new this.client.Embed(message, colour)
       .setDescription("No Information is stored for bots")
     )
 
     const user = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
-    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    return message.util!.send(new this.client.Embed(message, colour)
         .setDescription(`Cash: ${user.cash}`)
     )
   }

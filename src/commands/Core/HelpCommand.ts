@@ -30,7 +30,8 @@ export default class Help extends Command {
   }
 
   async exec (message: Message, { command }: { command : any }): Promise<Message> {
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    const embed = new this.client.Embed(message, colour)
     if (!command) {
       embed
         .setAuthor(`Help Menu - ${message.guild ? message.guild.name : message.author.username}`, message.guild ? message.guild.iconURL({ dynamic: true }) as string : message.author.displayAvatarURL({ dynamic: true }) as string)

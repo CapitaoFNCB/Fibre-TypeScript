@@ -1,8 +1,8 @@
 import { Listener } from "discord-akairo";
-import chalk from "chalk"
-import { ErelaClient, Player } from "erela.js"
+import { ErelaClient } from "erela.js"
 import { nodes, connection } from "../utils/Config"
 import mongoose from "mongoose";
+import { MessageEmbed } from "discord.js";
 
 export default class ReadyListener extends Listener {
   public constructor() {
@@ -36,8 +36,10 @@ export default class ReadyListener extends Listener {
       queueEnd.save()
 
       if(queueEnd.notifications){
-        player.textChannel.send(new this.client.Embed(null, await this.client.findOrCreateGuild({id: player.guild.id}).then(guild => guild.colour))
-          .setDescription("Queue Has Ended")
+        let guild_colour = await this.client.findOrCreateGuild({id: player.guild.id}).then(guild => guild.colour)
+        player.textChannel.send(new MessageEmbed()
+          .setColor(guild_colour)
+          .setDescription(`Now playing: ${track.title}`)
         )
       }
     })
@@ -48,7 +50,9 @@ export default class ReadyListener extends Listener {
         trackStart.save()
 
         if(trackStart.notifications){
-          player.textChannel.send(new this.client.Embed(null, await this.client.findOrCreateGuild({id: player.guild.id}).then(guild => guild.colour))
+          let guild_colour = trackStart.colour
+          player.textChannel.send(new MessageEmbed()
+            .setColor(guild_colour)
             .setDescription(`Now playing: ${track.title}`)
           )
         }

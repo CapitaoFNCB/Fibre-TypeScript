@@ -18,9 +18,10 @@ export default class SkipCommand extends Command {
   public async exec(message: Message) {
     const { channel } = message.member!.voice;
     const player = this.client.manager.players.get(message.guild!.id);
-    if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("There is no player for this guild"));
-    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Skip Command"));
-    if(player.queue.length < 1) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("The queue is empty"));
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild"));
+    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Skip Command"));
+    if(player.queue.length < 1) return message.channel.send(new this.client.Embed(message, colour).setDescription("The queue is empty"));
     const voice_channel = message.guild!.channels.cache.get(player.voiceChannel.id)
     let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
 
@@ -39,11 +40,11 @@ export default class SkipCommand extends Command {
                 if(guild.skip_users.length > 2){
                     player.stop()
 
-                    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                    return message.util!.send(new this.client.Embed(message, colour)
                         .setDescription(`Skipped song`))
 
                 }else{
-                    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                    return message.util!.send(new this.client.Embed(message, colour)
                         .setDescription(`Skip Request Received ${guild.skip_users.length}/3`))
                 }
 
@@ -52,30 +53,30 @@ export default class SkipCommand extends Command {
                 if(guild.skip_users.length > 1){
                     player.stop()
 
-                    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                    return message.util!.send(new this.client.Embed(message, colour)
                         .setDescription(`Skipped song`))
 
                 }else{
-                    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                    return message.util!.send(new this.client.Embed(message, colour)
                         .setDescription(`Skip Request Received ${guild.skip_users.length}/2`))
                 }
 
             }else{
                     player.stop()
 
-                    return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+                    return message.util!.send(new this.client.Embed(message, colour)
                         .setDescription(`Skipped song`))
             }
 
         }else{
-            return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+            return message.util!.send(new this.client.Embed(message, colour)
                 .setDescription("You cannot skip twice!")
             )
         }
     }else{
         player.stop()
 
-        return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
+        return message.util!.send(new this.client.Embed(message, colour)
             .setDescription(`Skipped song`))
     }
   }

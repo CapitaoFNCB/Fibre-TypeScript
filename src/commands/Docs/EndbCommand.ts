@@ -31,7 +31,8 @@ export default class EndbCommand extends Command {
   }
 
   public async exec(message: Message, { query }: { query: string }){
-    const embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour));
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    const embed = new this.client.Embed(message, colour);
     const { data } = await axios.get('https://raw.githubusercontent.com/chroventer/endb/gh-pages/endb.jsdoc.json');
     const doc = data.find((el) => el.longname.toLowerCase() === query.toLowerCase());
     if (doc) {

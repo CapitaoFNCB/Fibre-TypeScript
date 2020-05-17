@@ -22,14 +22,14 @@ export default class QueueCommand extends Command {
     const player = this.client.manager.players.get(message.guild!.id)
 
     const { channel } = message.member!.voice;
-
-    if(!player) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("There is no player for this guild"));
-    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("You need to be in the same voice channel as me to use Queue Command"));
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild"));
+    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Queue Command"));
     let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
     if(!player.queue.length){
-        return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("The queue is empty"));
+        return message.channel.send(new this.client.Embed(message, colour).setDescription("The queue is empty"));
     } else if(player.queue.length < 2) {
-        return message.channel.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`Now Playing`,`${player.queue[0].title}`, false).setFooter(`${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`));
+        return message.channel.send(new this.client.Embed(message, colour).addField(`Now Playing`,`${player.queue[0].title}`, false).setFooter(`${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`));
     } else {
         let page: number = Math.floor(11);
         let i: number = 0;
@@ -37,7 +37,7 @@ export default class QueueCommand extends Command {
         let pages = Math.floor((player.queue.slice(2).length + 10) / 10);
         let current = 1;
         let data = await this.client.findOrCreateGuild({id: message.guild!.id})
-        let embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false).addField(`Queue:`, queuelist, false).setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${data.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
+        let embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false).addField(`Queue:`, queuelist, false).setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${data.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
         await message.util!.send(embed).then(async (msg) => {
             msg.delete({ timeout: 60000 });
             if (Math.floor((player.queue.slice(2).length + 10) / 10) > 1) {
@@ -59,7 +59,7 @@ export default class QueueCommand extends Command {
                         queuelist = player.queue.slice(page - 10, page).map((track) => `${++i}. ${track.title}`).join('\n');
                         if(!queuelist.length) return collected.users.remove(message.author).catch(error => null);
                         collected.users.remove(message.author).catch(error => null)
-                        let edit_Embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
+                        let edit_Embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
                             .addField(`Queue:`, queuelist , false)
                             .setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
                         msg.edit("", edit_Embed).catch(error => null)
@@ -74,7 +74,7 @@ export default class QueueCommand extends Command {
                         pages = Math.floor((player.queue.slice(1).length + 10) / 10);
                         if(!queuelist.length) return collected.users.remove(message.author).catch(error => null)
                         collected.users.remove(message.author).catch(error => null)
-                        let edit_embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
+                        let edit_embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
                             .addField(`Queue:`, queuelist , false)
                             .setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
                         msg.edit("", edit_embed).catch(error => null)
@@ -89,7 +89,7 @@ export default class QueueCommand extends Command {
                         pages = Math.floor((player.queue.slice(1).length + 10) / 10);
                         if(!queuelist.length) return collected.users.remove(message.author).catch(error => null)
                         collected.users.remove(message.author).catch(error => null)
-                        let next_embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
+                        let next_embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
                             .addField(`Queue:`, queuelist , false)
                             .setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
                         msg.edit("", next_embed).catch(error => null)
@@ -104,7 +104,7 @@ export default class QueueCommand extends Command {
                         pages = Math.floor((player.queue.slice(1).length + 10) / 10);
                         if(!queuelist.length) return collected.users.remove(message.author).catch(error => null)
                         collected.users.remove(message.author).catch(error => null)
-                        let end_embed: Embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
+                        let end_embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false)
                             .addField(`Queue:`, queuelist , false)
                             .setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
                         msg.edit("", end_embed).catch(error => null)

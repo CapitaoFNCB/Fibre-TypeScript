@@ -31,7 +31,7 @@ export default class LyricsCommand extends Command {
   }
 
   async exec(message: Message, { query }: { query: string }): Promise<Message | any > {
-
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let lyrics;
     let songNameFormated;
     if(query) {
@@ -46,7 +46,7 @@ export default class LyricsCommand extends Command {
 
         } else {
 
-          message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("Please make sure you specify a song or have a player playing."))
+          message.util!.send(new this.client.Embed(message, colour).setDescription("Please make sure you specify a song or have a player playing."))
 
         }
 
@@ -56,24 +56,24 @@ export default class LyricsCommand extends Command {
     res = await res.text();
     let $ = await cheerio.load(res);
     let songLink = `https://musixmatch.com${$("h2[class=\"media-card-title\"]").find("a").attr("href")}`;
-    if(songLink.includes("undefined")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
+    if(songLink.includes("undefined")) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${songNameFormated}`))
     res = await fetch(songLink);
     res = await res.text();
     $ = await cheerio.load(res);
     lyrics = await $("p[class=\"mxm-lyrics__content \"]").text();
-    if(!lyrics.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Nothing found for ${songNameFormated}`))
+    if(!lyrics.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${songNameFormated}`))
     let page: number = Math.floor(2048);
     let pages = Math.floor((lyrics.length + 2048) / 2048);
     let current = 1;
     let next_embed;
     let list = lyrics.slice(page - 2048, page)
-    let embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(list)
+    let embed = new this.client.Embed(message, colour).setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
 
     message.util!.send(embed).then(async (msg) => {
 
-        msg.delete({ timeout: 60000 }).catch(() => null);
-
         if(lyrics.length > 2048) {
+
+          msg.delete({ timeout: 60000 }).catch(() => null);
 
             await msg.react('⏪');
             await msg.react('◀');
@@ -92,8 +92,8 @@ export default class LyricsCommand extends Command {
                         page = Math.floor(current) * 2048;
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-                            .setDescription(list)
+                        next_embed = new this.client.Embed(message, colour)
+                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -103,8 +103,8 @@ export default class LyricsCommand extends Command {
                         page = Math.floor(current) * 2048;
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-                            .setDescription(list)
+                        next_embed = new this.client.Embed(message, colour)
+                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -114,8 +114,8 @@ export default class LyricsCommand extends Command {
                         page = Math.floor(current) * 2048;
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-                            .setDescription(list)
+                        next_embed = new this.client.Embed(message, colour)
+                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -125,8 +125,8 @@ export default class LyricsCommand extends Command {
                         page = Math.floor(current) * 2048;
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
-                        next_embed = new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-                            .setDescription(list)
+                        next_embed = new this.client.Embed(message, colour)
+                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
