@@ -12,13 +12,13 @@ export default class DisableLevelCommand extends Command {
 
         let guild: any = await this.client.findOrCreateGuild({id: message.guild!.id})
         if(!guild.level) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-            .setDescription("Level System is Already Disabled")
+            .setDescription("Level System is Already Disabled.")
         )
 
         guild.level = false
 
         message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-            .setDescription("Disable Level System")
+            .setDescription("Disabled Level System.")
         )
         guild.save()
     }   

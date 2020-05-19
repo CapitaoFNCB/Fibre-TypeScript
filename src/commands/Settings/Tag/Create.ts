@@ -37,7 +37,7 @@ export default class TagCommand extends Command {
         if (name.match(USER_MENTION_REGEX) || name.match(CHANNEL_MENTION_REGEX))
             return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`You cannot name your tag that, as it contains a mention of a channel, or user.`));
 
-        if (!name.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Please include a tag name`));
+        if (!name.length) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`Please include a tag name.`));
 
         if (name.length > 16) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription(`You cannot name your tag that, as it exceeds the tag name character limit.`));
             

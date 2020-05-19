@@ -11,6 +11,7 @@ export default class NpmCommand extends Command {
       aliases: ["npm"],
       category: "Docs",
       channel: "guild",
+      typing: true,
       args: [
         {
             id: "query",
@@ -36,7 +37,7 @@ export default class NpmCommand extends Command {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let data: any = await fetch(`https://registry.npmjs.org/${query}`)
 
-    if(data.error || data.code) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(data.error || data.code) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)."))
 
     let body: any = await data.json()
 
@@ -50,11 +51,11 @@ export default class NpmCommand extends Command {
     let files: string | any = all.filter(x => x.length > 4 && x.includes("Files")).length ? all.filter(x => x.length > 4 && x.includes("Files"))[0].split("Files")[1].match(/\d+/) : "`Unknown`"
 
     if(body.error) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("No Package with this name")  
+      .setDescription("No Package with this name.")  
     )
 
     if(!body["dist-tags"]) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("This package is missing information")  
+      .setDescription("This package is missing information.")  
     )
 
     const embed = new this.client.Embed(message, colour)

@@ -34,12 +34,15 @@ export default class VolumeCommand extends Command {
     });
   }
 
-  async exec (message: Message, { amount }: { amount: number }) {
+  async exec (message: Message, { amount }: { amount: any }) {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    if(amount == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, colour).setDescription("You need to be in a voice channel."))
+    if(amount == "there is no player for this guild") return message.util!.send(new this.client.Embed(message, colour).setDescription("There is currently no player for this guild."));
+    if(amount == "This user is in the incorrect voice channel, connect to correct") return message.util!.send(new this.client.Embed(message, colour).setDescription(`You need to be in the same voice channel as me to use Volume Command.`));
     const player = this.client.manager.players.get(message.guild!.id)
 
     message.util!.send(new this.client.Embed(message, colour)
-        .setDescription(`Player volume set from ${player.volume}% to ${amount}%`)
+        .setDescription(`Player volume set from ${player.volume}% to ${amount}%.`)
     )
 
     player.setVolume(amount)

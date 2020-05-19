@@ -7,7 +7,7 @@ import OSUtils, { NetStatMetrics } from "node-os-utils";
 export default class BotstatsCommand extends Command {
     public constructor() {
       super("botstats", {
-        aliases: ["botstats", "botinfo", "bot"],
+        aliases: ["botstats", "botinfo", "bot", "stats"],
         category: "Core",
         channel: "guild",
         typing: true,

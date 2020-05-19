@@ -20,7 +20,7 @@ export default class PlayBackCommand extends Command {
     let guildData = await this.client.findOrCreateGuild({id: message.guild!.id})
     
     if(!guildData.last_playing.length) return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("Play something first before you can use this")
+        .setDescription("Play something first before you can use this.")
     )
 
     let player: any;
@@ -30,15 +30,15 @@ export default class PlayBackCommand extends Command {
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Playback Command"));
+        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Playback Command."));
     }
 
     if (!channel) {
-        return message.util!.send(new this.client.Embed(message, colour).setDescription("You Need to be in a voice channel"))
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("You Need to be in a voice channel."))
     }else if (!channel.joinable) {
-        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to enter this voice channel."))
     }else if(!channel.speakable){
-        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to speak this voice channel."))
     }
 
     this.client.manager.search(guildData.last_playing, message.author).then(async found => {
@@ -55,18 +55,18 @@ export default class PlayBackCommand extends Command {
 
                 player.queue.add(found.tracks[0]);
                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}`))
-                if(!player.playing && player.queue.length < 2) player.play();
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}.`))
+                if(!player.playing && player.queue.length == 1) player.play();
             break;
 
             case "LOAD_FAILED":
                 message.react(this.client.emojiList.reaction.deny).catch(() => null)
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found.`))
             break;
 
             case "NO_MATCHES":
                 message.react(this.client.emojiList.reaction.deny).catch(() => null)
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found.`))
             break;
         }
     })

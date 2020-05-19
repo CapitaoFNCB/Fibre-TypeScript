@@ -21,17 +21,17 @@ export default class ResumeCommand extends Command {
 
     const { channel } = message.member!.voice;
 
-    if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild"));
-    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Leave Command"));
+    if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild."));
+    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Resume Command."));
 
     if(player.playing)  return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("Already Resumed")
+        .setDescription("Already Resumed.")
     )  
 
     player.pause(false)
 
     return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("Resumed Music")
+        .setDescription("Resumed Music.")
     )
   }
 }

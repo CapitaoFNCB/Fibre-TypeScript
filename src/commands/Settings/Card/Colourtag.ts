@@ -29,7 +29,7 @@ export default class ColourTag extends Command {
         founduser.colour = change
         founduser.save()
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-            .setDescription(`Set colour to ${change}`)
+            .setDescription(`Set colour to ${change}.`)
         )
     }   
 }

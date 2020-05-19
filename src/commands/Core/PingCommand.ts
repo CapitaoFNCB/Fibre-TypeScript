@@ -27,7 +27,7 @@ export default class PingCommand extends Command {
         const execTime = hrDiff[0] > 0 ? `${hrDiff[0]}s` : `${Math.round(hrDiff[1] / 1000000)}ms`;
         let ping: number[] = await this.client.shard!.fetchClientValues('ws.ping')
         return message.util!.send(new this.client.Embed(message, colour)
-          .setDescription(`Response: \`${timeDiff} ms\`\nLatency: \`${Math.round(this.client.ws.ping)} ms\`\nDataBase Ping: \`${execTime}\`\nAverage Shard Ping: \`${ping.reduce((a,b) => b + a) / ping.length}ms\``));
+          .setDescription(`Response: \`${timeDiff} ms\`\nLatency: \`${Math.round(this.client.ws.ping)} ms\`\nDatabase Ping: \`${execTime}\`\nAverage Shard Ping: \`${ping.reduce((a,b) => b + a) / ping.length}ms\``));
         });
     }
 }

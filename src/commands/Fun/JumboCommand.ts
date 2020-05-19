@@ -17,7 +17,7 @@ export default class JumboCommand extends Command {
               type: "string",
               match: "rest",
               prompt: {
-                  start: "Who would you like to search for?"
+                  start: "What emoji would you like to enlarge?"
               }
             }
         ],

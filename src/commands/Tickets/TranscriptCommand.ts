@@ -28,7 +28,7 @@ export default class TranscriptCommand extends Command {
     const channel = message.guild!.channels.cache.get(message.channel!.id)
 
     if(!channel!.name.startsWith("ticket-")) return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-      .setDescription("This command can used for Tickets")
+      .setDescription("This command can used for Tickets.")
     )
 
     let channelMessages = await (await message.channel.messages.cache.filter(x => !x.author.bot))

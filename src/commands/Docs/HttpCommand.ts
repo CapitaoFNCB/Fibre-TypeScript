@@ -32,11 +32,11 @@ export default class HTTPDocsCommand extends Command {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let body: any = await fetch(`https://api.duckduckgo.com/?q=HTTP+${query}&format=json&atb=v208-1`)
 
-    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)."))
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}.`))
 
     let embed = new this.client.Embed(message, colour)
       .setAuthor(`HTTP`, 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/HTTP_logo.svg/1200px-HTTP_logo.svg.png', data.AbstractURL)

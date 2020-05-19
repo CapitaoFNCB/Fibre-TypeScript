@@ -33,11 +33,11 @@ export default class PythonCommand extends Command {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let body: any = await fetch(`https://api.duckduckgo.com/?q=python+${query}&format=json&atb=v208-1`)
 
-    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)."))
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}.`))
 
     return message.util!.send(new this.client.Embed(message, colour)
 

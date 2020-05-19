@@ -50,7 +50,7 @@ export default class TagCommand extends Command {
         guild.save()
 
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-            .setDescription(`Updated: \`${name.toLowerCase()}\``)
+            .setDescription(`Updated: \`${name.toLowerCase()}\`.`)
         )
     }
 }

@@ -33,11 +33,11 @@ export default class DOMDocsCommand extends Command {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     let body: any = await fetch(`https://api.duckduckgo.com/?q=DOM+${query}&format=json&atb=v208-1`)
 
-    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)"))
+    if(body.status != 200) return message.util!.send(new this.client.Embed(message, colour).setDescription("There was an error when searching (Api Could Be Down)."))
 
     let data = await body.json()
 
-    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}`))
+    if(!data.AbstractURL.length || !data.Abstract.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${query}.`))
 
     let embed = new this.client.Embed(message, colour)
       .setAuthor(`DOM`, 'https://www.pikpng.com/pngl/m/110-1104721_how-to-capture-an-image-from-a-dom.png', data.AbstractURL)

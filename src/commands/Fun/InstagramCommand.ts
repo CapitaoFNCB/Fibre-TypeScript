@@ -21,6 +21,7 @@ export default class InstagramCommand extends Command {
           }
         }
       ],
+      typing: true,
       description: {
         content: "Shows instagram profile.",
         usage: "instagram [] username ]",
@@ -36,7 +37,7 @@ export default class InstagramCommand extends Command {
     const search = await api.instagram(string)
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     if(!search.success) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("No Account with this name")
+      .setDescription("No Account with this name.")
     )
 
     const result = await fetch(search.user.profile_pic_url);

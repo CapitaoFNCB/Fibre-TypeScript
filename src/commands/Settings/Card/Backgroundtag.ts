@@ -26,13 +26,13 @@ export default class BackgroundTag extends Command {
     }
 
     public async exec (message: Message, { change }: { change: any }) {
-        if(change == "premium only command, reply with need premium") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("This is premium use only"))
+        if(change == "premium only command, reply with need premium") return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour)).setDescription("This is premium use only."))
         let founduser = await this.client.findOrCreateUser({ id: message.author.id })
         let buffered = await change.buffer()
         founduser.backgound = buffered
         founduser.save()
         return message.util!.send(new this.client.Embed(message, await this.client.findOrCreateGuild({id: message.guild!.id}).then(guild => guild.colour))
-            .setDescription("Changed card background")
+            .setDescription("Changed card background.")
         )
     }   
 }

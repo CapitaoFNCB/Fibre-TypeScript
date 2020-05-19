@@ -20,20 +20,20 @@ export default class JoinCommand extends Command {
     const { channel } = message.member!.voice
 
     if(!channel) return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("You Need to be in a voice channel")
+        .setDescription("You Need to be in a voice channel.")
       )
     
     let player = this.client.manager.players.get(message.guild!.id)
     if(player) return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("I'm already in a voice channel")
+        .setDescription("I'm already in a voice channel.")
     )
 
     if(!channel.joinable) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("I cannot join this voice channel")
+      .setDescription("I cannot join this voice channel.")
     )
 
     if(!channel.speakable) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("I cannot speak this voice channel")
+      .setDescription("I cannot speak this voice channel.")
     )
 
     let guild = await this.client.findOrCreateGuild({id: message.guild!.id})

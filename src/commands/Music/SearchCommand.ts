@@ -66,8 +66,8 @@ export default class SearchCommand extends Command {
                     volume: guild.volume
                 });
                 player.queue.add(found.tracks[0]);
-                 message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}`))
-                if(!player.playing && player.queue.length < 2) player.play();
+                 message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}.`))
+                 if(!player.playing && player.queue.length == 1) player.play();
 
             break;
 
@@ -127,7 +127,7 @@ export default class SearchCommand extends Command {
                         )
                         
                         send_message.reactions.removeAll().catch(() => null)
-                        if(!player.playing && player.queue.length < 2) player.play();
+                        if(!player.playing && player.queue.length == 1) player.play();
                         reactions.stop()
 
                     }else{
@@ -141,11 +141,11 @@ export default class SearchCommand extends Command {
                         player.queue.add(tracks[reacted - 1])
                         if(send_message.editable)
                             send_message.edit("", new this.client.Embed(message, colour)
-                            .setDescription(`Queued: ${tracks[reacted - 1].title}`)
+                            .setDescription(`Queued: ${tracks[reacted - 1].title}.`)
                         )
 
                         send_message.reactions.removeAll().catch(() => null)
-                        if(!player.playing && player.queue.length < 2) player.play();
+                        if(!player.playing && player.queue.length == 1) player.play();
                     }
                     reactions.stop()
                 })
@@ -164,7 +164,7 @@ export default class SearchCommand extends Command {
                 }
                 const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                 message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                if(!player.playing && (player.queue.length - found.playlist.tracks.length) < 2) player.play();
+                if(!player.playing && player.queue.length == 1) player.play();
             break;
 
             case "LOAD_FAILED":
@@ -190,8 +190,8 @@ export default class SearchCommand extends Command {
                                 volume: guild.volume
                             });
                             player.queue.add(found.tracks[0]);
-                            message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}`))
-                            if(!player.playing && player.queue.length < 2) player.play();
+                            message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}.`))
+                            if(!player.playing && player.queue.length == 1) player.play();
 
                         break;
 
@@ -249,7 +249,7 @@ export default class SearchCommand extends Command {
                                         .setDescription(`Queued: All songs`)
                                     )
                                     send_message.reactions.removeAll().catch(() => null)
-                                    if(!player.playing && player.queue.length < 2) player.play();
+                                    if(!player.playing && player.queue.length == 1) player.play();
                                     reactions.stop()
             
                                 }else{
@@ -267,7 +267,7 @@ export default class SearchCommand extends Command {
                                     )
             
                                     send_message.reactions.removeAll().catch(() => null)
-                                    if(!player.playing && player.queue.length < 2) player.play();
+                                    if(!player.playing && player.queue.length == 1) player.play();
                                 }
                                 reactions.stop()
                             })
@@ -284,10 +284,10 @@ export default class SearchCommand extends Command {
                     
                             for (const track of found.playlist.tracks){
                                 player.queue.add(track)
+                                if(!player.playing && player.queue.length == 1) player.play();
                             }
                             const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                             message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                            if(!player.playing && player.queue.length < 2) player.play();
                         break;
 
                         case "LOAD_FAILED":

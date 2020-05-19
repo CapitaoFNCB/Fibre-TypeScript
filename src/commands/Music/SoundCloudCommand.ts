@@ -39,19 +39,19 @@ export default class SoundCloudCommand extends Command {
     let player: any;
     let filter: any;
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
-    if(query == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, colour).setDescription("You need to be in a voice channel"))
+    if(query == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, colour).setDescription("You need to be in a voice channel."))
     if(query == "This user is in the incorrect voice channel, connect to correct") return message.util!.send(new this.client.Embed(message, colour).setDescription(`You need to be in the same voice channel as me to use SoundCloud Command.`));
     const { channel } = message.member!.voice
     if (!channel!.joinable) {
-        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to enter this voice channel"))
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to enter this voice channel."))
     }else if(!channel!.speakable){
-        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to speak this voice channel"))
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("I don't seem to have permission to speak this voice channel."))
     }
 
     player = this.client.manager.players.get(message.guild!.id)
 
     if(player){
-        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Play Command"));
+        if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use SoundCloud Command."));
     }
     let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
     this.client.manager.search({source: "soundcloud", query: query }, message.author).then(async found => {
@@ -66,8 +66,8 @@ export default class SoundCloudCommand extends Command {
                     volume: guild.volume
                 });
                 player.queue.add(found.tracks[0]);
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}`))
-                if(!player.playing && player.queue.length < 2) player.play();
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.tracks[0].title}.`))
+                if(!player.playing && player.queue.length == 1) player.play();
 
             break;
 
@@ -123,12 +123,12 @@ export default class SoundCloudCommand extends Command {
                         }
                         if(send_message.editable)
                             send_message.edit("", new this.client.Embed(message, colour)
-                            .setDescription(`Queued: All`)
+                            .setDescription(`Queued: All tracks.`)
                         )
                         
                         send_message.reactions.removeAll().catch(null)
 
-                        if(!player.playing && player.queue.length < 2) player.play();
+                        if(!player.playing && player.queue.length == 1) player.play();
                         reactions.stop()
 
 
@@ -143,11 +143,11 @@ export default class SoundCloudCommand extends Command {
                         player.queue.add(tracks[reacted - 1])
                         if(send_message.editable)
                             send_message.edit("", new this.client.Embed(message, colour)
-                            .setDescription(`Queued: ${tracks[reacted - 1].title}`)
+                            .setDescription(`Queued: ${tracks[reacted - 1].title}.`)
                         )
 
                         send_message.reactions.removeAll().catch(null)
-                        if(!player.playing && player.queue.length < 2) player.play();
+                        if(!player.playing && player.queue.length == 1) player.play();
                         reactions.stop()
                     }
                 })
@@ -167,15 +167,15 @@ export default class SoundCloudCommand extends Command {
                 }
                 const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                 message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                if(!player.playing && (player.queue.length - found.playlist.tracks.length) < 2) player.play();
+                if(!player.playing && player.queue.length == 1) player.play();
             break;
 
             case "LOAD_FAILED":
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found.`))
             break;
 
             case "NO_MATCHES":
-                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found`))
+                message.util!.send(new this.client.Embed(message, colour).setDescription(`No Songs Found.`))
             break;
         }
     })

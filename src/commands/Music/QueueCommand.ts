@@ -20,16 +20,13 @@ export default class QueueCommand extends Command {
   async exec (message: Message) {
 
     const player = this.client.manager.players.get(message.guild!.id)
-
-    const { channel } = message.member!.voice;
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
-    if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild"));
-    if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Queue Command"));
+    if(!player) return message.util!.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild."));
     let guild = await this.client.findOrCreateGuild({id: message.guild!.id})
     if(!player.queue.length){
-        return message.channel.send(new this.client.Embed(message, colour).setDescription("The queue is empty"));
+        return message.util!.send(new this.client.Embed(message, colour).setDescription("The queue is empty."));
     } else if(player.queue.length < 2) {
-        return message.channel.send(new this.client.Embed(message, colour).addField(`Now Playing`,`${player.queue[0].title}`, false).setFooter(`${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`));
+        return message.util!.send(new this.client.Embed(message, colour).addField(`Now Playing`,`${player.queue[0].title}`, false).setFooter(`${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${guild.notifications ? "Notifications Enabled" : "Notifications Disabled"}`));
     } else {
         let page: number = Math.floor(11);
         let i: number = 0;

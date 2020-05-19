@@ -34,13 +34,13 @@ export default class Help extends Command {
   public async exec(message: Message, { member }: { member: GuildMember }): Promise<Message> {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     if(member.user.bot) return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("No Information is stored for bots")
+        .setDescription("No Information is stored for bots.")
     )
 
     const found = await this.client.findOrCreateMember({ id: message.author.id, guildId: message.guild!.id})
 
     if(!found) return message.util!.send(new this.client.Embed(message, colour)
-      .setDescription("Couldn't find data in database")
+      .setDescription("Couldn't find data in database.")
     )
     
     function test(level, xp){
@@ -62,11 +62,11 @@ export default class Help extends Command {
    return message.util!.send(attachment)
 
     async function user(){
-        return new Canvas(934, 282)
+        let canvas = new Canvas(934, 282)
         .setColor("#2C2F33")
         .addRect(0, 0, 934, 282)
-        .addImage(toBuffer(user_data.backgound.buffer), 0, 0, 934, 282)
-        .setColor("#2C2F33")
+        if(user_data.premium) canvas.addImage(toBuffer(user_data.backgound.buffer), 0, 0, 934, 282)
+        canvas.setColor("#2C2F33")
         .setShadowColor('rgba(22, 22, 22, 1)')
         .setShadowOffsetY(5)
         .setShadowBlur(10)
@@ -88,6 +88,7 @@ export default class Help extends Command {
         .setTextAlign('right')
         .addText(`XP: ${size(found.xp)} / ${size(found.level * 650)}`, 835, 230)
         .addText(`${found.xp == 0 && found.level == 1 ? "" : `Rank ${leader_rank == 0 ? "Unranked" : "#" + leader_rank}`}`, 835, 260)
+        return canvas
     }
   }
 }

@@ -67,7 +67,7 @@ export default class PlayCommand extends Command {
                                 }); 
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                                if(!player.playing && player.queue.length < 2) player.play();
+                                if(!player.playing && player.queue.length == 1) player.play();
                         break;
                     }
                 })
@@ -98,7 +98,7 @@ export default class PlayCommand extends Command {
                                 }); 
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                                if(!player.playing && player.queue.length < 2) player.play();
+                                if(!player.playing && player.queue.length == 1) player.play();
                         break;
                     }
                 })
@@ -128,7 +128,7 @@ export default class PlayCommand extends Command {
                             }); 
                             player.queue.add(tracks[0]);
                             message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                            if(!player.playing && player.queue.length < 2) player.play();
+                            if(!player.playing && player.queue.length == 1) player.play();
                             message.util!.send(new this.client.Embed(message, colour)
                                 .setDescription(stripIndents`Song name: \`${data.name}\`\nSong by: \`${data.artists.map(artist => artist.name).join(", ")}\``)
                                 .setThumbnail(data.album.images[0].url)
@@ -165,8 +165,8 @@ export default class PlayCommand extends Command {
                     });
                     player.queue.add(found.tracks[0]);
                     message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                    message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}`))
-                    if(!player.playing && player.queue.length < 2) player.play();
+                    message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}.`))
+                    if(!player.playing && player.queue.length == 1) player.play();
 
                 break;
 
@@ -181,8 +181,8 @@ export default class PlayCommand extends Command {
                     }); 
                     player.queue.add(tracks[0]);
                     message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                    message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}`))
-                    if(!player.playing && player.queue.length < 2) player.play();
+                    message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}.`))
+                    if(!player.playing && player.queue.length == 1) player.play();
 
                 break;
 
@@ -197,11 +197,11 @@ export default class PlayCommand extends Command {
             
                     for (const track of found.playlist.tracks){
                         player.queue.add(track)
+                        if(!player.playing && player.queue.length == 1) player.play();
                     }
                     message.react(this.client.emojiList.reaction.accept).catch(() => null)
                     const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                     message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                    if(!player.playing && (player.queue.length - found.playlist.tracks.length) < 2) player.play();
                     
                 break;
 
@@ -230,8 +230,8 @@ export default class PlayCommand extends Command {
                                 });
                                 player.queue.add(found.tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}`))
-                                if(!player.playing && player.queue.length < 2) player.play();
+                                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}.`))
+                                if(!player.playing && player.queue.length == 1) player.play();
                 
                             break;
                 
@@ -246,8 +246,8 @@ export default class PlayCommand extends Command {
                                 });
                                 player.queue.add(tracks[0]);
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
-                                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}`))
-                                if(!player.playing && player.queue.length < 2) player.play();
+                                message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.tracks[0].title}.`))
+                                if(!player.playing && player.queue.length == 1) player.play();
                 
                             break;
                 
@@ -262,11 +262,11 @@ export default class PlayCommand extends Command {
                         
                                 for (const track of found.playlist.tracks){
                                     player.queue.add(track)
+                                    if(!player.playing && player.queue.length == 1) player.play();
                                 }
                                 message.react(this.client.emojiList.reaction.accept).catch(() => null)
                                 const duration = Utils.formatTime(found.playlist.tracks.map(x => x.duration).reduce((a: any ,b: any) => a + b), true)
                                 message.util!.send(new this.client.Embed(message, colour).setDescription(`Queued: ${found.playlist.tracks.length} tracks in playlist ${found.playlist.info.name}\nDuration: ${duration}`));
-                                if(!player.playing && (player.queue.length - found.playlist.tracks.length) < 2) player.play();
                                 
                             break;
                             

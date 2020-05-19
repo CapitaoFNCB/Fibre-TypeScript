@@ -41,7 +41,7 @@ export default class BassBoostCommand extends Command {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
     if(query == "This user is not in a voice channel, ask to join") return message.util!.send(new this.client.Embed(message, colour).setDescription("You need to be in a voice channel."));
     if(query == "there is no player for this guild") return message.util!.send(new this.client.Embed(message, colour).setDescription("There is currently no player for this guild."));
-    if(query == "This user is in the incorrect voice channel, connect to correct") return message.util!.send(new this.client.Embed(message, colour).setDescription(`You need to be in the same voice channel as me to use Bassboost Command.`));
+    if(query == "This user is in the incorrect voice channel, connect to correct") return message.util!.send(new this.client.Embed(message, colour).setDescription(`You need to be in the same voice channel as me to use BassBoost Command.`));
     query = Number(query)
     let player: Player = await this.client.manager.players.get(message.guild!.id)
     let bands: IEqualizerBand[] = [ { band:3, gain: query / 200 }, { band: 4, gain: query / 200 } ]
