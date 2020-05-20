@@ -8,7 +8,7 @@ export default class BotstatsCommand extends Command {
     public constructor() {
       super("botstats", {
         aliases: ["botstats", "botinfo", "bot", "stats"],
-        category: "Core",
+        category: "Info",
         channel: "guild",
         typing: true,
         description: {

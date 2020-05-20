@@ -36,12 +36,12 @@ export default class QueueCommand extends Command {
         let data = await this.client.findOrCreateGuild({id: message.guild!.id})
         let embed: Embed = new this.client.Embed(message, colour).addField(`🎧 Now Playing`,`${player.queue[0].title}`, false).addField(`Queue:`, queuelist, false).setFooter(`Page: ${current} / ${pages} • ${player.trackRepeat ? "Repeating Track" : player.queueRepeat ? "Repeating Queue" : "Not Repeating"} • ${data.notifications ? "Notifications Enabled" : "Notifications Disabled"}`);
         await message.util!.send(embed).then(async (msg) => {
-            msg.delete({ timeout: 60000 });
+            msg.delete({ timeout: 60000 }).catch(() => null);
             if (Math.floor((player.queue.slice(2).length + 10) / 10) > 1) {
-            await msg.react('⏪');
-            await msg.react('◀');
-            await msg.react('▶');
-            await msg.react('⏩');
+            await msg.react('⏪').catch(() => null);
+            await msg.react('◀').catch(() => null);
+            await msg.react('▶').catch(() => null);
+            await msg.react('⏩').catch(() => null);
             current = Math.floor(page / 10);
             const collector = msg.createReactionCollector((reaction, user) => (reaction.emoji.name === '⏪' || "◀" || "▶" || "⏩") && user.id === message.author.id, { time: 60000 });
             collector.on("collect", async (collected: MessageReaction) => {

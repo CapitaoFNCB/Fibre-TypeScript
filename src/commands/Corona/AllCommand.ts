@@ -10,7 +10,7 @@ export default class AllCommand extends Command {
       category: "Corona",
       channel: "guild",
       description: {
-        content: "Shows all coronavirus statistics",
+        content: "Shows all coronavirus statistics.",
         usage: "all",
         examples: [
           "all"

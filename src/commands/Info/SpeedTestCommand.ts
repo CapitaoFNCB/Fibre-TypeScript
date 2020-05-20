@@ -7,7 +7,7 @@ export default class SpeedtestCommand extends Command {
   public constructor() {
     super("speedtest", {
       aliases: ["speedtest", "speed","internet"],
-      category: "Core",
+      category: "Info",
       channel: "guild",
       cooldown: 50000,
       ratelimit: 1,

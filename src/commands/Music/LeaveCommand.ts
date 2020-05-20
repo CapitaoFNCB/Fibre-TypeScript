@@ -16,18 +16,12 @@ export default class LeaveCommand extends Command {
   }
 
   async exec (message: Message) {
-    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
-    const player = this.client.manager.players.get(message.guild!.id)
-
+    let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour);
+    const player = this.client.manager.players.get(message.guild!.id);
     const { channel } = message.member!.voice;
-
     if(!player) return message.channel.send(new this.client.Embed(message, colour).setDescription("There is no player for this guild."));
     if(!channel || channel.id !== player.voiceChannel.id) return message.channel.send(new this.client.Embed(message, colour).setDescription("You need to be in the same voice channel as me to use Leave Command."));
-      
-    this.client.manager.players.destroy(message.guild!.id)
-
-    return message.util!.send(new this.client.Embed(message, colour)
-        .setDescription("Left Voice Channel")
-    )
+    this.client.manager.players.destroy(message.guild!.id);
+    return message.util!.send(new this.client.Embed(message, colour).setDescription("Left Voice Channel"));
   }
 }

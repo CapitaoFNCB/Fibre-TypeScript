@@ -8,7 +8,7 @@ export default class LyricsCommand extends Command {
   constructor() {
     super("lyrics", {
       aliases: ["lyrics", "ly"],
-      category: "Core",
+      category: "Music",
       channel: "guild",
       args: [
         {

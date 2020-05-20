@@ -31,6 +31,7 @@ export default class Help extends Command {
 
   async exec (message: Message, { command }: { command : any }): Promise<Message> {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
+    let prefix = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.prefix)
     const embed = new this.client.Embed(message, colour)
     if (!command) {
       embed
@@ -58,10 +59,10 @@ export default class Help extends Command {
     embed 
       .setAuthor(`Help - ${command}`, message.guild ? message.guild.iconURL({ dynamic: true }) as string : message.author.displayAvatarURL({ dynamic: true }) as string)
       .setDescription(stripIndents`
-        **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${this.client.capitalize(alias)}\``).join(", ") : "Unknown"}
-        **Usage**: \`${command.description.usage || "Unknown"}\`
         **Description**: \`${command.description.content || command}\`
-        **Examples**: ${command.description.examples.map(x => `\`${x}\``).join(" ")}
+        **Aliases**: ${command.aliases ? command.aliases.map(alias => `\`${prefix}${alias}\``).join(", ") : "Unknown"}
+        **Usage**: \`${command.description.usage || "Unknown"}\`
+        **Examples**: ${command.description.examples.map(x => `\`${prefix}${x}\``).join(" ")}
       `) 
 
     return message.util!.send(embed);

@@ -15,8 +15,10 @@ export default class ScreenCommand extends Command {
               type: async (message: Message, website: string) => {
                 if(!(message.channel as TextChannel).nsfw && !this.client.ownerID.includes(message.author.id)) return "This channel is not nsfw";
                 if(website) {
-                  let data = await fetch(website)
-                  if(data.status == 200) return website
+                  try {
+                    let data = await fetch(website)
+                    if(data.status == 200) return website
+                  } catch {}
                   return Flag.fail(website)
                 }
               },

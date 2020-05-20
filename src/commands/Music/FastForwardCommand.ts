@@ -27,7 +27,7 @@ export default class FastForwardCommand extends Command {
             match: "rest",
             prompt:{
               start: "How much would you like to fastforward by?",
-              retry: "Invalid amount, try again, must be greater than 0."
+              retry: "Invalid amount, please try again, must be greater than 0."
             }
           }
       ],

@@ -23,7 +23,7 @@ export default class BassBoostCommand extends Command {
             match: "rest",
             prompt:{
               start: "How much would you like to bass boost by?",
-              retry: "Invalid amount, try again (the scale is 0-200)."
+              retry: "Invalid amount, please try again (the scale is 0-200)."
             }
           }
       ],

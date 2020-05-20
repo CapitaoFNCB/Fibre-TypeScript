@@ -4,7 +4,7 @@ import { Message } from "discord.js";
 export default class EnableCommand extends Command {
   public constructor() {
     super("enable", {
-      aliases: ["enable", "e", "en"],
+      aliases: ["enable", "en"],
       category: "Settings",
       channel: "guild",
       description: {

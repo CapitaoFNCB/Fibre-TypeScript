@@ -1,5 +1,5 @@
 import { Listener } from "discord-akairo";
-import { ErelaClient } from "erela.js"
+import { ErelaClient, Player, Track } from "erela.js"
 import { nodes, connection } from "../utils/Config"
 import mongoose from "mongoose";
 import { MessageEmbed } from "discord.js";
@@ -29,6 +29,10 @@ export default class ReadyListener extends Listener {
 
     this.client.manager = new ErelaClient(this.client, nodes)
     .on("nodeConnect", node => this.client.logger.info("New Node Created"))
+
+    .on("trackStuck", (player: Player, track: Track) => {
+      player.play()
+    })
 
     .on("queueEnd", async (player, track) => {
       let queueEnd = await this.client.findOrCreateGuild({id: player.guild.id})

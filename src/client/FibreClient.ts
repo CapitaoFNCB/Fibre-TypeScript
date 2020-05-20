@@ -12,6 +12,8 @@ import Embed from "./FibreEmbed";
 import { load } from "../dashboard/app";
 import { emojiList } from "../utils/EmojiList";
 import "../extensions/FibreMember";
+import "../extensions/FibreTextChannel";
+import "../extensions/FibreMessage";
 import { ErelaClient } from "erela.js";
 import { KSoftClient } from "@ksoft/api";
 // import Constants from "discord.js/src/util/Constants";
