@@ -3,6 +3,7 @@ import { Message, MessageReaction } from "discord.js";
 import cheerio from "cheerio";
 import fetch from "node-fetch";
 import { Player } from "erela.js";
+import { geniusApi } from "../../utils/Config"
 
 export default class LyricsCommand extends Command {
   constructor() {
@@ -10,6 +11,7 @@ export default class LyricsCommand extends Command {
       aliases: ["lyrics", "ly"],
       category: "Music",
       channel: "guild",
+      typing: true,
       args: [
         {
           id: "query",
@@ -32,42 +34,33 @@ export default class LyricsCommand extends Command {
 
   async exec(message: Message, { query }: { query: string }): Promise<Message | any > {
     let colour = await this.client.findOrCreateGuild({ id: message.guild!.id }).then(guild => guild.colour)
-    let lyrics;
     let songNameFormated;
     if(query) {
-        songNameFormated = query.toLowerCase().replace(/\(lyrics|lyric|official music video|audio|official|official video|official video hd|clip officiel|clip|extended|hq\)/gmi, "");
-
+        songNameFormated = query.toLowerCase();
     } else {
         const player: Player = this.client.manager.players.get(message.guild!.id)
-
         if(player && player.queue[0]){
-          
-          songNameFormated = player.queue[0].title.toLowerCase().replace(/\(lyrics|lyric|official music video|audio| video|official|official video|official video hd|clip officiel|clip|extended|hq\)/gi, "");
-
+          songNameFormated = player.queue[0].title.toLowerCase();
         } else {
-
           message.util!.send(new this.client.Embed(message, colour).setDescription("Please make sure you specify a song or have a player playing."))
-
         }
-
     }
-
-    let res: any = await fetch(`https://www.musixmatch.com/search/${encodeURIComponent(songNameFormated)}`);
-    res = await res.text();
-    let $ = await cheerio.load(res);
-    let songLink = `https://musixmatch.com${$("h2[class=\"media-card-title\"]").find("a").attr("href")}`;
-    if(songLink.includes("undefined")) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${songNameFormated}.`))
-    res = await fetch(songLink);
-    res = await res.text();
-    $ = await cheerio.load(res);
-    lyrics = await $("p[class=\"mxm-lyrics__content \"]").text();
-    if(!lyrics.length) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${songNameFormated}.`))
+    const headers = { Authorization: `Bearer ${geniusApi}` };
+    let body: any = await fetch(`https://api.genius.com/search?q=${encodeURI(songNameFormated)}`, { headers });
+    let res = await body.json();
+    if(!res.response.hits[0]) return message.util!.send(new this.client.Embed(message, colour).setDescription(`Nothing found for ${songNameFormated}`));
+    const songID = res.response.hits[0].result.id;
+    let result_body = await fetch(`https://api.genius.com/songs/${songID}`, { headers });
+    let result = await result_body.json();
+    const song = result.response.song;
+    let lyrics = await getLyrics(song.url);
+    lyrics = lyrics.replace(/(\[.+\])/g, '');
     let page: number = Math.floor(2048);
     let pages = Math.floor((lyrics.length + 2048) / 2048);
     let current = 1;
     let next_embed;
     let list = lyrics.slice(page - 2048, page)
-    let embed = new this.client.Embed(message, colour).setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
+    let embed = new this.client.Embed(message, colour).setDescription(list).setAuthor(song.full_title).setThumbnail(song.primary_artist.image_url)
 
     message.util!.send(embed).then(async (msg) => {
 
@@ -93,7 +86,7 @@ export default class LyricsCommand extends Command {
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
                         next_embed = new this.client.Embed(message, colour)
-                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
+                            .setDescription(list).setAuthor(song.full_title).setThumbnail(song.primary_artist.image_url)
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -104,7 +97,7 @@ export default class LyricsCommand extends Command {
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
                         next_embed = new this.client.Embed(message, colour)
-                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
+                            .setDescription(list).setAuthor(song.full_title).setThumbnail(song.primary_artist.image_url)
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -115,7 +108,7 @@ export default class LyricsCommand extends Command {
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
                         next_embed = new this.client.Embed(message, colour)
-                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
+                            .setDescription(list).setAuthor(song.full_title).setThumbnail(song.primary_artist.image_url)
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -126,7 +119,7 @@ export default class LyricsCommand extends Command {
                         list = lyrics.slice(page - 2048, page)
                         collected.users.remove(message.author).catch(error => null)
                         next_embed = new this.client.Embed(message, colour)
-                            .setDescription(list).setAuthor("Search result for: " + songNameFormated.split(" ").map(song => song.slice(0,1).toUpperCase() + song.slice(1).toLowerCase()).join(" ")).setFooter("This is not very accurate, will be be made more accurate soon")
+                            .setDescription(list).setAuthor(song.full_title).setThumbnail(song.primary_artist.image_url)
                         msg.edit("", next_embed).catch(() => null)
                     break;
 
@@ -134,5 +127,11 @@ export default class LyricsCommand extends Command {
             })
         }
     })
+    async function getLyrics(url) {
+      const response = await fetch(url);
+      const text = await response.text();
+      const $ = cheerio.load(text);
+      return $('.lyrics').text().trim();
+    }
   }
 }

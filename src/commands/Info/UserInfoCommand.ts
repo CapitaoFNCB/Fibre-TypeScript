@@ -10,7 +10,8 @@ const emojies = {
   "BUGHUNTER_LEVEL_2": "<:fibre_bug_hunter_1:712566988635111524>",
   "BUGHUNTER_LEVEL_1": "<:fibre_bug_hunter_2:712568939321884713>",
   "HOUSE_BRAVERY": "<:fibre_house_bravery:712566988320538716>",
-  "HOUSE_BRILLIANCE": "<:fibre_house_brilliance:712566988467208215>"
+  "HOUSE_BRILLIANCE": "<:fibre_house_brilliance:712566988467208215>",
+  "VERIFIED_BOT": "<:fibre_verified_bot:712613523976486982>"
 }
 
 export default class UserInfoCommand extends Command {
@@ -55,7 +56,7 @@ export default class UserInfoCommand extends Command {
     if(member.joinedTimestamp){
       return message.util!.send(new this.client.Embed(message, colour)
         .addField("Username:", member.user.username, true)
-        .addField("Badges", member.user.flags.toArray().length ? member.user.flags.toArray().map(x => emojies[x]).join(" ") : "\`No Badges\`")
+        .addField(`Badges [${member.user.flags.toArray().length}]:`, member.user.flags.toArray().length ? member.user.flags.toArray().map(x => emojies[x]).join(" ") : "\`No Badges\`")
         .addField(`Roles [${member.roles.cache.size - 1}]:`, `${member.roles.cache.map(role => role).filter(role => role.name !== "@everyone").sort((a,b) => b.position - a.position).slice(0,15).join(", ")} ${member.roles.cache.size > 16 ? "..." : ""}`, false)
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: "png", size: 2048 }))
         .setFooter(`User ID: ${member.id}`)

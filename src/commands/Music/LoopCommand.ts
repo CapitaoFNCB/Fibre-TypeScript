@@ -21,7 +21,7 @@ export default class LoopCommand extends Command {
   public *args(): object {
     const method = yield {
         type: [
-            ["tag-trackloop", "track", "single", "current", "t"],
+            ["tag-trackloop", "track", "single", "current", "t", "song"],
             ["tag-queueloop", "queue", "all", "q"],
             ["tag-loopnone", "none", "no", "0", "n"],
         ],

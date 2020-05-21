@@ -145,7 +145,7 @@ export default class PlayNowCommand extends Command {
                 }
             })
             setTimeout(async () => {
-              if(player.queue.length > 2){
+              if(player.queue.length > 1){
                 player.queue.add(player.queue[0], 2);
                 player.stop();
               }
@@ -180,7 +180,7 @@ export default class PlayNowCommand extends Command {
                         volume: guild.volume
                     });
                     player.queue.add(found.tracks[0], 1);
-                    if(player.queue.length > 2){
+                    if(player.queue.length > 1){
                       player.queue.add(player.queue[0], 2);
                       player.stop();
                     }
@@ -200,7 +200,7 @@ export default class PlayNowCommand extends Command {
                         volume: guild.volume
                     }); 
                     player.queue.add(tracks[0], 1);
-                    if(player.queue.length > 2){
+                    if(player.queue.length > 1){
                       player.queue.add(player.queue[0], 2);
                       player.stop();
                     }
@@ -255,7 +255,7 @@ export default class PlayNowCommand extends Command {
                                   volume: guild.volume
                               });
                               player.queue.add(found.tracks[0], 1);
-                              if(player.queue.length > 2){
+                              if(player.queue.length > 1){
                                 player.queue.add(player.queue[0], 2);
                                 player.stop();
                               }
@@ -275,7 +275,7 @@ export default class PlayNowCommand extends Command {
                                   volume: guild.volume
                               }); 
                               player.queue.add(tracks[0], 1);
-                              if(player.queue.length > 2){
+                              if(player.queue.length > 1){
                                 player.queue.add(player.queue[0], 2);
                                 player.stop();
                               }

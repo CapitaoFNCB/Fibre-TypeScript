@@ -28,7 +28,16 @@ export default class ReadyListener extends Listener {
     }
 
     this.client.manager = new ErelaClient(this.client, nodes)
-    .on("nodeConnect", node => this.client.logger.info("New Node Created"))
+    .on("nodeConnect", () => this.client.logger.info("New Node Created"))
+
+    .on("trackError", async (player: Player, track: Track, message: any) => {
+
+      let guild = await this.client.findOrCreateGuild({id: player.guild.id})
+      player.textChannel.send(new MessageEmbed()
+        .setColor(guild.colour)
+        .setDescription(`There was an error when trying to play ${track.title}\nThis is a lavalink issue.`)
+      )
+    })
 
     .on("trackStuck", (player: Player, track: Track) => {
       player.play()
