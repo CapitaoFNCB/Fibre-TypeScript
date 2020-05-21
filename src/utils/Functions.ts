@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, Permissions } from "discord.js";
 import { owners } from "./Config";
 import guildsData from "../database/Guild";
 import membersData from "../database/Member";
@@ -146,4 +146,17 @@ export async function getUsersData(client, users){
         }
         resolve(usersData);
     });
+}
+
+export function invite(client){
+    let perms: any[] = []
+    for(const command of client.commandHandler.modules.values()) {
+        if(command.clientPermissions) {
+            for(const perm of command.clientPermissions as any) {
+                perms.push(perm)
+            }
+        }
+    }
+    let data = new Permissions(3072).add([...new Set(perms)]).bitfield
+    return `https://discordapp.com/oauth2/authorize?client_id=${client.user!.id}&permissions=${data}&scope=bot`
 }

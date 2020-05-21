@@ -37,6 +37,7 @@ export default class ReadyListener extends Listener {
         .setColor(guild.colour)
         .setDescription(`There was an error when trying to play ${track.title}\nThis is a lavalink issue.`)
       )
+      this.client.manager.players.destroy(player.guild.id)
     })
 
     .on("trackStuck", (player: Player, track: Track) => {

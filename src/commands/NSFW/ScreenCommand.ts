@@ -31,7 +31,9 @@ export default class ScreenCommand extends Command {
       description: {
         content: "Takes a screenshot of the url request.",
         usage: "screen [ url ]",
-        examples: ["screen https://example.com/"]
+        examples: [
+          "screen https://example.com/"
+        ]
       },
     });
   }
