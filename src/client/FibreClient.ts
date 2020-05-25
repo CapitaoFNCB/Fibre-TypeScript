@@ -30,7 +30,7 @@ Logger.setFormatter(new DefaultFormatter({
 
 declare module "discord.js" {
   interface GuildMember {
-    owner: any;
+    owner: Boolean;
   }
 }
 

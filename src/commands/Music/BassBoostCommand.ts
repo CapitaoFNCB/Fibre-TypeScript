@@ -17,8 +17,8 @@ export default class BassBoostCommand extends Command {
                 let player = await this.client.manager.players.get(message.guild!.id)
                 if(!player) return "there is no player for this guild"
                 if(message.member!.voice.channelID !== player.voiceChannel.id) return "This user is in the incorrect voice channel, connect to correct"
-                if(Number(amount) == 0 || (Number(amount) && (Number(amount) <= 200))) return amount
-                if(!Number(amount)) return Flag.fail(amount)
+                if(amount && Number(amount) == 0 || (Number(amount) && (Number(amount) <= 200))) return amount
+                if(Number(amount)) return Flag.fail(amount)
             },
             match: "rest",
             prompt:{

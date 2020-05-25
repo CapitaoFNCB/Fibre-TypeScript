@@ -1,13 +1,13 @@
 import { Command } from "discord-akairo";
 import { Message, MessageAttachment, GuildMember } from "discord.js";
-import { Canvas } from "canvas-constructor"
-import fetch from "node-fetch"
-import membersData from "../../database/Member"
+import { Canvas } from "canvas-constructor";
+import fetch from "node-fetch";
+const { createCanvas, loadImage } = require("canvas")
 
 export default class Help extends Command {
   constructor() {
     super("level", {
-      aliases: ["level"],
+      aliases: ["level", "rank"],
       category: "Level",
       channel: "guild",
       args: [
@@ -53,6 +53,7 @@ export default class Help extends Command {
     let levels = await this.client.membersData.find({ guildId: message.guild!.id }).lean()
     let membersLeaderboard = await levels.map((m) => { return { id: m.id, level: m.level, xp: m.xp, totalxp: test(m.level, m.xp) };}).sort((a,b) => b.totalxp - a.totalxp);
     let leader_rank: number | string = membersLeaderboard.map(user => user.id).indexOf(member.id) + 1 == 0 ? "Unknown" : membersLeaderboard.map(user => user.id).indexOf(member.id) + 1
+    let image = await loadImage(`images/${member.user.presence.status}.png`)
     const user_data = await this.client.findOrCreateUser({ id: member.id })
     const result = await fetch(member.user.displayAvatarURL({ format: 'png', size: 2048 }));
     if (!result.ok) return message.util!.send("Failed to get Avatar");
@@ -88,6 +89,7 @@ export default class Help extends Command {
         .setTextAlign('right')
         .addText(`XP: ${size(found.xp)} / ${size(found.level * 650)}`, 835, 230)
         .addText(`${found.xp == 0 && found.level == 1 ? "" : `Rank ${leader_rank == 0 ? "Unranked" : "#" + leader_rank}`}`, 835, 260)
+        .addImage(image, 0, 0, 934, 282)
         return canvas
     }
   }
