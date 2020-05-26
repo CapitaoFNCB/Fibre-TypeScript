@@ -37,6 +37,7 @@
     "human-ms": "^1.0.5",
     "is-hexcolor": "^1.0.0",
     "jsdom": "^16.2.2",
+    "jszip": "^3.4.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "mongoose": "^5.9.7",
@@ -58,6 +59,7 @@
     "twemoji": "^12.1.5",
     "typescript": "^3.8.3",
     "underscore": "^1.10.2",
-    "vultrex.haste": "^1.0.1"
+    "vultrex.haste": "^1.0.1",
+    "zip-a-folder": "0.0.12"
   }
 }

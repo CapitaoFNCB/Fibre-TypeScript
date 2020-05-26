@@ -1,6 +1,5 @@
 import { Command } from "discord-akairo";
 import { Message } from "discord.js";
-
 import { exec } from "child_process";
 
 export default class ExecCommand extends Command {

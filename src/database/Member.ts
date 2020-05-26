@@ -11,6 +11,7 @@ const Member = new mongoose.Schema({
     cash: {type: Number, default: 0},
     work_time: {type: Number, default: 0},
     rob_time: {type: Number, default: 0},
+    crime_time: { type: Number, default: 0 },
     daily_time: {type: Number, default: 0},
     weekly_time: {type: Number, default: 0},
     server_blacklisted: { type: Boolean, default: false },

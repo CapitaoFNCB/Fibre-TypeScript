@@ -17,8 +17,8 @@ export default class KickCommand extends Command {
           default: null
         },
       ],
-      clientPermissions: "KICK_MEMBERS",
-      userPermissions: "KICK_MEMBERS",
+      clientPermissions: ["KICK_MEMBERS"],
+      userPermissions: ["KICK_MEMBERS"],
       description: {
         content: "Kicks members from a server. (limit: 10 messages)", 
         usage: "kick [ users ]",

@@ -158,11 +158,6 @@ export function invite(client){
             }
         }
     }
-    let data = new Permissions(3072).add([...new Set(perms)]).bitfield
+    let data = new Permissions(3148800).add([...new Set(perms)]).bitfield
     return `https://discordapp.com/oauth2/authorize?client_id=${client.user!.id}&permissions=${data}&scope=bot`
-}
-
-export async function resolveMembers(string: string, client: AkairoClient) {
-    let arr: any[] = string.split(" ");
-    console.log(arr)
 }
